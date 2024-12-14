@@ -1,5 +1,5 @@
 (undo-tree-save-format-version . 1)
-"d2c63b0591a3d6b2ff74f7c17dd3c65fe990b17d"
+"5179f977dcd9ee67e40944405a66ea1abbdd289c"
 [nil nil nil nil (26461 36064 943032 411000) 0 nil]
 ([nil nil ((13190 . 13194) (t 26461 34302 966408 220000)) nil (26461 36064 943031 287000) 0 nil])
 ([nil nil ((13194 . 13210)) nil (26461 36064 943030 281000) 0 nil])
@@ -919,5 +919,36 @@
 ([nil nil ((14425 . 14428)) nil (26461 54846 463871 796000) 0 nil])
 ([nil nil ((14428 . 14429)) nil (26461 54846 463870 544000) 0 nil])
 ([nil nil ((14686 . 14694)) nil (26461 54846 463869 837000) 0 nil])
-([nil current ((14694 . 14695)) nil (26461 54846 463864 945000) 0 nil])
+([nil nil ((14694 . 14695)) nil (26461 54846 463864 945000) 0 nil])
+([nil nil ((#("
+" 0 1 (wrap-prefix #("* " 0 2 (face org-indent)) line-prefix "" fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -12898) (undo-tree-id75 . -1) 12899 (t 26461 54846 580572 377000)) nil (26461 62026 619720 234000) 0 nil])
+([nil nil ((#("
+" 0 1 (wrap-prefix #("* " 0 2 (face org-indent)) line-prefix "" fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -12620) (undo-tree-id74 . -1) 12621) nil (26461 62026 619718 293000) 0 nil])
+([nil nil ((#("
+" 0 1 (wrap-prefix #("* " 0 2 (face org-indent)) line-prefix "" fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -10029) (undo-tree-id73 . -1) 10030) nil (26461 62026 619716 398000) 0 nil])
+([nil nil ((28301 . 28302)) nil (26461 62026 619713 994000) 0 nil])
+([nil nil ((#("*" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -28301) (undo-tree-id72 . -1) 28302) nil (26461 62026 619712 868000) 0 nil])
+([nil nil ((28301 . 28304)) nil (26461 62026 619701 914000) 0 nil])
+([nil nil ((28304 . 28306)) nil (26461 62026 619701 76000) 0 nil])
+([nil nil ((28306 . 28307)) nil (26461 62026 619700 594000) 0 nil])
+([nil nil ((28307 . 28314)) nil (26461 62026 619700 30000) 0 nil])
+([nil nil ((28314 . 28327)) nil (26461 62026 619699 405000) 0 nil])
+([nil nil ((28327 . 28333)) nil (26461 62026 619698 775000) 0 nil])
+([nil nil ((28333 . 28334)) nil (26461 62026 619698 100000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 28628 . 28629) (nil fontified nil 28619 . 28629) (nil fontified nil 28585 . 28619) (nil fontified nil 28547 . 28585) (nil fontified nil 28510 . 28547) (nil fontified nil 28470 . 28510) (nil fontified nil 28460 . 28470) (nil fontified nil 28459 . 28460) (nil fontified nil 28437 . 28459) (nil fontified nil 28418 . 28437) (nil fontified nil 28398 . 28418) (nil fontified nil 28379 . 28398) (nil fontified nil 28357 . 28379) (nil fontified nil 28334 . 28357) (28334 . 28629)) nil (26461 62026 619697 263000) 0 nil])
+([nil nil ((28641 . 28643) (28630 . 37033) (#("
+" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified nil)) . 28630) (28629 . 28631)) nil (26461 62026 619694 998000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 37111 . 37112) (nil fontified nil 37102 . 37112) (nil fontified nil 37084 . 37102) (nil fontified nil 37058 . 37084) (nil fontified nil 37035 . 37058) (37035 . 37112)) nil (26461 62026 619693 832000) 0 nil])
+([nil nil ((37034 . 37035)) nil (26461 62026 619692 289000) 0 nil])
+([nil nil ((37114 . 37142) (#("
+" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified nil)) . 37114) (37113 . 37115)) nil (26461 62026 619687 761000) 0 nil])
+([nil nil ((37142 . 37144) (t 26461 62026 740946 448000)) nil (26462 383 868495 731000) 0 nil])
+([nil nil ((#("*" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified t)) . -37142) (undo-tree-id76 . -1) (#("*" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified t)) . -37143) (undo-tree-id77 . -1) 37144) nil (26462 383 868494 220000) 0 nil])
+([nil nil ((37142 . 37143)) nil (26462 383 868480 918000) 0 nil])
+([nil nil ((37143 . 37149)) nil (26462 383 868480 309000) 0 nil])
+([nil nil ((37149 . 37168)) nil (26462 383 868479 798000) 0 nil])
+([nil nil ((37168 . 37170)) nil (26462 383 868479 192000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 37913 . 37914) (nil fontified nil 37904 . 37914) (nil fontified nil 37854 . 37904) (nil fontified nil 37805 . 37854) (nil fontified nil 37777 . 37805) (nil fontified nil 37715 . 37777) (nil fontified nil 37705 . 37715) (nil fontified nil 37688 . 37705) (nil fontified nil 37687 . 37688) (nil fontified nil 37614 . 37687) (nil fontified nil 37592 . 37614) (nil fontified nil 37508 . 37592) (nil fontified nil 37490 . 37508) (nil fontified nil 37453 . 37490) (nil fontified nil 37435 . 37453) (nil fontified nil 37434 . 37435) (nil fontified nil 37360 . 37434) (nil fontified nil 37338 . 37360) (nil fontified nil 37265 . 37338) (nil fontified nil 37247 . 37265) (nil fontified nil 37211 . 37247) (nil fontified nil 37193 . 37211) (nil fontified nil 37170 . 37193) (37170 . 37914)) nil (26462 383 868477 667000) 0 nil])
+([nil current ((37926 . 37928) (37915 . 37950) (#("
+" 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified nil)) . 37915) (37914 . 37916)) nil (26462 383 868468 892000) 0 nil])
 nil

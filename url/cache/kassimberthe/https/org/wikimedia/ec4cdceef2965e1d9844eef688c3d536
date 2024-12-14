@@ -1,0 +1,48 @@
+HTTP/1.1 200 OK
+cache-control: s-maxage=864000, max-age=86400
+content-type: image/svg+xml; charset=utf-8; profile="https://www.mediawiki.org/wiki/Specs/SVG/1.0.0"
+x-resource-location: 979236eb049f13fa685f313ec9105ff33e8ebe61
+access-control-allow-origin: *
+access-control-allow-methods: GET,HEAD
+access-control-allow-headers: accept, content-type, content-length, cache-control, accept-language, api-user-agent, if-match, if-modified-since, if-none-match, dnt, accept-encoding
+access-control-expose-headers: etag
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+referrer-policy: origin-when-cross-origin
+x-xss-protection: 1; mode=block
+content-security-policy: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+x-content-security-policy: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+x-webkit-csp: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+server: restbase1035
+date: Sat, 14 Dec 2024 08:29:12 GMT
+vary: Accept-Encoding
+age: 49290
+x-cache: cp6010 miss, cp6013 hit/14
+x-cache-status: hit-front
+server-timing: cache;desc="hit-front", host;desc="cp6013"
+strict-transport-security: max-age=106384710; includeSubDomains; preload
+report-to: { "group": "wm_nel", "max_age": 604800, "endpoints": [{ "url": "https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0" }] }
+nel: { "report_to": "wm_nel", "max_age": 604800, "failure_fraction": 0.05, "success_fraction": 0.0}
+set-cookie: WMF-Last-Access=14-Dec-2024;Path=/;HttpOnly;secure;Expires=Wed, 15 Jan 2025 12:00:00 GMT
+set-cookie: WMF-Last-Access-Global=14-Dec-2024;Path=/;Domain=.wikimedia.org;HttpOnly;secure;Expires=Wed, 15 Jan 2025 12:00:00 GMT
+x-client-ip: 2a04:cec0:1930:6819:f983:3869:474:7c13
+set-cookie: GeoIP=FR:IDF:Paris:48.83:2.41:v4; Path=/; secure; Domain=.wikimedia.org
+set-cookie: NetworkProbeLimit=0.001;Path=/;Secure;SameSite=Lax;Max-Age=3600
+accept-ranges: bytes
+content-length: 1259
+
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="7.206ex" height="2.343ex" style="vertical-align: -0.505ex;" viewBox="0 -791.3 3102.4 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">{\displaystyle 4m+1}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-34" d="M462 0Q444 3 333 3Q217 3 199 0H190V46H221Q241 46 248 46T265 48T279 53T286 61Q287 63 287 115V165H28V211L179 442Q332 674 334 675Q336 677 355 677H373L379 671V211H471V165H379V114Q379 73 379 66T385 54Q393 47 442 46H471V0H462ZM293 211V545L74 212L183 211H293Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6D" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-34" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6D" x="500" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2B" x="1601" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="2601" y="0"></use>
+</g>
+</svg>

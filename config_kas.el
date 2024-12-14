@@ -512,3 +512,39 @@
 
   :config
   (add-hook 'calc-trail-mode-hook 'evil-insert-state))
+
+(use-package web-mode
+  :mode ("\\.erb$"
+         "\\.html$"
+         "\\.php$"
+         "\\.rhtml$")
+
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-indent-style 2))
+
+(use-package rainbow-mode
+  :hook web-mode)
+
+(eval-and-compile
+  (defun eww-browse-wikipedia-en ()
+    (interactive)
+    (let ((search (read-from-minibuffer "Recherche Wikipédia (EN) : ")))
+      (eww-browse-url
+       (concat "https://en.wikipedia.org/w/index.php?search=" search)))))
+
+(eval-and-compile
+  (defun eww-browser-english-dict ()
+    (interactive)
+    (let ((search (read-from-minibuffer "Recherche dans le dictionnaire (EN) : ")))
+      (eww-browse-url
+       (concat "https://www.merriam-webster.com/dictionary/" search)))))
+
+(use-package eww
+  :config
+  (setq eww-search-prefix "https://startpage.com/search/?q=")
+  :bind (("C-c w b" . 'eww)
+         ("C-c w d" . 'eww-browser-english-dict)
+         ("C-c w w" . 'eww-browse-wikipedia-en)))

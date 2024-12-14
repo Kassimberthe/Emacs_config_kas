@@ -1,0 +1,66 @@
+HTTP/1.1 200 OK
+cache-control: s-maxage=864000, max-age=86400
+content-type: image/svg+xml; charset=utf-8; profile="https://www.mediawiki.org/wiki/Specs/SVG/1.0.0"
+x-resource-location: e586772938f1fe6118c8c9f32ef6e485c4957189
+access-control-allow-origin: *
+access-control-allow-methods: GET,HEAD
+access-control-allow-headers: accept, content-type, content-length, cache-control, accept-language, api-user-agent, if-match, if-modified-since, if-none-match, dnt, accept-encoding
+access-control-expose-headers: etag
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+referrer-policy: origin-when-cross-origin
+x-xss-protection: 1; mode=block
+content-security-policy: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+x-content-security-policy: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+x-webkit-csp: default-src 'none'; media-src *; img-src *; style-src *;frame-ancestors 'self'
+server: restbase1037
+date: Sat, 14 Dec 2024 22:10:39 GMT
+vary: Accept-Encoding
+age: 0
+x-cache: cp6015 miss, cp6013 miss
+x-cache-status: miss
+server-timing: cache;desc="miss", host;desc="cp6013"
+strict-transport-security: max-age=106384710; includeSubDomains; preload
+report-to: { "group": "wm_nel", "max_age": 604800, "endpoints": [{ "url": "https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0" }] }
+nel: { "report_to": "wm_nel", "max_age": 604800, "failure_fraction": 0.05, "success_fraction": 0.0}
+set-cookie: WMF-Last-Access=14-Dec-2024;Path=/;HttpOnly;secure;Expires=Wed, 15 Jan 2025 12:00:00 GMT
+set-cookie: WMF-Last-Access-Global=14-Dec-2024;Path=/;Domain=.wikimedia.org;HttpOnly;secure;Expires=Wed, 15 Jan 2025 12:00:00 GMT
+x-client-ip: 2a04:cec0:1930:6819:f983:3869:474:7c13
+set-cookie: GeoIP=FR:IDF:Paris:48.83:2.41:v4; Path=/; secure; Domain=.wikimedia.org
+set-cookie: NetworkProbeLimit=0.001;Path=/;Secure;SameSite=Lax;Max-Age=3600
+accept-ranges: bytes
+transfer-encoding: chunked
+
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="17.033ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 7333.5 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">{\displaystyle \Re (z_{1}),\Re (z_{2})&gt;0}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJFRAK-52" d="M27 496Q31 569 102 627T234 685Q236 685 241 685T251 686Q287 686 318 672T367 638T399 598T418 564L423 550Q424 554 434 567T463 601T505 639T561 671T626 685Q672 685 688 659T710 572Q713 533 721 523T766 513Q781 513 787 514T794 516Q796 512 798 509T801 504T802 501T787 493Q702 461 624 401L607 389Q655 383 688 358L697 352V342Q699 330 699 297Q704 209 710 173T734 103Q751 69 765 69Q769 69 806 83L824 90V74Q823 73 759 24T693 -26Q692 -26 660 32L628 90L629 111Q631 159 631 177Q631 278 614 300Q584 340 523 340Q500 340 467 333T431 325Q429 325 429 322Q428 321 426 308T420 275T410 230T392 178T366 125L358 112L342 99Q306 70 269 38T213 -10T193 -26Q192 -26 163 0T116 26Q82 26 50 -8L42 -16L35 -8L27 0L35 10Q43 21 58 38T104 80T158 106Q179 106 218 65L235 48Q238 48 255 60T295 99T329 158Q352 231 352 359Q352 555 242 614Q210 628 187 628Q140 628 116 600T91 548Q91 522 138 464T185 382V376Q185 345 158 313T103 263L76 246Q74 244 64 253L54 260L65 267Q91 285 100 302Q111 318 111 337Q111 355 69 410T27 496ZM562 628Q504 628 443 507L435 491L436 479Q437 471 437 446Q437 396 432 351L529 389L602 426Q673 462 673 463H672Q644 470 637 483T622 553Q608 628 562 628Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-7A" d="M347 338Q337 338 294 349T231 360Q211 360 197 356T174 346T162 335T155 324L153 320Q150 317 138 317Q117 317 117 325Q117 330 120 339Q133 378 163 406T229 440Q241 442 246 442Q271 442 291 425T329 392T367 375Q389 375 411 408T434 441Q435 442 449 442H462Q468 436 468 434Q468 430 463 420T449 399T432 377T418 358L411 349Q368 298 275 214T160 106L148 94L163 93Q185 93 227 82T290 71Q328 71 360 90T402 140Q406 149 409 151T424 153Q443 153 443 143Q443 138 442 134Q425 72 376 31T278 -11Q252 -11 232 6T193 40T155 57Q111 57 76 -3Q70 -11 59 -11H54H41Q35 -5 35 -2Q35 13 93 84Q132 129 225 214T340 322Q352 338 347 338Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3E" d="M84 520Q84 528 88 533T96 539L99 540Q106 540 253 471T544 334L687 265Q694 260 694 250T687 235Q685 233 395 96L107 -40H101Q83 -38 83 -20Q83 -19 83 -17Q82 -10 98 -1Q117 9 248 71Q326 108 378 132L626 250L378 368Q90 504 86 509Q84 513 84 520Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJFRAK-52" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="828" y="0"></use>
+<g transform="translate(1218,0)">
+ <use xlink:href="#E1-MJMATHI-7A" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="658" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-29" x="2137" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2526" y="0"></use>
+ <use xlink:href="#E1-MJFRAK-52" x="2972" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="3800" y="0"></use>
+<g transform="translate(4190,0)">
+ <use xlink:href="#E1-MJMATHI-7A" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-32" x="658" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-29" x="5109" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3E" x="5776" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="6833" y="0"></use>
+</g>
+</svg>

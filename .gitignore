@@ -1,0 +1,6 @@
+# Ignore Emacs backup and autosave files
+*~
+.#*
+*.elc
+.emacs.desktop
+.emacs.d/elpa/
