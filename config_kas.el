@@ -461,6 +461,9 @@
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)  ;; Définit la fonction de configuration des fenêtres pour l'affichage d'Ediff
   (setq ediff-split-window-function 'split-window-horizontally))  ;; Définit la méthode de découpage de fenêtre (ici, horizontalement)
 
+;; Activer M-x command-log-mode
+  (use-package command-log-mode)
+
 (use-package magit
   :ensure-system-package git  ;; Vérifie que Git est installé sur le système
   :hook (with-editor-mode . evil-insert-state)  ;; Mettre `evil-insert-state` quand `with-editor-mode` est activé
@@ -603,5 +606,57 @@
   :after python-mode
   :hook (elpy-mode-hook . py-autopep8-enable-on-save))
 
-(add-to-list 'load-path "/home/kassimberthe/.emacs.d/ox-ipynb")
-(require 'ox-ipynb)
+(use-package org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh"    . "src sh")               ;; Shell script
+                  ("el"    . "src emacs-lisp")       ;; Emacs Lisp
+                  ("li"    . "src lisp")             ;; Lisp
+                  ("sc"    . "src scheme")           ;; Scheme
+                  ("py"    . "src python")           ;; Python
+                  ("pys"   . "src python :session my_session") ;; Python session
+                  ("pyp"   . "src python :session my_session :results output") ;; Python with output
+                  ("pyv"   . "src python :session my_session :results value") ;; Python with value
+                  ("pyg"   . "src python :session my_session :results file :file graph.png") ;; Python with graph file
+                  ("yaml"  . "src yaml")             ;; YAML
+                  ("json"  . "src json")             ;; JSON
+                  ("cpp"   . "src C++")              ;; C++
+                  ("tex"   . "src latex")))          ;; LaTeX
+    (add-to-list 'org-structure-template-alist item)))
+
+(use-package ox-pandoc
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t  ;; Installe automatiquement si non disponible
+  :mode "\\.md\\'"  ;; Active markdown-mode pour les fichiers .md
+  :config
+  (setq markdown-command "pandoc") ;; Utilise Pandoc pour convertir Markdown
+  (setq markdown-enable-math t) ;; Active le support des mathématiques
+  (setq markdown-fontify-code-blocks-natively t) ;; Syntaxe des blocs de code colorée
+
+  ;; Préférences pour une meilleure lisibilité
+  (add-hook 'markdown-mode-hook #'visual-line-mode) ;; Active la coupure visuelle des lignes
+  (add-hook 'markdown-mode-hook #'variable-pitch-mode) ;; Active une police proportionnelle
+  (add-hook 'markdown-mode-hook #'visual-fill-column-mode) ;; Centre le texte
+
+  ;; Désactiver les numéros de ligne dans markdown-mode
+  (add-hook 'markdown-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+(use-package visual-fill-column
+  :ensure t
+  :config
+  (setq visual-fill-column-width 80
+        visual-fill-column-center-text t))
+
+(with-eval-after-load 'org
+  (require 'ox-md)) ;; Charge l'exportateur Markdown
+
+;;; ipynb
+;; Cloner le dépôt ox-ipynb
+;; git clone https://github.com/jkitchin/ox-ipynb.git
+
+;; Installer et configurer ox-ipynb
+(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")  ;; Ajouter ox-ipynb au chemin de chargement
+(require 'ox-ipynb)  ;; Charger le paquet ox-ipynb
