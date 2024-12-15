@@ -347,6 +347,41 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 #+RESULTS:
 : t
 
+** Autocomplétion
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :defer 2
+  :diminish
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay 0.1) ;; Temps d'attente avant l'affichage des suggestions
+  (company-minimum-prefix-length 2) ;; Longueur minimale du préfixe pour afficher les suggestions
+  (company-show-numbers t) ;; Affiche les numéros pour les suggestions
+  (company-tooltip-align-annotations t) ;; Aligne les annotations dans la bulle d'aide
+  :config
+  (global-company-mode t)) ;; Active le mode global pour Company
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-box
+  :after company
+  :hook (company-mode . company-box-mode)
+  :diminish)
+#+END_SRC
+
+#+RESULTS:
+| company-box-mode | company-mode-set-explicitly |
+
 * Personnalisation du mode line
 ** Mode line
 #+BEGIN_SRC emacs-lisp
@@ -767,7 +802,39 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 #+RESULTS:
 
+** Sudo edit
+
+#+BEGIN_SRC emacs-lisp
+(use-package sudo-edit
+  :commands (sudo-edit))
+#+END_SRC
+
+#+RESULTS:
+
+** Cron: ajouter la coloration au fichier
+
+#+BEGIN_SRC emacs-lisp
+(use-package crontab-mode)
+#+END_SRC
+
+#+RESULTS:
+
+** Calculatrice
+
+#+BEGIN_SRC emacs-lisp
+(use-package calc
+  :ensure nil
+
+  :config
+  (add-hook 'calc-trail-mode-hook 'evil-insert-state))
+#+END_SRC
+
+#+RESULTS:
+: t
+*
+
 * Magit et git
+** Magit
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
@@ -813,41 +880,14 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 #+RESULTS:
 : magit-status
 
+** Git-timemachine
+
 #+BEGIN_SRC emacs-lisp
 (use-package git-timemachine)
 #+END_SRC
 
 #+RESULTS:
 
-** Sudo edit
-
-#+BEGIN_SRC emacs-lisp
-(use-package sudo-edit
-  :commands (sudo-edit))
-#+END_SRC
-
-#+RESULTS:
-
-** Cron: ajouter la coloration au fichier
-
-#+BEGIN_SRC emacs-lisp
-(use-package crontab-mode)
-#+END_SRC
-
-#+RESULTS:
-
-** Calculatrice
-
-#+BEGIN_SRC emacs-lisp
-(use-package calc
-  :ensure nil
-
-  :config
-  (add-hook 'calc-trail-mode-hook 'evil-insert-state))
-#+END_SRC
-
-#+RESULTS:
-: t
 * Web
 ** Exportation vers le web
 #+BEGIN_SRC emacs-lisp
@@ -1096,16 +1136,141 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 ** Jupyter-Notebook (ipynb)
 
 #+BEGIN_SRC emacs-lisp
-;;; ipynb
-;; Cloner le dépôt ox-ipynb
-;; git clone https://github.com/jkitchin/ox-ipynb.git
+;; Ajouter ox-ipynb au chemin de chargement
+(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")
 
-;; Installer et configurer ox-ipynb
-(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")  ;; Ajouter ox-ipynb au chemin de chargement
-(require 'ox-ipynb)  ;; Charger le paquet ox-ipynb
+;; Charger le paquet ox-ipynb
+(require 'ox-ipynb)
+
+;; Activer l'exportation vers Jupyter Notebook
+(setq org-export-backends '(ipynb)) ;; Ajoute `ipynb` comme backend d'exportation
+
+;; Assurez-vous d'avoir des blocs de code correctement formatés dans Org
 #+END_SRC
 
 #+RESULTS:
-: ox-ipynb
+| ipynb |
 
+* Mode graphique
 
+#+BEGIN_SRC emacs-lisp
+;;; Apparence de base ---------------------------------------
+
+;; Interface utilisateur minimaliste
+(setq inhibit-startup-screen t)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+
+;; Laissez l'arrière-plan du bureau apparaître
+(set-frame-parameter (selected-frame) 'alpha '(97 . 100))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+
+;;; Thème et polices ----------------------------------------
+
+;; Installer doom-themes si nécessaire
+(unless (package-installed-p 'doom-themes)
+  (package-install 'doom-themes))
+
+;; Charger Doom-Palenight pour le look System Crafters
+(load-theme 'doom-palenight t)
+
+;; Définir des variables pour les polices
+(defvar my/fixed-width-font "JetBrains Mono"
+  "Police à espacement fixe.")
+(defvar my/variable-width-font "Iosevka Aile"
+  "Police à espacement variable.")
+
+;; Configurer les polices
+(set-face-attribute 'default nil :font my/fixed-width-font :weight 'light :height 180)
+(set-face-attribute 'fixed-pitch nil :font my/fixed-width-font :weight 'light :height 190)
+(set-face-attribute 'variable-pitch nil :font my/variable-width-font :weight 'light :height 1.3)
+
+;;; Apparence du mode Org ------------------------------------
+
+;; Charger org-faces
+(require 'org-faces)
+
+;; Masquer les marqueurs d'emphase
+(setq org-hide-emphasis-markers t)
+
+;; Redimensionner les en-têtes dans Org
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+  (set-face-attribute (car face) nil :font my/variable-width-font :weight 'medium :height (cdr face)))
+
+;; Agrandir le titre du document
+(set-face-attribute 'org-document-title nil :font my/variable-width-font :weight 'bold :height 1.3)
+
+;; Configurer les faces spécifiques d'Org pour utiliser fixed-pitch
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;;; Centrage des documents Org --------------------------------
+
+;; Installer visual-fill-column si nécessaire
+(unless (package-installed-p 'visual-fill-column)
+  (package-install 'visual-fill-column))
+
+;; Configurer la largeur de remplissage
+(setq visual-fill-column-width 110
+      visual-fill-column-center-text t)
+
+;;; Présentations avec Org-Present ---------------------------
+
+;; Installer org-present si nécessaire
+(unless (package-installed-p 'org-present)
+  (package-install 'org-present))
+
+(defun my/org-present-prepare-slide (buffer-name heading)
+  "Préparez une diapositive en affichant uniquement les sous-titres directs."
+  (org-overview)
+  (org-show-entry)
+  (org-show-children))
+
+(defun my/org-present-start ()
+  "Configurer les paramètres pour démarrer une présentation avec org-present."
+  (setq-local face-remapping-alist
+              '((default (:height 1.5) variable-pitch)
+                (header-line (:height 4.0) variable-pitch)
+                (org-document-title (:height 1.75) org-document-title)
+                (org-code (:height 1.55) org-code)
+                (org-verbatim (:height 1.55) org-verbatim)
+                (org-block (:height 1.25) org-block)
+                (org-block-begin-line (:height 0.7) org-block)))
+  (setq header-line-format " ") ;; Espace vide en haut
+  (org-display-inline-images)   ;; Afficher les images en ligne
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
+
+(defun my/org-present-end ()
+  "Réinitialiser les paramètres à la fin d'une présentation org-present."
+  (setq-local face-remapping-alist '((default variable-pitch default)))
+  (setq header-line-format nil)
+  (org-remove-inline-images)
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0))
+
+;; Activer les polices à pas variable dans Org mode
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+
+;; Configurer org-present
+(add-hook 'org-present-mode-hook 'my/org-present-start)
+(add-hook 'org-present-mode-quit-hook 'my/org-present-end)
+(add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide)
+#+END_SRC
+
+#+RESULTS:
+| my/org-present-prepare-slide |
