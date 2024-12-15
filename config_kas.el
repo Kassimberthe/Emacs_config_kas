@@ -548,3 +548,60 @@
   :bind (("C-c w b" . 'eww)
          ("C-c w d" . 'eww-browser-english-dict)
          ("C-c w w" . 'eww-browse-wikipedia-en)))
+
+(setq-default tab-width 2)
+
+(use-package subword
+  :config (global-subword-mode 1))
+
+;; Activer les langages dans Org Babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)   ;; Activer Emacs Lisp
+   (shell . t)        ;; Activer Shell
+   (python . t)       ;; Activer Python
+   (C . t)            ;; Activer C et C++
+   (R . t)))          ;; Activer R
+
+;; Utiliser org-tempo pour ajouter des raccourcis pour les blocs de code
+(use-package org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh" . "src sh")
+                  ("el" . "src emacs-lisp")
+                  ("li" . "src lisp")
+                  ("sc" . "src scheme")
+                  ("ts" . "src typescript")
+                  ("py" . "src python")
+                  ("yaml" . "src yaml")
+                  ("json" . "src json")
+                  ("c" . "src C")
+                  ("r" . "src R")
+    (add-to-list 'org-structure-template-alist item)))))
+
+(setq python-shell-interpreter "python3")
+
+(setq org-babel-python-command "python3")
+(setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
+
+(setq org-babel-python-command "python3")
+
+(use-package python-mode
+  :hook (python-mode . eglot-ensure))
+
+(use-package elpy
+  :after python-mode
+
+  :custom
+  (elpy-rpc-python-command "python3")
+
+  :config
+  (elpy-enable))
+
+(use-package py-autopep8
+  :after python-mode
+  :hook (elpy-mode-hook . py-autopep8-enable-on-save))
+
+(add-to-list 'load-path "/home/kassimberthe/.emacs.d/ox-ipynb")
+(require 'ox-ipynb)

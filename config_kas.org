@@ -893,3 +893,120 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 #+RESULTS:
 : eww-browse-wikipedia-en
+
+* Environnement de programmation
+
+** Profondeur de retrait et camelcase
+
+#+BEGIN_SRC emacs-lisp
+(setq-default tab-width 2)
+#+END_SRC
+
+#+RESULTS:
+: 2
+
+#+BEGIN_SRC emacs-lisp
+(use-package subword
+  :config (global-subword-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Activation des langages de programmation
+
+#+BEGIN_SRC emacs-lisp
+;; Activer les langages dans Org Babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)   ;; Activer Emacs Lisp
+   (shell . t)        ;; Activer Shell
+   (python . t)       ;; Activer Python
+   (C . t)            ;; Activer C et C++
+   (R . t)))          ;; Activer R
+#+END_SRC
+
+#+RESULTS:
+
+** Raccourcis pour les blocs
+
+#+BEGIN_SRC emacs-lisp
+;; Utiliser org-tempo pour ajouter des raccourcis pour les blocs de code
+(use-package org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh" . "src sh")
+                  ("el" . "src emacs-lisp")
+                  ("li" . "src lisp")
+                  ("sc" . "src scheme")
+                  ("ts" . "src typescript")
+                  ("py" . "src python")
+                  ("yaml" . "src yaml")
+                  ("json" . "src json")
+                  ("c" . "src C")
+                  ("r" . "src R")
+    (add-to-list 'org-structure-template-alist item)))))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Python
+
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "python3")
+#+END_SRC
+
+#+RESULTS:
+: python3
+
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-python-command "python3")
+(setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
+#+END_SRC
+
+#+RESULTS:
+: /usr/bin:/home/kassimberthe/.cask/bin:/home/kassimberthe/.cask/bin:/home/kassimberthe/anaconda3/bin:/snap/bin:/home/kassimberthe/.local/bin:/snap/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/emacs/current/usr/bin
+
+
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-python-command "python3")
+#+END_SRC
+
+#+RESULTS:
+: python3
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package python-mode
+  :hook (python-mode . eglot-ensure))
+#+END_SRC
+
+#+RESULTS:
+| eglot-ensure | doom-modeline-env-setup-python |
+
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :after python-mode
+
+  :custom
+  (elpy-rpc-python-command "python3")
+
+  :config
+  (elpy-enable))
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+(use-package py-autopep8
+  :after python-mode
+  :hook (elpy-mode-hook . py-autopep8-enable-on-save))
+#+END_SRC
+
+#+RESULTS:
+* Exportation
+
+
+
