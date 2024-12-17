@@ -172,6 +172,11 @@
               (LaTeX-math-mode)
               (setq TeX-master t))))
 
+(with-eval-after-load 'org
+  (setq org-file-apps
+        '((auto-mode . emacs)
+          ("\\.pdf\\'" . "evince %s"))))
+
 (use-package pdf-tools
   :if (not (eq system-type 'windows-nt))
   :config
@@ -211,6 +216,8 @@
   :after company
   :hook (company-mode . company-box-mode)
   :diminish)
+
+(setq org-hide-emphasis-markers t)
 
 (use-package doom-modeline
   :ensure t
@@ -283,6 +290,11 @@
 
 (setq save-place-forget-unreadable-files nil)  ; Conserver la position même pour les fichiers illisibles
 (save-place-mode 1)  ; Activer le mode de sauvegarde de la position
+
+;; Chargement et configuration du package 'pulsar'
+(use-package pulsar
+  :ensure t ;; Assure que le package est installé s'il ne l'est pas
+  :bind ("<f8>" . pulsar-pulse-line)) ;; Associe la touche F8 à la commande 'pulsar-pulse-line'
 
 (use-package which-key
   :demand t ;; Charge immédiatement `which-key` au démarrage d'Emacs
@@ -499,6 +511,13 @@
   :config
   (add-hook 'calc-trail-mode-hook 'evil-insert-state))
 
+;; Configuration du package yasnippet pour gérer les snippets
+(use-package yasnippet
+  :demand t ;; Charge immédiatement yasnippet
+  :config
+  (setq yas-indent-line 'auto) ;; Indente automatiquement les lignes dans les snippets
+  (yas-global-mode 1)) ;; Active yasnippet globalement
+
 (use-package magit
   :ensure-system-package git  ;; Vérifie que Git est installé sur le système
   :hook (with-editor-mode . evil-insert-state)  ;; Mettre `evil-insert-state` quand `with-editor-mode` est activé
@@ -581,14 +600,15 @@
 (use-package subword
   :config (global-subword-mode 1))
 
-;; Activer les langages dans Org Babel
+;; Charger les langages de programmation
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((emacs-lisp . t)   ;; Activer Emacs Lisp
-   (shell . t)        ;; Activer Shell
-   (python . t)       ;; Activer Python
-   (C . t)            ;; Activer C et C++
-   (R . t)))          ;; Activer R
+ '((emacs-lisp . t)  ;; Activer Emacs Lisp
+   (shell . t)       ;; Activer Shell
+   (python . t)      ;; Activer Python
+   (ruby . t)        ;; Activer Ruby
+   ;; (C++ . t)       ;; Activer C++ (désactivé pour l'instant)
+   (latex . t)))     ;; Activer LaTeX
 
 ;; Utiliser org-tempo pour ajouter des raccourcis pour les blocs de code
 (use-package org-tempo
@@ -607,28 +627,8 @@
                   ("r" . "src R")
     (add-to-list 'org-structure-template-alist item)))))
 
-(setq python-shell-interpreter "python3")
-
+;; Utiliser Python 3 comme interpréteur pour Org-Babel
 (setq org-babel-python-command "python3")
-(setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
-
-(setq org-babel-python-command "python3")
-
-(use-package python-mode
-  :hook (python-mode . eglot-ensure))
-
-(use-package elpy
-  :after python-mode
-
-  :custom
-  (elpy-rpc-python-command "python3")
-
-  :config
-  (elpy-enable))
-
-(use-package py-autopep8
-  :after python-mode
-  :hook (elpy-mode-hook . py-autopep8-enable-on-save))
 
 (use-package org-tempo
   :ensure nil
@@ -688,133 +688,28 @@
 
 ;; Assurez-vous d'avoir des blocs de code correctement formatés dans Org
 
-;;; Désactiver la numérotation des lignes dans Markdown et Notebook -*- lexical-binding: t; -*-
+;; Activer visual-fill-column dans Org mode pour simuler des marges
+(add-hook 'org-mode-hook 'visual-fill-column-mode)
 
-;; Désactiver les numéros de ligne pour markdown-mode
-(add-hook 'markdown-mode-hook 
-          (lambda () (display-line-numbers-mode -1)))
+;; Définir la largeur de la page à 80 caractères (par exemple)
+(setq visual-fill-column-width 80)
 
+;; Centrer le texte dans la fenêtre
+(setq visual-fill-column-center-text t)
 
-;; Désactiver les numéros de ligne pour les notebooks Jupyter (ein:notebook-mode)
-(add-hook 'ein:notebook-mode-hook 
-          (lambda () (display-line-numbers-mode -1)))
+;; Configurer fill-column pour les retours à la ligne à 80 caractères
+(setq-default fill-column 80)
 
-(add-hook 'ein:notebook-multilang-mode-hook 
-          (lambda () (display-line-numbers-mode -1)))
+;; Activer auto-fill-mode dans Org mode pour forcer les retours à la ligne
+(add-hook 'org-mode-hook 'auto-fill-mode)
 
-;;; Apparence de base ---------------------------------------
+;; Équilibrer automatiquement les fenêtres après suppression
+(advice-add #'delete-window
+            :after #'(lambda (&rest _)
+                       (balance-windows))) ;; Appelle 'balance-windows' après 'delete-window'
 
-;; Interface utilisateur minimaliste
-(setq inhibit-startup-screen t)
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-
-;; Laissez l'arrière-plan du bureau apparaître
-(set-frame-parameter (selected-frame) 'alpha '(97 . 100))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-
-;;; Thème et polices ----------------------------------------
-
-;; Installer doom-themes si nécessaire
-(unless (package-installed-p 'doom-themes)
-  (package-install 'doom-themes))
-
-;; Charger Doom-Palenight pour le look System Crafters
-(load-theme 'doom-palenight t)
-
-;; Définir des variables pour les polices
-(defvar my/fixed-width-font "JetBrains Mono"
-  "Police à espacement fixe.")
-(defvar my/variable-width-font "Iosevka Aile"
-  "Police à espacement variable.")
-
-;; Configurer les polices
-(set-face-attribute 'default nil :font my/fixed-width-font :weight 'light :height 180)
-(set-face-attribute 'fixed-pitch nil :font my/fixed-width-font :weight 'light :height 190)
-(set-face-attribute 'variable-pitch nil :font my/variable-width-font :weight 'light :height 1.3)
-
-;;; Apparence du mode Org ------------------------------------
-
-;; Charger org-faces
-(require 'org-faces)
-
-;; Masquer les marqueurs d'emphase
-(setq org-hide-emphasis-markers t)
-
-;; Redimensionner les en-têtes dans Org
-(dolist (face '((org-level-1 . 1.2)
-                (org-level-2 . 1.1)
-                (org-level-3 . 1.05)
-                (org-level-4 . 1.0)
-                (org-level-5 . 1.1)
-                (org-level-6 . 1.1)
-                (org-level-7 . 1.1)
-                (org-level-8 . 1.1)))
-  (set-face-attribute (car face) nil :font my/variable-width-font :weight 'medium :height (cdr face)))
-
-;; Agrandir le titre du document
-(set-face-attribute 'org-document-title nil :font my/variable-width-font :weight 'bold :height 1.3)
-
-;; Configurer les faces spécifiques d'Org pour utiliser fixed-pitch
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-;;; Centrage des documents Org --------------------------------
-
-;; Installer visual-fill-column si nécessaire
-(unless (package-installed-p 'visual-fill-column)
-  (package-install 'visual-fill-column))
-
-;; Configurer la largeur de remplissage
-(setq visual-fill-column-width 110
-      visual-fill-column-center-text t)
-
-;;; Présentations avec Org-Present ---------------------------
-
-;; Installer org-present si nécessaire
-(unless (package-installed-p 'org-present)
-  (package-install 'org-present))
-
-(defun my/org-present-prepare-slide (buffer-name heading)
-  "Préparez une diapositive en affichant uniquement les sous-titres directs."
-  (org-overview)
-  (org-show-entry)
-  (org-show-children))
-
-(defun my/org-present-start ()
-  "Configurer les paramètres pour démarrer une présentation avec org-present."
-  (setq-local face-remapping-alist
-              '((default (:height 1.5) variable-pitch)
-                (header-line (:height 4.0) variable-pitch)
-                (org-document-title (:height 1.75) org-document-title)
-                (org-code (:height 1.55) org-code)
-                (org-verbatim (:height 1.55) org-verbatim)
-                (org-block (:height 1.25) org-block)
-                (org-block-begin-line (:height 0.7) org-block)))
-  (setq header-line-format " ") ;; Espace vide en haut
-  (org-display-inline-images)   ;; Afficher les images en ligne
-  (visual-fill-column-mode 1)
-  (visual-line-mode 1))
-
-(defun my/org-present-end ()
-  "Réinitialiser les paramètres à la fin d'une présentation org-present."
-  (setq-local face-remapping-alist '((default variable-pitch default)))
-  (setq header-line-format nil)
-  (org-remove-inline-images)
-  (visual-fill-column-mode 0)
-  (visual-line-mode 0))
-
-;; Activer les polices à pas variable dans Org mode
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-
-;; Configurer org-present
-(add-hook 'org-present-mode-hook 'my/org-present-start)
-(add-hook 'org-present-mode-quit-hook 'my/org-present-end)
-(add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide)
+;; Équilibrer les fenêtres et se déplacer après une division
+(advice-add #'split-window
+            :after #'(lambda (&rest _)
+                       (balance-windows) ;; Équilibre les fenêtres
+                       (other-window 1))) ;; Se déplace vers la nouvelle fenêtre

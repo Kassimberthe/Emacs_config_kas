@@ -1,4 +1,7 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/kassimberthe/.emacs.d/config_kas.org" . 57828)
- ("/home/kassimberthe/prog.org" . 1561)
+(("/home/kassimberthe/.emacs.d/config_kas.org" . 53310)
+ ("/home/kassimberthe/Documents/Article_sorbonne/question_article.org" . 47)
+ ("/home/kassimberthe/prog.org" . 7)
+ ("/home/kassimberthe/testnote.org" . 44)
+ ("/home/kassimberthe/testnote.ipynb" . 400)
  ("/home/kassimberthe/prog.ipynb" . 4027))
