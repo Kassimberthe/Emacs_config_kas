@@ -499,16 +499,16 @@
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
 		(:commit . "f632fa5f140b04260fa23b15ffccbfe5a787b2e2"))])
  (dslide .
-	 [(0 5 5)
+	 [(0 6 0)
 	  ((emacs
 	    (29 2)))
-	  "Domain Specific sLIDEs. A presentation framework" tar
+	  "Domain Specific sLIDEs. Programmable Presentation" tar
 	  ((:url . "https://github.com/positron-solutions/dslide")
 	   (:keywords "convenience" "org-mode" "presentation" "narrowing")
 	   (:maintainer "Positron" . "contact@positron.solutions")
 	   (:authors
 	    ("Positron" . "contact@positron.solutions"))
-	   (:commit . "0d9a1f6c27e0543e912213d0a5047999f9e5deb5"))])
+	   (:commit . "c90b3d65ef70808516bc639fb73e5e19359546d1"))])
  (eat .
       [(0 9 4)
        ((emacs
@@ -1317,7 +1317,7 @@
 	     ("Hrvoje Niksic" . "hniksic@gmail.com"))
 	    (:commit . "5d2751c4ca101fa0884ce8662f5566736f8257fe"))])
  (hyperdrive .
-	     [(0 5)
+	     [(0 5 1)
 	      ((emacs
 		(28 1))
 	       (map
@@ -1339,7 +1339,7 @@
 	       (:maintainer "Joseph Turner" . "~ushin/ushin@lists.sr.ht")
 	       (:authors
 		("Joseph Turner" . "joseph@ushin.org"))
-	       (:commit . "6159bd0ad03f9bed3acb6ab57b914bf4faf78ba5"))])
+	       (:commit . "165e1b1c6bd2bd3de1dec27325fada116153c822"))])
  (hyperdrive-org-transclusion .
 			      [(0 3 1)
 			       ((emacs
@@ -2049,7 +2049,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:commit . "1edda80e2e32b72e77f4f16ae5b83c312c68ee95"))])
  (racket-mode .
-	      [(1 0 20241216 83424)
+	      [(1 0 20241217 125843)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar

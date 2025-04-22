@@ -48,6 +48,10 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 *  Evil mode
 ** Undo-tree
+*Fonctionnement*: Il permet d'avoir accès aux différentes modifications
+du fichier avec la commande /M-x undo-tree-visualize/ entrer.
+u ie annuler la modification, r ie revenir sur la modif annulé,
+n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
   :demand t
@@ -220,15 +224,22 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 : --list
 
 ** Comparateur de fichier
-
+*Fonctionnement*:Il ajoute de la coloration en fonction de la modification du fichier
+suivi par git.
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
-  :config (global-diff-hl-mode t)
-  :hook (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+  :config
+  (global-diff-hl-mode t)
+  :hook
+  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+
+(setq diff-hl-change-color "green")   ;; Couleur pour les modifications (maintenant vert)
+(setq diff-hl-delete-color "red")     ;; Couleur pour les suppressions
+(setq diff-hl-insert-color "magenta")    ;; Couleur pour les ajouts (maintenant magenta)
 #+END_SRC
 
 #+RESULTS:
-| diff-hl-magit-post-refresh |
+: magenta
 
 ** Latex
 
@@ -272,33 +283,47 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
   :commands (org-export-dispatch)
 
   :custom
+  ;; Utilisation de minted pour les blocs de code
+  (org-latex-src-block-backend 'minted)
+  
+  ;; Compilation avec -shell-escape nécessaire pour minted
   (org-latex-pdf-process '("latexmk -xelatex -shell-escape -quiet -f %f"))
 
-  (org-latex-src-block-backend 'listings)
-  (org-latex-listings-options
-   '(("basicstyle" "\\ttfamily")
-     ("showstringspaces" "false")
-     ("keywordstyle" "\\color{blue}\\textbf")
-     ("commentstyle" "\\color{gray}")
-     ("stringstyle" "\\color{green!70!black}")
-     ("stringstyle" "\\color{red}")
-     ("frame" "single")
-     ("numbers" "left")
-     ("numberstyle" "\\ttfamily")
-     ("columns" "fullflexible")))
+  ;; Ajouter la définition de couleur dans le préambule LaTeX
+  (org-latex-header "  \\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
+  
+  ;; Packages à inclure dans le document LaTeX
+     (org-latex-packages-alist
+      '(("" "minted")                                     ;; pour les blocs de code colorés
+        ("" "booktabs")                                   ;; pour des tableaux plus jolis
+        ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; multilingue, version XeLaTeX-friendly de babel
+        ("" "grffile")                                    ;; support des noms de fichiers complexes
+  ;;      ("" "unicode-math")                               ;; meilleures polices pour les maths avec xelatex
+        ("" "xcolor")))                                   ;; support des couleurs dans LaTeX
 
-  (org-latex-packages-alist '(("" "listings")
-                              ("" "booktabs")
-                              ("AUTO" "polyglossia" t ("xelatex" "lualatex"))
-                              ("" "grffile")
-                              ("" "unicode-math")
-                              ("" "xcolor")))
-
-  :config
-  (add-to-list 'org-latex-logfiles-extensions "tex"))
+     :config
+     ;; Supprime aussi les .tex après export si nécessaire
+     (add-to-list 'org-latex-logfiles-extensions "tex"))
 #+END_SRC
 
 #+RESULTS:
+
+Pour compiler avec minted, on utilise: /Latexmk with shell-escape/ entrer.
+#+BEGIN_SRC emacs-lisp
+(use-package auctex
+  :ensure t
+  :config
+  (setq TeX-command-list
+        (add-to-list 'TeX-command-list
+                     '("Latexmk with shell-escape"
+                       "latexmk -xelatex -shell-escape -quiet -f %s"
+                       TeX-run-TeX nil t))))
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-beamer
@@ -548,7 +573,7 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 * Mini-beffeur
 ** Which-key
-
+Il prose des racourcis de clavier
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :demand t ;; Charge immédiatement `which-key` au démarrage d'Emacs
@@ -864,21 +889,23 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 ** yasnippets
 
-#+BEGIN_SRC emacs-lisp
-;; Configuration du package yasnippet pour gérer les snippets
-(use-package yasnippet
-  :demand t ;; Charge immédiatement yasnippet
-  :config
-  (setq yas-indent-line 'auto) ;; Indente automatiquement les lignes dans les snippets
-  (yas-global-mode 1)) ;; Active yasnippet globalement
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# ;; Configuration du package yasnippet pour gérer les snippets
+# (use-package yasnippet
+#   :demand t ;; Charge immédiatement yasnippet
+#   :config
+#   (setq yas-indent-line 'auto) ;; Indente automatiquement les lignes dans les snippets
+#   (yas-global-mode 1)) ;; Active yasnippet globalement
+# #+END_SRC
 
-#+RESULTS:
-: t
+# #+RESULTS:
+# : t
 
 * Magit et git
 ** Magit
-
+ 🧪 Scénario courant : modifier, commiter, push
+*Fonctionnement*: Il permet de Stager, commit, push, pull etc avec la commande /C-x g/.
+s ie Stager fichier / hunk, u ie Unstager, c c ie Commit, P p ie Push, F u ie Pull, l l ie Voir log.
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure-system-package git  ;; Vérifie que Git est installé sur le système
@@ -924,12 +951,17 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 : magit-status
 
 ** Git-timemachine
-
+*Fonctionnement*: Il permet de naviguer entre les versions du fichier. Par exple,
+Ouvrir un fichier suivi par git, lancer timemachine avec C-c t/. Pour naviguer,
+n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour quitter.
 #+BEGIN_SRC emacs-lisp
-(use-package git-timemachine)
+(use-package git-timemachine
+  :defer t
+  :bind ("C-c t" . git-timemachine-toggle))  ;; Lance la timemachine avec C-c t
 #+END_SRC
 
 #+RESULTS:
+: git-timemachine-toggle
 
 * Web
 ** Exportation vers le web
@@ -1151,6 +1183,7 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 | ipynb |
 
 * Fenêtre
+** Ajuster les fenêtres
 
 #+BEGIN_SRC emacs-lisp
 ;; Équilibrer automatiquement les fenêtres après suppression
@@ -1167,3 +1200,131 @@ Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de 
 
 #+RESULTS:
 
+essai
+
+** Marge entre les fenêtres
+
+#+BEGIN_SRC emacs-lisp
+;; Load up doom-palenight for the System Crafters look
+(load-theme 'doom-palenight t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Désactiver la numérotation des lignes pour Org Mode
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | turn-on-org-cdlatex | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+
+* Fonctionnement de Git
+** Correspondance des commandes Git avec Magit dans Emacs
+*** git status
+- 🎯 **Rôle** : Affiche l’état actuel du dépôt (modifications, staging, etc.)
+- Git : `git status`
+- Magit : `M-x magit-status` ou touche `s` (minuscule)
+
+*** git add <fichier>
+- 🎯 **Rôle** : Ajoute un fichier au staging area (préparation au commit)
+- Git : `git add <fichier>`
+- Magit : touche `s` (minuscule) pour stage le fichier
+
+*** git commit
+- 🎯 **Rôle** : Enregistre les modifications stagées dans l’historique
+- Git : `git commit`
+- Magit : touche `C` (majuscule), valider avec `C-c C-c`
+
+*** git commit --amend
+- 🎯 **Rôle** : Modifie le dernier commit (message ou contenu)
+- Git : `git commit --amend`
+- Magit : `C` (majuscule), puis sélectionner "Amend"
+
+*** git diff
+- 🎯 **Rôle** : Montre les différences entre versions de fichiers
+- Git : `git diff`
+- Magit : 
+  - `d` (minuscule) : diff entre working dir et index
+  - `D` (majuscule) : diff entre index et HEAD
+
+*** git pull
+- 🎯 **Rôle** : Récupère et fusionne les changements distants
+- Git : `git pull`
+- Magit : `P` (majuscule)
+- Rebase : `P r` (majuscule, puis minuscule)
+
+*** git push
+- 🎯 **Rôle** : Envoie les commits locaux vers le dépôt distant
+- Git : `git push`
+- Magit : `P` (majuscule)
+
+*** git fetch
+- 🎯 **Rôle** : Récupère les changements distants sans les fusionner
+- Git : `git fetch`
+- Magit : `f` (minuscule)
+
+*** git merge <branche>
+- 🎯 **Rôle** : Fusionne une branche dans la branche courante
+- Git : `git merge <branche>`
+- Magit : `M` (majuscule)
+
+*** git rebase <branche>
+- 🎯 **Rôle** : Réapplique les commits locaux sur une autre base
+- Git : `git rebase <branche>`
+- Magit : `r` (minuscule)
+
+*** git branch
+- 🎯 **Rôle** : Affiche ou gère les branches locales
+- Git : `git branch`
+- Magit :
+  - `b b` : créer une branche
+  - `b m` : changer de branche
+  - `b k` : supprimer une branche
+
+*** git checkout <branche>
+- 🎯 **Rôle** : Change de branche
+- Git : `git checkout <branche>`
+- Magit : `b m` (minuscule)
+
+*** git log
+- 🎯 **Rôle** : Affiche l’historique des commits
+- Git : `git log`
+- Magit : 
+  - `l` (minuscule) : log simple
+  - `l L` : log détaillé
+
+*** git reset <commit>
+- 🎯 **Rôle** : Déplace la HEAD et modifie ou non l’index et le working dir
+- Git : `git reset <commit>`
+- Magit : `x` (minuscule)
+
+*** git stash
+- 🎯 **Rôle** : Sauvegarde temporairement les modifications non commitées
+- Git : `git stash`
+- Magit :
+  - `z s` : stash
+  - `z l` : lister les stashs
+
+*** git cherry-pick <commit>
+- 🎯 **Rôle** : Applique un commit spécifique d’une autre branche
+- Git : `git cherry-pick <commit>`
+- Magit : `P p` (majuscule, puis minuscule)
+
+*** git revert <commit>
+- 🎯 **Rôle** : Crée un commit qui annule un commit précédent
+- Git : `git revert <commit>`
+- Magit : `v` (minuscule)
+
+*** git tag <tagname>
+- 🎯 **Rôle** : Crée un marqueur (tag) sur un commit
+- Git : `git tag <tagname>`
+- Magit : `t` (minuscule)
+
+*** git clean
+- 🎯 **Rôle** : Supprime les fichiers non suivis
+- Git : `git clean -f`
+- Magit : `C x` (majuscule puis minuscule)

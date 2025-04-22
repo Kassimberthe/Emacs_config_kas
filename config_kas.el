@@ -103,8 +103,14 @@
 (setq ispell-list-command "--list")
 
 (use-package diff-hl
-  :config (global-diff-hl-mode t)
-  :hook (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+  :config
+  (global-diff-hl-mode t)
+  :hook
+  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+
+(setq diff-hl-change-color "green")   ;; Couleur pour les modifications (maintenant vert)
+(setq diff-hl-delete-color "red")     ;; Couleur pour les suppressions
+(setq diff-hl-insert-color "magenta")    ;; Couleur pour les ajouts (maintenant magenta)
 
 (use-package auctex
   :defer t
@@ -131,30 +137,36 @@
   :commands (org-export-dispatch)
 
   :custom
+  ;; Utilisation de minted pour les blocs de code
+  (org-latex-src-block-backend 'minted)
+  
+  ;; Compilation avec -shell-escape nécessaire pour minted
   (org-latex-pdf-process '("latexmk -xelatex -shell-escape -quiet -f %f"))
 
-  (org-latex-src-block-backend 'listings)
-  (org-latex-listings-options
-   '(("basicstyle" "\\ttfamily")
-     ("showstringspaces" "false")
-     ("keywordstyle" "\\color{blue}\\textbf")
-     ("commentstyle" "\\color{gray}")
-     ("stringstyle" "\\color{green!70!black}")
-     ("stringstyle" "\\color{red}")
-     ("frame" "single")
-     ("numbers" "left")
-     ("numberstyle" "\\ttfamily")
-     ("columns" "fullflexible")))
+  ;; Ajouter la définition de couleur dans le préambule LaTeX
+  (org-latex-header "  \\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
+  
+  ;; Packages à inclure dans le document LaTeX
+     (org-latex-packages-alist
+      '(("" "minted")                                     ;; pour les blocs de code colorés
+        ("" "booktabs")                                   ;; pour des tableaux plus jolis
+        ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; multilingue, version XeLaTeX-friendly de babel
+        ("" "grffile")                                    ;; support des noms de fichiers complexes
+  ;;      ("" "unicode-math")                               ;; meilleures polices pour les maths avec xelatex
+        ("" "xcolor")))                                   ;; support des couleurs dans LaTeX
 
-  (org-latex-packages-alist '(("" "listings")
-                              ("" "booktabs")
-                              ("AUTO" "polyglossia" t ("xelatex" "lualatex"))
-                              ("" "grffile")
-                              ("" "unicode-math")
-                              ("" "xcolor")))
+     :config
+     ;; Supprime aussi les .tex après export si nécessaire
+     (add-to-list 'org-latex-logfiles-extensions "tex"))
 
+(use-package auctex
+  :ensure t
   :config
-  (add-to-list 'org-latex-logfiles-extensions "tex"))
+  (setq TeX-command-list
+        (add-to-list 'TeX-command-list
+                     '("Latexmk with shell-escape"
+                       "latexmk -xelatex -shell-escape -quiet -f %s"
+                       TeX-run-TeX nil t))))
 
 (use-package ox-beamer
   :ensure nil
@@ -511,13 +523,6 @@
   :config
   (add-hook 'calc-trail-mode-hook 'evil-insert-state))
 
-;; Configuration du package yasnippet pour gérer les snippets
-(use-package yasnippet
-  :demand t ;; Charge immédiatement yasnippet
-  :config
-  (setq yas-indent-line 'auto) ;; Indente automatiquement les lignes dans les snippets
-  (yas-global-mode 1)) ;; Active yasnippet globalement
-
 (use-package magit
   :ensure-system-package git  ;; Vérifie que Git est installé sur le système
   :hook (with-editor-mode . evil-insert-state)  ;; Mettre `evil-insert-state` quand `with-editor-mode` est activé
@@ -557,7 +562,9 @@
         magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1  ;; Fonction pour afficher Magit en mode plein écran
         magit-push-always-verify nil))  ;; Désactive la vérification avant chaque push
 
-(use-package git-timemachine)
+(use-package git-timemachine
+  :defer t
+  :bind ("C-c t" . git-timemachine-toggle))  ;; Lance la timemachine avec C-c t
 
 (use-package web-mode
   :mode ("\\.erb$"
@@ -688,21 +695,6 @@
 
 ;; Assurez-vous d'avoir des blocs de code correctement formatés dans Org
 
-;; Activer visual-fill-column dans Org mode pour simuler des marges
-(add-hook 'org-mode-hook 'visual-fill-column-mode)
-
-;; Définir la largeur de la page à 80 caractères (par exemple)
-(setq visual-fill-column-width 80)
-
-;; Centrer le texte dans la fenêtre
-(setq visual-fill-column-center-text t)
-
-;; Configurer fill-column pour les retours à la ligne à 80 caractères
-(setq-default fill-column 80)
-
-;; Activer auto-fill-mode dans Org mode pour forcer les retours à la ligne
-(add-hook 'org-mode-hook 'auto-fill-mode)
-
 ;; Équilibrer automatiquement les fenêtres après suppression
 (advice-add #'delete-window
             :after #'(lambda (&rest _)
@@ -713,3 +705,8 @@
             :after #'(lambda (&rest _)
                        (balance-windows) ;; Équilibre les fenêtres
                        (other-window 1))) ;; Se déplace vers la nouvelle fenêtre
+
+;; Load up doom-palenight for the System Crafters look
+(load-theme 'doom-palenight t)
+
+(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
