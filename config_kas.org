@@ -1221,8 +1221,35 @@ essai
 #+RESULTS:
 | (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | turn-on-org-cdlatex | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
-
 * Fonctionnement de Git
+**  Envoi vers le dossier distant Git ↔ Magit
+#+BEGIN_EXPORT html
+<div style="text-align: center;">
+#+END_EXPORT
+| Commande Git                        | Magit                         | Détail touche(s)                   |
+|------------------------------------+-------------------------------+------------------------------------|
+| ➤ git add .                        | ➤  S                          | Majuscule : stage all              |
+| ➤ git commit -m "explication"      | ➤  C                          | Majuscule : ouvrir commit buffer   |
+| ➤ git push -u origin master        | ➤  P p                        | Majuscule P, puis minuscule p      |
+#+BEGIN_EXPORT html
+</div>
+#+END_EXPORT
+
+**  Gestion des commits: correspondance Git ↔ Magit
+#+BEGIN_EXPORT html
+<div style="text-align: center;">
+#+END_EXPORT
+| Commande Git                        | Magit                         | Détail touche(s)                   |
+|------------------------------------+-------------------------------+------------------------------------|
+| ➤ git log                          | ➤ `l l`                       | Affiche les commits                |
+| ➤ git log -n p                     |                               | Affiche les p derniers commits         |
+| ➤ git show <sha-1>                | ➤ Naviguer dans `l l`, puis `RET` sur le commit | Montrer le contenu du commit no..|
+| ➤ git checkout <sha-1>            | ➤ `b b`, taper SHA-1          | Revenir au  commit no...       |
+| ➤ git checkout master             | ➤ `b m`, puis `master`        | Revenir à l'avant dernier commit   |
+#+BEGIN_EXPORT html
+</div>
+#+END_EXPORT
+
 ** Correspondance des commandes Git avec Magit dans Emacs
 *** git status
 - 🎯 **Rôle** : Affiche l’état actuel du dépôt (modifications, staging, etc.)
