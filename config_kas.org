@@ -1250,6 +1250,36 @@ essai
 </div>
 #+END_EXPORT
 
+** Faire suivre un dossier par Git
++ Créer le dossier
++ Dans le dossier, taper: /git init/ avec le terminal.
+  **Remarque*: Le dossier créé contient la branche master et le repository
+  contient la branche /origin/.
+** Connecter la branche master et origin
++  Aller dans le dossier local
++  Taper /git remote add origin lien_origin/
+** Faire un pull request
+Il s'agit de partir d'une branche autre que master pour le connecter au
+dépôt distant origin.
++ /git push origin nom_nouvelle_branche/
++ Après vérification sur github, si ok on merge
+** Merger dans le dossier local
++ Aller sur la branche à laquelle on veut merger
++ /git merge nom_nouvelle_branche/
+** Mise à jour du dépôt local
++ /git pull origin master/
+**  Les branches
+#+ATTR_HTML: :style text-align: center; margin-left: auto; margin-right: auto;
+| Git CLI                         | Magit (Emacs)                         | Action                                |
+|---------------------------------+---------------------------------------+----------------------------------------|
+| git branch                      | b b (magit-branch-checkout)           | Lister les branches                    |
+| git branch ma-branche           | b n (magit-branch-create)             | Créer une branche                      |
+| git checkout -b ma-branche      | b c (checkout new branch)             | Créer + se déplacer                    |
+| git checkout autre-branche      | b b (choisir dans la liste)           | Changer de branche                     |
+| git branch -d ma-branche        | b k (magit-branch-delete)             | Supprimer une branche (locale)         |
+| git merge ma-branche            | m m (magit-merge)                     | Fusionner une branche                  |
+| git rebase main                 | r r (magit-rebase)                    | Rebaser une branche                    |
+
 ** Correspondance des commandes Git avec Magit dans Emacs
 *** git status
 - 🎯 **Rôle** : Affiche l’état actuel du dépôt (modifications, staging, etc.)
