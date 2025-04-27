@@ -1,15 +1,13 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/kassimberthe/.emacs.d/config_kas.org" . 60205)
+(("/home/kassim/.emacs.d/config_kas.org" . 66549)
+ ("/home/kassimberthe/.emacs.d/config_kas.org" . 60205)
  ("/home/kassimberthe/Téléchargements/DM_kassim_berthé.tex" . 25374)
  ("/home/kassimberthe/Téléchargements/Kmintede.tex" . 192)
  ("/home/kassimberthe/Téléchargements/WhatSie/projet_biau.tex" . 4149)
- ("/home/kassimberthe/Téléchargements/WhatSie/diapo_nonPara.tex"
-	. 3075)
- ("/home/kassimberthe/Téléchargements/WhatSie/projet_nonParametrique.tex"
-	. 3737)
+ ("/home/kassimberthe/Téléchargements/WhatSie/diapo_nonPara.tex" . 3075)
+ ("/home/kassimberthe/Téléchargements/WhatSie/projet_nonParametrique.tex" . 3737)
  ("/home/kassimberthe/Téléchargements/WhatSie/main.tex" . 6355)
- ("/home/kassimberthe/Documents/Article_sorbonne/question_article.org"
-	. 4213)
+ ("/home/kassimberthe/Documents/Article_sorbonne/question_article.org" . 4213)
  ("/home/kassimberthe/prog.org" . 7)
  ("/home/kassimberthe/Documents/Article_sorbonne/proget_np.org" . 3)
  ("/home/kassimberthe/testnote.org" . 44)
