@@ -1387,9 +1387,7 @@ dépôt distant origin.
 - Magit : `C x` (majuscule puis minuscule)
   
 * Org mode configuration
-
 ** Configuration Org-mode
-
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 (require 'org-agenda)
@@ -1407,7 +1405,6 @@ dépôt distant origin.
 : org-capture
 
 ** Répertoire de base
-
 #+BEGIN_SRC emacs-lisp
 ;; windows home directory
 ;; NOTE: For some reason $HOME or ~ doesn't work on Windows even if we have wsl installed..
@@ -1455,7 +1452,7 @@ dépôt distant origin.
 (setq org-agenda-files (list (concat org-directory "/personal.org")
 							 (concat org-directory "/work.org")
 							 (concat org-directory "/school.org")
-							 (concat org-directory "/diary.org")))
+							 (concat org-directory "/journal.org")))
 (setq org-deadline-warning-days 7)
 (setq org-agenda-include-diary nil) ; NOTE: We are including calendar holidays in diary.org
 (setq org-agenda-span 7)
@@ -1470,25 +1467,25 @@ dépôt distant origin.
 : only-window
 
 ** Capture
-
 #+BEGIN_SRC emacs-lisp
-(setq org-default-notes-file (concat org-directory "/refile.org"))
-(setq org-capture-templates
-	  '(("t" "Refile" entry (file (lambda () (concat org-directory "/refile.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("p" "Personal" entry (file (lambda () (concat org-directory "/personal.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("w" "Work" entry (file (lambda () (concat org-directory "/work.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)))
+      (setq org-default-notes-file (concat org-directory "/brouillon.org"))
+      (setq org-capture-templates
+          '(("b" "Brouillon" entry (file (lambda () (concat org-directory "/brouillon.org")))
+           "* TODO %?\n %U\n" :empty-lines 1)
+          ("p" "Personal" entry (file (lambda () (concat org-directory "/personal.org")))
+           "* TODO %?\n %U\n" :empty-lines 1)
+          ("w" "Work" entry (file (lambda () (concat org-directory "/work.org")))
+           "* TODO %?\n %U\n" :empty-lines 1)
+          ("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
+           "* TODO %?\n %U\n" :empty-lines 1)
+           ("j" "Journal" entry (file+datetree (lambda () (concat org-directory "/journal.org")))
+         "* %?\nEntered on %U\n" :empty-lines 1)))
 #+END_SRC
 
 #+RESULTS:
-| t | Refile | entry | (file (lambda nil (concat org-directory /refile.org))) | * TODO %? |
+| b | Brouillon | entry | (file (lambda nil (concat org-directory /brouillon.org))) | * TODO %? |
 
 ** MobileOrg
-
 #+BEGIN_SRC emacs-lisp
 (setq org-mobile-directory (concat home-directory "/Dropbox/Apps/MobileOrg"))
 ;; (setq org-mobile-directory (concat home-directory "/Dropbox/Applications/MobileOrg"))
