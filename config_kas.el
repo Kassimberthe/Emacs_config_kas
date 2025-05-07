@@ -764,16 +764,18 @@
 ;; TODO: org-agenda-custom-commands
 (setq org-agenda-window-setup 'only-window)
 
-(setq org-default-notes-file (concat org-directory "/refile.org"))
+(setq org-default-notes-file (concat org-directory "/brouillon.org"))
 (setq org-capture-templates
-	  '(("t" "Refile" entry (file (lambda () (concat org-directory "/refile.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("p" "Personal" entry (file (lambda () (concat org-directory "/personal.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("w" "Work" entry (file (lambda () (concat org-directory "/work.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)
-		("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
-		 "* TODO %?\n %U\n" :empty-lines 1)))
+    '(("b" "Brouillon" entry (file (lambda () (concat org-directory "/brouillon.org")))
+     "* TODO %?\n %U\n" :empty-lines 1)
+    ("p" "Personal" entry (file (lambda () (concat org-directory "/personal.org")))
+     "* TODO %?\n %U\n" :empty-lines 1)
+    ("w" "Work" entry (file (lambda () (concat org-directory "/work.org")))
+     "* TODO %?\n %U\n" :empty-lines 1)
+    ("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
+     "* TODO %?\n %U\n" :empty-lines 1)
+     ("j" "Journal" entry (file+datetree (lambda () (concat org-directory "/journal.org")))
+   "* %?\nEntered on %U\n" :empty-lines 1)))
 
 (setq org-mobile-directory (concat home-directory "/Dropbox/Apps/MobileOrg"))
 ;; (setq org-mobile-directory (concat home-directory "/Dropbox/Applications/MobileOrg"))

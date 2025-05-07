@@ -3,7 +3,7 @@
 
 (setq savehist-minibuffer-history-variables '(magit-git-command-history evil-ex-history query-replace-history TeX-command-history org-read-date-history eww-prompt-history extended-command-history consult--buffer-history minibuffer-history consult--line-history file-name-history))
 (setq magit-git-command-history '("S"))
-(setq evil-ex-history '("q" "q!" "w" "q" "wq" "w" "wq" "w" "q" "w"))
+(setq evil-ex-history '("q" "w" "q" "q!" "w" "q" "wq" "w" "wq" "w" "q" "w"))
 (setq query-replace-history '(";\\theta)" ")" "z" "\\theta" "\\`{a}" "à" "\\c{c}" "ç" "\\`{e}" "è" "\\'{e}" "é" "\\'e" "é" "\\mathscr" "\\mathcal"))
 (setq TeX-command-history '("View" "Latexmk with shell-escape" "View" "Latexmk with shell-escape" "View" "Latexmk with shell-escape" "LaTeX" "View" "LaTeX" "View"))
 (setq org-read-date-history '("lo    "))
