@@ -4,7 +4,7 @@
   '((emacs     "26.3")
     (tablist   "1.0")
     (let-alist "1.0.4"))
-  :url "https://github.com/vedang/pdf-tools"
+  :url "http://github.com/vedang/pdf-tools/"
   :commit "30b50544e55b8dbf683c2d932d5c33ac73323a16"
   :revdesc "30b50544e55b"
   :keywords '("files" "multimedia")

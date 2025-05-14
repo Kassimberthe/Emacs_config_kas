@@ -707,7 +707,7 @@
                        (other-window 1))) ;; Se déplace vers la nouvelle fenêtre
 
 ;; Load up doom-palenight for the System Crafters look
-(load-theme 'doom-palenight t)
+;(load-theme 'doom-palenight t)
 
 (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 

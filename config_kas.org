@@ -1206,7 +1206,7 @@ essai
 
 #+BEGIN_SRC emacs-lisp
 ;; Load up doom-palenight for the System Crafters look
-(load-theme 'doom-palenight t)
+;(load-theme 'doom-palenight t)
 #+END_SRC
 
 #+RESULTS:
@@ -1498,4 +1498,5 @@ dépôt distant origin.
 
 #+RESULTS:
 : ~/Notes/orgfiles/mobile-flagged.org
+
 

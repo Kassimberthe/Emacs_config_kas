@@ -4,7 +4,7 @@
   '((yasnippet "0.8.0")
     (company   "0.8.0")
     (auctex    "11.87"))
-  :url "https://github.com/alexeyr/company-auctex"
+  :url "https://github.com/alexeyr/company-auctex/"
   :commit "9400a2ec7459dde8cbf1a5d50dfee4e300ed7e18"
   :revdesc "9400a2ec7459"
   :authors '(("Christopher Monsanto" . "chris@monsan.to")
