@@ -206,23 +206,19 @@
   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))                         ;; Supprimer une annotation
 
 (use-package company
-  :defer 2
-  :diminish
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind
-  (:map company-active-map
-        ("<tab>" . company-complete-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-begin-commands '(self-insert-command))
-  (company-idle-delay 0.1) ;; Temps d'attente avant l'affichage des suggestions
-  (company-minimum-prefix-length 2) ;; Longueur minimale du préfixe pour afficher les suggestions
-  (company-show-numbers t) ;; Affiche les numéros pour les suggestions
-  (company-tooltip-align-annotations t) ;; Aligne les annotations dans la bulle d'aide
+  :ensure t
   :config
-  (global-company-mode t)) ;; Active le mode global pour Company
+  (setq company-tooltip-align-annotations t)
+  (add-hook 'after-init-hook 'global-company-mode) ;; actif partout
+
+  (add-to-list 'company-frontends 'company-tng-frontend)
+
+  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+  (define-key company-active-map [tab] 'company-complete-common-or-cycle)
+  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
+  (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
+
+  (define-key company-mode-map (kbd "C-<SPC>") 'company-complete))
 
 (use-package company-box
   :after company
@@ -784,3 +780,67 @@
 ;; (setq org-mobile-files (list ()))
 (setq org-mobile-force-id-on-agenda-items nil)
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobile-flagged.org"))
+
+(use-package mu4e
+  :load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.10.8"
+  :demand t
+  :bind (("C-c m" . mu4e))
+  :hook (mu4e-compose-mode . flyspell-mode)
+  :config
+;  (require 'org-mu4e)
+  (require 'shr)
+
+  (setq mail-user-agent 'mu4e-user-agent
+        mu4e-maildir "~/.maildir"
+        mu4e-sent-folder "/fastmail/Sent"
+        mu4e-drafts-folder "/fastmail/Drafts"
+        mu4e-trash-folder "/fastmail/Trash"
+        mu4e-refile-folder "/fastmail/Archive"
+        mu4e-completing-read-function 'ivy-completing-read
+        mu4e-confirm-quit nil
+        mu4e-kill-buffer-on-exit t
+        smtpmail-stream-type 'ssl
+        smtpmail-smtp-server "smtp.fastmail.com"
+        smtpmail-smtp-service 465
+        send-mail-function 'smtpmail-send-it
+        message-send-mail-function 'smtpmail-send-it
+        mu4e-view-date-format "%a %e %b %Y %T"
+        mu4e-headers-date-format "%d/%m/%Y"
+        mu4e-headers-time-format "%T"
+        mu4e-view-prefer-html t
+        shr-use-colors nil
+        shr-use-fonts nil
+        shr-width 79)
+
+  (setq mu4e-bookmarks
+        '((:name "Unread messages"
+                 :query "flag:unread AND NOT flag:trashed AND NOT maildir:/fastmail/Spam AND NOT maildir:/fastmail/Trash"
+                 :key ?u)
+          (:name "Today's messages"
+                 :query "date:today..now"
+                 :key ?t)
+          (:name "Inbox"
+                 :query "maildir:/fastmail/INBOX"
+                 :key ?i))))
+
+(setq auth-sources '("~/.password-store"))
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-auth-supported '(login)
+      smtpmail-stream-type 'ssl
+      smtpmail-smtp-server "smtp.fastmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-smtp-user "berthekassime@fastmail.com")
+
+;; Activer l'affichage des numéros de lignes relatifs globalement
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode t)
+
+;; Activer uniquement dans certains modes si souhaité
+;; (add-hook 'prog-mode-hook (lambda ()
+;;                             (setq display-line-numbers 'relative)
+;;                             (display-line-numbers-mode t)))
+
+;; Désactiver dans certains modes comme org, term, eshell
+;(dolist (mode '(org-mode-hook term-mode-hook eshell-mode-hook))
+;  (add-hook mode (lambda () (display-line-numbers-mode 0))))
