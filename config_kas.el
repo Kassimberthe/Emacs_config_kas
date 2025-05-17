@@ -227,6 +227,21 @@
 
 (setq org-hide-emphasis-markers t)
 
+(use-package drag-stuff
+  :ensure t
+  :config
+  (drag-stuff-global-mode 1)
+
+  ;; Raccourcis personnalisés pour evil-mode
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal drag-stuff-mode-map
+      (kbd "M-j") 'drag-stuff-down
+      (kbd "M-k") 'drag-stuff-up)
+    (evil-define-key 'visual drag-stuff-mode-map
+      (kbd "M-j") 'drag-stuff-down
+      (kbd "M-k") 'drag-stuff-up))
+  )
+
 (use-package doom-modeline
   :ensure t
   :init
@@ -303,6 +318,14 @@
 (use-package pulsar
   :ensure t ;; Assure que le package est installé s'il ne l'est pas
   :bind ("<f8>" . pulsar-pulse-line)) ;; Associe la touche F8 à la commande 'pulsar-pulse-line'
+
+(use-package all-the-icons
+  :if (display-graphic-p)
+  :ensure t)
+
+(use-package all-the-icons-dired
+  :ensure t
+  :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package which-key
   :demand t ;; Charge immédiatement `which-key` au démarrage d'Emacs
@@ -845,6 +868,17 @@
 ;(dolist (mode '(org-mode-hook term-mode-hook eshell-mode-hook))
 ;  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+(use-package git-gutter
+  :ensure t
+  :config
+  (global-git-gutter-mode +1)
+  (setq git-gutter:modified-sign "≠")   ;; signe pour les lignes modifiées
+  (setq git-gutter:added-sign    "+") ;; signe pour les lignes ajoutées
+  (setq git-gutter:deleted-sign  "-") ;; signe pour les lignes supprimées
+  (set-face-foreground 'git-gutter:modified "orange")
+  (set-face-foreground 'git-gutter:added    "green")
+  (set-face-foreground 'git-gutter:deleted  "red"))
+
 (use-package general
   :config
   (general-evil-setup)
@@ -1072,3 +1106,9 @@
     "w u" '(upcase-word :wk "Upcase word")
     "w =" '(count-words :wk "Count words/lines for buffer"))
 )
+
+;; Ajouter le dossier contenant ton thème personnalisé au chemin des thèmes
+(add-to-list 'custom-theme-load-path "~/.emacs/themes/")
+
+;; Charger ton thème personnalisé 'dtmacs'
+(load-theme 'dtmacs t)

@@ -423,6 +423,27 @@ Pour compiler avec minted, on utilise: /Latexmk with shell-escape/ entrer.
 #+RESULTS:
 : t
 
+** Déplacement des lignes
+#+begin_src emacs-lisp
+(use-package drag-stuff
+  :ensure t
+  :config
+  (drag-stuff-global-mode 1)
+
+  ;; Raccourcis personnalisés pour evil-mode
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal drag-stuff-mode-map
+      (kbd "M-j") 'drag-stuff-down
+      (kbd "M-k") 'drag-stuff-up)
+    (evil-define-key 'visual drag-stuff-mode-map
+      (kbd "M-j") 'drag-stuff-down
+      (kbd "M-k") 'drag-stuff-up))
+  )
+#+end_src
+
+#+RESULTS:
+: t
+
 * Personnalisation du mode line
 ** Mode line
 #+BEGIN_SRC emacs-lisp
@@ -568,6 +589,21 @@ Pour compiler avec minted, on utilise: /Latexmk with shell-escape/ entrer.
 : pulsar-pulse-line
 
 * Mini-beffeur
+** All-the-icons
+M-x all-the-icons-install-fonts RET
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :if (display-graphic-p)
+  :ensure t)
+
+(use-package all-the-icons-dired
+  :ensure t
+  :hook (dired-mode . all-the-icons-dired-mode))
+#+end_src
+
+#+RESULTS:
+| all-the-icons-dired-mode | dired-extra-startup | (lambda nil (undo-tree-mode 1)) | pdf-occur-dired-minor-mode |
+
 ** Which-key
 Il prose des racourcis de clavier
 #+BEGIN_SRC emacs-lisp
@@ -1827,6 +1863,18 @@ dépôt distant origin.
     "w u" '(upcase-word :wk "Upcase word")
     "w =" '(count-words :wk "Count words/lines for buffer"))
 )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Themes
+#+BEGIN_SRC emacs-lisp
+;; Ajouter le dossier contenant ton thème personnalisé au chemin des thèmes
+(add-to-list 'custom-theme-load-path "~/.emacs/themes/")
+
+;; Charger ton thème personnalisé 'dtmacs'
+(load-theme 'dtmacs t)
 #+END_SRC
 
 #+RESULTS:
