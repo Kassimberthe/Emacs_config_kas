@@ -121,73 +121,114 @@
   (setq-default TeX-master nil))
 
 (use-package company-auctex
-  :after auctex
+  :after (auctex company)         ;; Charger après AUCTeX et company
+  :ensure t                       ;; S’assurer que le paquet est installé
   :config
-  (company-auctex-init))
+  (company-auctex-init))         ;; Initialiser company-auctex pour compléter les macros, environnements, etc.
 
 (use-package cdlatex
-  :diminish 'org-cdlatex-mode
-  :hook ((LaTeX-mode . turn-on-cdlatex)
-         (org-mode . turn-on-org-cdlatex)))
+  :ensure t                                  ;; S'assurer que cdlatex est installé
+  :diminish org-cdlatex-mode                 ;; Ne pas afficher le mode mineur dans la barre de mode
+  :hook ((LaTeX-mode . turn-on-cdlatex)      ;; Activer cdlatex en LaTeX-mode
+         (org-mode . turn-on-org-cdlatex))   ;; Activer cdlatex en org-mode
+  :config
+  (setq cdlatex-use-dollar-to-ensure-math nil)) ;; Option : éviter les conflits avec les dollars dans org
 
 (use-package ox-latex
-  :ensure-system-package latexmk
-  :ensure nil
+  :ensure nil                                        ;; ox-latex fait déjà partie de Org-mode
   :after org
   :commands (org-export-dispatch)
+  :ensure-system-package latexmk                    ;; Vérifie que latexmk est installé
 
   :custom
-  ;; Utilisation de minted pour les blocs de code
+  ;; Utiliser minted pour les blocs de code (avec syntax highlighting)
   (org-latex-src-block-backend 'minted)
-  
-  ;; Compilation avec -shell-escape nécessaire pour minted
-  (org-latex-pdf-process '("latexmk -xelatex -shell-escape -quiet -f %f"))
 
-  ;; Ajouter la définition de couleur dans le préambule LaTeX
-  (org-latex-header "  \\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
-  
-  ;; Packages à inclure dans le document LaTeX
-     (org-latex-packages-alist
-      '(("" "minted")                                     ;; pour les blocs de code colorés
-        ("" "booktabs")                                   ;; pour des tableaux plus jolis
-        ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; multilingue, version XeLaTeX-friendly de babel
-        ("" "grffile")                                    ;; support des noms de fichiers complexes
-  ;;      ("" "unicode-math")                               ;; meilleures polices pour les maths avec xelatex
-        ("" "xcolor")))                                   ;; support des couleurs dans LaTeX
+  ;; Commande de compilation avec latexmk, en xelatex, avec shell-escape (requis pour minted)
+  (org-latex-pdf-process
+   '("latexmk -xelatex -shell-escape -quiet -f %f"))
 
-     :config
-     ;; Supprime aussi les .tex après export si nécessaire
-     (add-to-list 'org-latex-logfiles-extensions "tex"))
+  ;; Ajouter une commande LaTeX dans le préambule pour définir une couleur (ex : fond transparent gris clair)
+  (org-latex-header "\\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
+
+  ;; Ajouter des packages utiles au document exporté depuis Org vers LaTeX
+  (org-latex-packages-alist
+   '(("" "minted")                                     ;; Code coloré avec minted
+     ("" "booktabs")                                   ;; Tableaux professionnels
+     ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; Multilingue, alternatif à babel
+     ("" "grffile")                                    ;; Noms de fichiers complexes dans \includegraphics
+     ;; ("" "unicode-math")                            ;; Décommente si tu veux de meilleures fontes mathématiques
+     ("" "xcolor")))                                   ;; Gestion des couleurs
+
+  :config
+  ;; Ajouter .tex à la liste des fichiers à supprimer après export
+  (add-to-list 'org-latex-logfiles-extensions "tex"))
 
 (use-package auctex
   :ensure t
+  :defer t
+  :after tex
   :config
-  (setq TeX-command-list
-        (add-to-list 'TeX-command-list
-                     '("Latexmk with shell-escape"
-                       "latexmk -xelatex -shell-escape -quiet -f %s"
-                       TeX-run-TeX nil t))))
+  (add-to-list 'TeX-command-list
+               '("Latexmk with shell-escape"
+                 "latexmk -xelatex -shell-escape -interaction=nonstopmode -f %s"
+                 TeX-run-TeX nil t))
+  (setq TeX-command-default "Latexmk with shell-escape"))
 
 (use-package ox-beamer
-  :ensure nil
-  :after ox-latex)
-
-(use-package auctex
-  :custom
-  (TeX-parse-self t)
-
+  :ensure nil                  ;; ox-beamer est inclus avec org-mode, donc inutile de l'installer
+  :after ox-latex              ;; Charger après ox-latex (export LaTeX)
   :config
-  (TeX-global-PDF-mode 1)
+  ;; Tu peux ici personnaliser la classe Beamer si nécessaire
+  ;; (par exemple, ajouter une classe personnalisée)
+  ;; (add-to-list 'org-latex-classes
+  ;;              '("beamer"
+  ;;                "\\documentclass[presentation]{beamer}"
+  ;;                ("\\section{%s}" . "\\section*{%s}")))
+  )
 
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (LaTeX-math-mode)
-              (setq TeX-master t))))
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :config
+  (pdf-tools-install))
 
-(with-eval-after-load 'org
-  (setq org-file-apps
-        '((auto-mode . emacs)
-          ("\\.pdf\\'" . "evince %s"))))
+;; Sélection du viewer selon le type d'affichage
+(add-hook 'after-init-hook
+          (lambda ()
+            (with-eval-after-load 'tex
+              (if (display-graphic-p)
+                  ;; mode graphique : pdf-tools
+                  (progn
+                    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+                    (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+                    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+                ;; mode terminal / non-graphique : evince
+                (setq TeX-view-program-selection '((output-pdf "Evince")))
+                (setq TeX-view-program-list '(("Evince" "evince %o")))))))
+
+;; Liste des extensions de fichiers générés par LaTeX à supprimer automatiquement après export Org->PDF
+(setq org-latex-logfiles-extensions
+      '("lof"          ;; List of Figures
+        "lot"          ;; List of Tables
+        "tex~"         ;; Fichier tex sauvegardé temporairement
+        "aux"          ;; Fichier auxiliaire
+        "idx"          ;; Index
+        "log"          ;; Journal de compilation
+        "out"          ;; Fichier de sortie auxiliaire
+        "toc"          ;; Table des matières
+        "nav"          ;; Navigation pour beamer
+        "snm"          ;; Slideshow notes for beamer
+        "vrb"          ;; Verbose log
+        "dvi"          ;; Fichier DVI
+        "fdb_latexmk"  ;; Fichier de suivi latexmk
+        "blg"          ;; Bibliographie bibtex log
+        "brf"          ;; Bibliographie
+        "fls"          ;; Fichier de dépendances latex
+        "entoc"        ;; ?
+        "ps"           ;; Postscript
+        "spl"          ;; ?
+        "bbl"))        ;; Bibliographie bbl
 
 (use-package pdf-tools
   :if (not (eq system-type 'windows-nt))

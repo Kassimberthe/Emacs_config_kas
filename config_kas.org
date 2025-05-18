@@ -249,7 +249,7 @@ suivi par git.
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-engine 'luatex)
-  (setq-default TeX-master nil))
+  (setq-default TeX-master nil)) 
 #+END_SRC
 
 #+RESULTS:
@@ -257,107 +257,153 @@ suivi par git.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company-auctex
-  :after auctex
+  :after (auctex company)         ;; Charger après AUCTeX et company
+  :ensure t                       ;; S’assurer que le paquet est installé
   :config
-  (company-auctex-init))
-#+END_SRC
-
-#+RESULTS:
-
-#+BEGIN_SRC emacs-lisp
-(use-package cdlatex
-  :diminish 'org-cdlatex-mode
-  :hook ((LaTeX-mode . turn-on-cdlatex)
-         (org-mode . turn-on-org-cdlatex)))
-#+END_SRC
-
-#+RESULTS:
-| turn-on-org-cdlatex | toc-org-enable | org-superstar-mode | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-
-#+BEGIN_SRC emacs-lisp
-(use-package ox-latex
-  :ensure-system-package latexmk
-  :ensure nil
-  :after org
-  :commands (org-export-dispatch)
-
-  :custom
-  ;; Utilisation de minted pour les blocs de code
-  (org-latex-src-block-backend 'minted)
-  
-  ;; Compilation avec -shell-escape nécessaire pour minted
-  (org-latex-pdf-process '("latexmk -xelatex -shell-escape -quiet -f %f"))
-
-  ;; Ajouter la définition de couleur dans le préambule LaTeX
-  (org-latex-header "  \\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
-  
-  ;; Packages à inclure dans le document LaTeX
-     (org-latex-packages-alist
-      '(("" "minted")                                     ;; pour les blocs de code colorés
-        ("" "booktabs")                                   ;; pour des tableaux plus jolis
-        ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; multilingue, version XeLaTeX-friendly de babel
-        ("" "grffile")                                    ;; support des noms de fichiers complexes
-  ;;      ("" "unicode-math")                               ;; meilleures polices pour les maths avec xelatex
-        ("" "xcolor")))                                   ;; support des couleurs dans LaTeX
-
-     :config
-     ;; Supprime aussi les .tex après export si nécessaire
-     (add-to-list 'org-latex-logfiles-extensions "tex"))
-#+END_SRC
-
-#+RESULTS:
-
-Pour compiler avec minted, on utilise: /Latexmk with shell-escape/ entrer.
-#+BEGIN_SRC emacs-lisp
-(use-package auctex
-  :ensure t
-  :config
-  (setq TeX-command-list
-        (add-to-list 'TeX-command-list
-                     '("Latexmk with shell-escape"
-                       "latexmk -xelatex -shell-escape -quiet -f %s"
-                       TeX-run-TeX nil t))))
-
+  (company-auctex-init))         ;; Initialiser company-auctex pour compléter les macros, environnements, etc.
 #+END_SRC
 
 #+RESULTS:
 : t
+
+#+BEGIN_SRC emacs-lisp
+(use-package cdlatex
+  :ensure t                                  ;; S'assurer que cdlatex est installé
+  :diminish org-cdlatex-mode                 ;; Ne pas afficher le mode mineur dans la barre de mode
+  :hook ((LaTeX-mode . turn-on-cdlatex)      ;; Activer cdlatex en LaTeX-mode
+         (org-mode . turn-on-org-cdlatex))   ;; Activer cdlatex en org-mode
+  :config
+  (setq cdlatex-use-dollar-to-ensure-math nil)) ;; Option : éviter les conflits avec les dollars dans org
+#+END_SRC
+
+#+RESULTS:
+| turn-on-org-cdlatex | (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-latex
+  :ensure nil                                        ;; ox-latex fait déjà partie de Org-mode
+  :after org
+  :commands (org-export-dispatch)
+  :ensure-system-package latexmk                    ;; Vérifie que latexmk est installé
+
+  :custom
+  ;; Utiliser minted pour les blocs de code (avec syntax highlighting)
+  (org-latex-src-block-backend 'minted)
+
+  ;; Commande de compilation avec latexmk, en xelatex, avec shell-escape (requis pour minted)
+  (org-latex-pdf-process
+   '("latexmk -xelatex -shell-escape -quiet -f %f"))
+
+  ;; Ajouter une commande LaTeX dans le préambule pour définir une couleur (ex : fond transparent gris clair)
+  (org-latex-header "\\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
+
+  ;; Ajouter des packages utiles au document exporté depuis Org vers LaTeX
+  (org-latex-packages-alist
+   '(("" "minted")                                     ;; Code coloré avec minted
+     ("" "booktabs")                                   ;; Tableaux professionnels
+     ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; Multilingue, alternatif à babel
+     ("" "grffile")                                    ;; Noms de fichiers complexes dans \includegraphics
+     ;; ("" "unicode-math")                            ;; Décommente si tu veux de meilleures fontes mathématiques
+     ("" "xcolor")))                                   ;; Gestion des couleurs
+
+  :config
+  ;; Ajouter .tex à la liste des fichiers à supprimer après export
+  (add-to-list 'org-latex-logfiles-extensions "tex"))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+#+BEGIN_SRC emacs-lisp
+(use-package auctex
+  :ensure t
+  :defer t
+  :after tex
+  :config
+  (add-to-list 'TeX-command-list
+               '("Latexmk with shell-escape"
+                 "latexmk -xelatex -shell-escape -interaction=nonstopmode -f %s"
+                 TeX-run-TeX nil t))
+  (setq TeX-command-default "Latexmk with shell-escape"))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+
 
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-beamer
-  :ensure nil
-  :after ox-latex)
-#+END_SRC
-
-#+RESULTS:
-
-#+BEGIN_SRC emacs-lisp
-(use-package auctex
-  :custom
-  (TeX-parse-self t)
-
+  :ensure nil                  ;; ox-beamer est inclus avec org-mode, donc inutile de l'installer
+  :after ox-latex              ;; Charger après ox-latex (export LaTeX)
   :config
-  (TeX-global-PDF-mode 1)
-
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (LaTeX-math-mode)
-              (setq TeX-master t))))
+  ;; Tu peux ici personnaliser la classe Beamer si nécessaire
+  ;; (par exemple, ajouter une classe personnalisée)
+  ;; (add-to-list 'org-latex-classes
+  ;;              '("beamer"
+  ;;                "\\documentclass[presentation]{beamer}"
+  ;;                ("\\section{%s}" . "\\section*{%s}")))
+  )
 #+END_SRC
 
 #+RESULTS:
-: t
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'org
-  (setq org-file-apps
-        '((auto-mode . emacs)
-          ("\\.pdf\\'" . "evince %s"))))
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :config
+  (pdf-tools-install))
+
+;; Sélection du viewer selon le type d'affichage
+(add-hook 'after-init-hook
+          (lambda ()
+            (with-eval-after-load 'tex
+              (if (display-graphic-p)
+                  ;; mode graphique : pdf-tools
+                  (progn
+                    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+                    (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+                    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+                ;; mode terminal / non-graphique : evince
+                (setq TeX-view-program-selection '((output-pdf "Evince")))
+                (setq TeX-view-program-list '(("Evince" "evince %o")))))))
+
 #+END_SRC
 
 #+RESULTS:
-: ((auto-mode . emacs) (\.pdf\' . evince %s))
+| (lambda nil (with-eval-after-load 'tex (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o)))))) | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o))))))) | org-persist-load-all | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
+
+
+#+BEGIN_SRC emacs-lisp
+;; Liste des extensions de fichiers générés par LaTeX à supprimer automatiquement après export Org->PDF
+(setq org-latex-logfiles-extensions
+      '("lof"          ;; List of Figures
+        "lot"          ;; List of Tables
+        "tex~"         ;; Fichier tex sauvegardé temporairement
+        "aux"          ;; Fichier auxiliaire
+        "idx"          ;; Index
+        "log"          ;; Journal de compilation
+        "out"          ;; Fichier de sortie auxiliaire
+        "toc"          ;; Table des matières
+        "nav"          ;; Navigation pour beamer
+        "snm"          ;; Slideshow notes for beamer
+        "vrb"          ;; Verbose log
+        "dvi"          ;; Fichier DVI
+        "fdb_latexmk"  ;; Fichier de suivi latexmk
+        "blg"          ;; Bibliographie bibtex log
+        "brf"          ;; Bibliographie
+        "fls"          ;; Fichier de dépendances latex
+        "entoc"        ;; ?
+        "ps"           ;; Postscript
+        "spl"          ;; ?
+        "bbl"))        ;; Bibliographie bbl
+#+END_SRC
+
+#+RESULTS:
+| lof | lot | tex~ | aux | idx | log | out | toc | nav | snm | vrb | dvi | fdb_latexmk | blg | brf | fls | entoc | ps | spl | bbl |
+
 
 ** PDFs-tools
 
