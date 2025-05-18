@@ -242,7 +242,6 @@ suivi par git.
 : magenta
 
 ** Latex
-
 #+BEGIN_SRC emacs-lisp
 (use-package auctex
   :defer t
@@ -1051,7 +1050,6 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 : eww-browse-wikipedia-en
 
 * Environnement de programmation
-
 ** Profondeur de retrait et camelcase
 
 #+BEGIN_SRC emacs-lisp
@@ -1118,6 +1116,144 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 
 #+RESULTS:
 : python3
+
+** C/C++
+#+BEGIN_SRC emacs-lisp
+(add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))
+#+END_SRC
+
+#+RESULTS:
+| lambda | nil | (c-set-style stroustrup) |
+
+#+BEGIN_SRC emacs-lisp
+(use-package cmake-mode
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+(use-package ggtags
+  :ensure t
+  :hook (c++-mode . ggtags-mode)
+  :bind (:map ggtags-mode-map
+         ("C-c g s" . ggtags-find-other-symbol)
+         ("C-c g h" . ggtags-view-tag-history)
+         ("C-c g r" . ggtags-find-reference)
+         ("C-c g f" . ggtags-find-file)
+         ("C-c g c" . ggtags-create-tags)
+         ("C-c g u" . ggtags-update-tags)
+         ("M-," . pop-tag-mark))
+  :config
+  (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-c-headers
+  :ensure t
+  :config
+  (add-to-list 'company-c-headers-path-system "/usr/include/c++/13")
+  (add-to-list 'company-backends 'company-c-headers))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+#+BEGIN_SRC emacs-lisp
+(require 'semantic)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(add-hook 'c++-mode-hook #'semantic-mode)
+#+END_SRC
+
+#+RESULTS:
+| semantic-mode | ggtags-mode | (lambda nil (c-set-style stroustrup)) |
+
+M-x irony-install-server
+#+BEGIN_SRC emacs-lisp
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-irony
+  :ensure t
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony)))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Ipython
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -i")
+#+END_SRC
+
+#+RESULTS:
+: --simple-prompt -i
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode nil)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (setq tab-width 4) (setq indent-tabs-mode nil)) | doom-modeline-env-setup-python |
+
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :ensure t
+  :config
+  (elpy-enable)
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
+  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1))))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+#+BEGIN_SRC emacs-lisp
+(use-package sphinx-doc
+  :ensure t
+  :hook (python-mode . sphinx-doc-mode))
+
+(use-package python-docstring
+  :ensure t
+  :config
+  (setq python-docstring-sentence-end-double-space nil)
+  :hook (python-mode . python-docstring-mode))
+#+END_SRC
+
+#+RESULTS:
+| python-docstring-mode | sphinx-doc-mode | elpy-mode | (lambda nil (setq tab-width 4) (setq indent-tabs-mode nil)) | doom-modeline-env-setup-python |
+
+#+BEGIN_SRC emacs-lisp
+(use-package ein
+  :ensure t
+  :hook (ein:notebook-multilang-mode
+         . (lambda () (ws-butler-mode -1) (visual-line-mode)))
+  :custom-face
+  (ein:cell-input-area ((t (:background "#f9f2d9")))))
+#+END_SRC
+
+#+RESULTS:
+| lambda | nil | (ws-butler-mode -1) | (visual-line-mode) |
 
 ** Org-Tempo
 

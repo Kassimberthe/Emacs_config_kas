@@ -656,6 +656,83 @@
 ;; Utiliser Python 3 comme interpréteur pour Org-Babel
 (setq org-babel-python-command "python3")
 
+(add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))
+
+(use-package cmake-mode
+  :ensure t)
+
+(use-package ggtags
+  :ensure t
+  :hook (c++-mode . ggtags-mode)
+  :bind (:map ggtags-mode-map
+         ("C-c g s" . ggtags-find-other-symbol)
+         ("C-c g h" . ggtags-view-tag-history)
+         ("C-c g r" . ggtags-find-reference)
+         ("C-c g f" . ggtags-find-file)
+         ("C-c g c" . ggtags-create-tags)
+         ("C-c g u" . ggtags-update-tags)
+         ("M-," . pop-tag-mark))
+  :config
+  (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
+
+(use-package company-c-headers
+  :ensure t
+  :config
+  (add-to-list 'company-c-headers-path-system "/usr/include/c++/13")
+  (add-to-list 'company-backends 'company-c-headers))
+
+(require 'semantic)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(add-hook 'c++-mode-hook #'semantic-mode)
+
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package company-irony
+  :ensure t
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony)))
+
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -i")
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode nil)))
+
+(use-package elpy
+  :ensure t
+  :config
+  (elpy-enable)
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
+  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1))))
+
+(use-package sphinx-doc
+  :ensure t
+  :hook (python-mode . sphinx-doc-mode))
+
+(use-package python-docstring
+  :ensure t
+  :config
+  (setq python-docstring-sentence-end-double-space nil)
+  :hook (python-mode . python-docstring-mode))
+
+(use-package ein
+  :ensure t
+  :hook (ein:notebook-multilang-mode
+         . (lambda () (ws-butler-mode -1) (visual-line-mode)))
+  :custom-face
+  (ein:cell-input-area ((t (:background "#f9f2d9")))))
+
 (use-package org-tempo
   :ensure nil
   :demand t
