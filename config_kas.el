@@ -1033,7 +1033,7 @@
     "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
     "b d" '(bookmark-delete :wk "Delete bookmark")
     "b i" '(ibuffer :wk "Ibuffer")
-    "b k" '(kill-current-buffer :wk "Kill current buffer")
+    "b f" '(kill-current-buffer :wk "Kill current buffer")
     "b K" '(kill-some-buffers :wk "Kill multiple buffers")
     "b l" '(list-bookmarks :wk "List bookmarks")
     "b m" '(bookmark-set :wk "Set bookmark")
@@ -1072,15 +1072,15 @@
   (dt/leader-keys
     "f" '(:ignore t :wk "Files")    
     "f c" '((lambda () (interactive)
-              (find-file "~/.config/emacs/config.org")) 
-            :wk "Open emacs config.org")
+              (find-file "~/.emacs/config_kas.org")) 
+            :wk "Open emacs config_kas.org")
     "f e" '((lambda () (interactive)
               (dired "~/.config/emacs/")) 
             :wk "Open user-emacs-directory in dired")
     "f d" '(find-grep-dired :wk "Search for string in files in DIR")
     "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
     "f i" '((lambda () (interactive)
-              (find-file "~/.config/emacs/init.el")) 
+              (find-file "~/.emacs/init.el")) 
             :wk "Open emacs init.el")
     "f j" '(counsel-file-jump :wk "Jump to a file below current directory")
     "f l" '(counsel-locate :wk "Locate a file")
@@ -1138,9 +1138,9 @@
     "h m" '(describe-mode :wk "Describe mode")
     "h r" '(:ignore t :wk "Reload")
     "h r r" '((lambda () (interactive)
-                (load-file "~/.config/emacs/init.el")
+                (load-file "~/.emacs/init.el")
                 (ignore (elpaca-process-queues)))
-              :wk "Reload emacs config")
+              :wk "Reload emacs config_kas")
     "h t" '(load-theme :wk "Load theme")
     "h v" '(describe-variable :wk "Describe variable")
     "h w" '(where-is :wk "Prints keybinding for command if set")
@@ -1204,9 +1204,9 @@
   (dt/leader-keys
     "w" '(:ignore t :wk "Windows/Words")
     ;; Window splits
-    "w c" '(evil-window-delete :wk "Close window")
+    "w f" '(evil-window-delete :wk "Close window")
     "w n" '(evil-window-new :wk "New window")
-    "w s" '(evil-window-split :wk "Horizontal split window")
+    "w -" '(evil-window-split :wk "Horizontal split window")
     "w v" '(evil-window-vsplit :wk "Vertical split window")
     ;; Window motions
     "w h" '(evil-window-left :wk "Window left")
@@ -1230,3 +1230,14 @@
 
 ;; Charger ton thème personnalisé 'dtmacs'
 (load-theme 'dtmacs t)
+
+(add-hook 'org-mode-hook (lambda () (company-mode -1)))
+
+(defun my/inhibit-angle-brackets-pairing (char)
+  "Inhibit electric pairing for < only."
+  (if (eq char ?<)
+      t
+    (funcall (default-value 'electric-pair-inhibit-predicate) char)))
+
+(with-eval-after-load 'electric-pair
+  (setq-default electric-pair-inhibit-predicate #'my/inhibit-angle-brackets-pairing))
