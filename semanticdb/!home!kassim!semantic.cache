@@ -1,0 +1,18 @@
+;; Object semanticdb-project-database-file-174534c793d2
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-174534c793d2"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-174534c793ec"
+      :major-mode c++-mode
+      :tags 
+        '( ("iostream" include (:system-flag t) nil [1 20])
+            ("main" function (:type "int") nil [22 336]))          
+      :file "test.cpp"
+      :pointmax 337
+      :fsize 336
+      :lastmodtime '(26673 52333 430989 562000)
+      :unmatched-syntax nil))
+  :file "!home!kassim!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")

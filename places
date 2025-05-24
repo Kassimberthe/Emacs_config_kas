@@ -1,5 +1,10 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/kassim/.emacs.d/config_kas.org" . 88619)
+(("/home/kassim/test.cpp" . 337)
+ ("/home/kassim/.emacs.d/config_kas.org" . 51358)
+ ("/tmp/jupyterAn6AyS" . 859)
+ ("/tmp/jupyterIjfeCy" . 859)
+ ("/tmp/jupyterW9rw63" . 859)
+ ("/home/kassim/.emacs.d/elpa/zmq-20241006.1857/emacs-zmq-x86_64-linux-gnu.tar.gz" . 37)
  ("/home/kassim/Téléchargements/minted.tex" . 500)
  ("/home/kassim/Téléchargements/README.org" . 20491)
  ("/home/kassim/.emacs.d/init.el" . 51)
