@@ -667,15 +667,14 @@
 (use-package subword
   :config (global-subword-mode 1))
 
-;; Charger les langages de programmation
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((emacs-lisp . t)  ;; Activer Emacs Lisp
-   (shell . t)       ;; Activer Shell
-   (python . t)      ;; Activer Python
-   (ruby . t)        ;; Activer Ruby
-   ;; (C++ . t)       ;; Activer C++ (désactivé pour l'instant)
-   (latex . t)))     ;; Activer LaTeX
+ '((emacs-lisp . t)
+   (shell . t)
+   (python . t)
+   (ruby . t)
+   (C . t)
+   (latex . t)))
 
 ;; Utiliser org-tempo pour ajouter des raccourcis pour les blocs de code
 (use-package org-tempo
@@ -741,38 +740,6 @@
   :config
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-irony)))
-
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "--simple-prompt -i")
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq tab-width 4)
-            (setq indent-tabs-mode nil)))
-
-(use-package elpy
-  :ensure t
-  :config
-  (elpy-enable)
-  (remove-hook 'elpy-modules 'elpy-module-flymake)
-  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1))))
-
-(use-package sphinx-doc
-  :ensure t
-  :hook (python-mode . sphinx-doc-mode))
-
-(use-package python-docstring
-  :ensure t
-  :config
-  (setq python-docstring-sentence-end-double-space nil)
-  :hook (python-mode . python-docstring-mode))
-
-(use-package ein
-  :ensure t
-  :hook (ein:notebook-multilang-mode
-         . (lambda () (ws-butler-mode -1) (visual-line-mode)))
-  :custom-face
-  (ein:cell-input-area ((t (:background "#f9f2d9")))))
 
 (use-package org-tempo
   :ensure nil
@@ -855,9 +822,9 @@
 
 ;; TODO: Replace with C-c o a like <leader>oa (action open agenda)
 
-(global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c c") #'org-capture)
+;(global-set-key (kbd "C-c l") #'org-store-link)
+;(global-set-key (kbd "C-c a") #'org-agenda)
+;(global-set-key (kbd "C-c c") #'org-capture)
 
 ;; windows home directory
 ;; NOTE: For some reason $HOME or ~ doesn't work on Windows even if we have wsl installed..
@@ -1000,7 +967,7 @@
 (use-package general
   :config
   (general-evil-setup)
-  
+
   ;; set up 'SPC' as the global leader key
   (general-create-definer dt/leader-keys
     :states '(normal insert visual emacs)
@@ -1025,7 +992,7 @@
     "a p" '(ellama-provider-select :wk "Ellama provider select")
     "a s" '(ellama-summarize :wk "Ellama summarize region")
     "a t" '(ellama-translate :wk "Ellama translate region"))
-   
+
   (dt/leader-keys
     "b" '(:ignore t :wk "Bookmarks/Buffers")
     "b b" '(switch-to-buffer :wk "Switch to buffer")
@@ -1037,8 +1004,8 @@
     "b K" '(kill-some-buffers :wk "Kill multiple buffers")
     "b l" '(list-bookmarks :wk "List bookmarks")
     "b m" '(bookmark-set :wk "Set bookmark")
-    "b n" '(next-buffer :wk "Next buffer")
-    "b p" '(previous-buffer :wk "Previous buffer")
+    "b k" '(next-buffer :wk "Next buffer")
+    "b j" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
     "b R" '(rename-buffer :wk "Rename buffer")
     "b s" '(basic-save-buffer :wk "Save buffer")
@@ -1072,16 +1039,16 @@
   (dt/leader-keys
     "f" '(:ignore t :wk "Files")    
     "f c" '((lambda () (interactive)
-              (find-file "~/.emacs/config_kas.org")) 
-            :wk "Open emacs config_kas.org")
+              (find-file "~/.emacs.d/config_kas.org")) 
+            :wk "Open emacs -nw config_kas.org")
     "f e" '((lambda () (interactive)
               (dired "~/.config/emacs/")) 
             :wk "Open user-emacs-directory in dired")
     "f d" '(find-grep-dired :wk "Search for string in files in DIR")
     "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
     "f i" '((lambda () (interactive)
-              (find-file "~/.emacs/init.el")) 
-            :wk "Open emacs init.el")
+              (find-file "~/.emacs.d/init.el")) 
+            :wk "Open emacs -nw init.el")
     "f j" '(counsel-file-jump :wk "Jump to a file below current directory")
     "f l" '(counsel-locate :wk "Locate a file")
     "f r" '(counsel-recentf :wk "Find recent files")
@@ -1153,7 +1120,18 @@
     "m i" '(org-toggle-item :wk "Org toggle item")
     "m t" '(org-todo :wk "Org todo")
     "m B" '(org-babel-tangle :wk "Org babel tangle")
-    "m T" '(org-todo-list :wk "Org todo list"))
+    "m T" '(org-todo-list :wk "Org todo list")
+    "m l" '(org-store-link :wk "Store Org link")
+    "m C" '(org-capture :wk "Org capture"))  ;; C majuscule = général
+
+  (dt/leader-keys
+    "m c" '(:ignore t :wk "Capture")
+    "m c b" (lambda () (interactive) (org-capture nil "b"))
+    "m c p" (lambda () (interactive) (org-capture nil "p"))
+    "m c w" (lambda () (interactive) (org-capture nil "w"))
+    "m c s" (lambda () (interactive) (org-capture nil "s"))
+    "m c j" (lambda () (interactive) (org-capture nil "j")))
+
 
   (dt/leader-keys
     "m b" '(:ignore t :wk "Tables")
@@ -1174,7 +1152,7 @@
   ;; set for us, so no need to specify each individually.
   (dt/leader-keys
     "p" '(projectile-command-map :wk "Projectile"))
-  
+
   (dt/leader-keys
     "r" '(:ignore t :wk "Radio")
     "r p" '(eradio-play :wk "Eradio play")
