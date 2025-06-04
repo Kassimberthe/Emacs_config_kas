@@ -967,7 +967,6 @@
 (use-package general
   :config
   (general-evil-setup)
-
   ;; set up 'SPC' as the global leader key
   (general-create-definer dt/leader-keys
     :states '(normal insert visual emacs)
@@ -1042,7 +1041,7 @@
               (find-file "~/.emacs.d/config_kas.org")) 
             :wk "Open emacs -nw config_kas.org")
     "f e" '((lambda () (interactive)
-              (dired "~/.config/emacs/")) 
+              (dired "~/.emacs.d")) 
             :wk "Open user-emacs-directory in dired")
     "f d" '(find-grep-dired :wk "Search for string in files in DIR")
     "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
@@ -1105,7 +1104,7 @@
     "h m" '(describe-mode :wk "Describe mode")
     "h r" '(:ignore t :wk "Reload")
     "h r r" '((lambda () (interactive)
-                (load-file "~/.emacs/init.el")
+                (load-file "~/.emacs.d/init.el")
                 (ignore (elpaca-process-queues)))
               :wk "Reload emacs config_kas")
     "h t" '(load-theme :wk "Load theme")
@@ -1132,7 +1131,6 @@
     "m c s" (lambda () (interactive) (org-capture nil "s"))
     "m c j" (lambda () (interactive) (org-capture nil "j")))
 
-
   (dt/leader-keys
     "m b" '(:ignore t :wk "Tables")
     "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
@@ -1158,7 +1156,6 @@
     "r p" '(eradio-play :wk "Eradio play")
     "r s" '(eradio-stop :wk "Eradio stop")
     "r t" '(eradio-toggle :wk "Eradio toggle"))
-
 
   (dt/leader-keys
     "s" '(:ignore t :wk "Search")
