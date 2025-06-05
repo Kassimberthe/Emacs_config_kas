@@ -1601,20 +1601,19 @@ dépôt distant origin.
 
 ** Fichiers agenda
 #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-files (list (concat org-directory "/personal.org")
-                 (concat org-directory "/work.org")
-                 (concat org-directory "/school.org")
-                 (concat org-directory "/journal.org")))
-
-  (setq diary-file (concat org-directory "/anniversaires.org"))
-  (setq org-deadline-warning-days 7)
-  (setq org-agenda-include-diary t) ; NOTE: We are including calendar holidays in diary.org
-  (setq org-agenda-span 7)
-  (setq org-agenda-start-on-weekday nil)
-  (setq org-agenda-start-day "-1d")
-  (setq org-agenda-start-with-log-mode t)
-  ;; TODO: org-agenda-custom-commands
-  (setq org-agenda-window-setup 'only-window)
+      (setq org-agenda-files (list (concat org-directory "/personal.org")
+                     (concat org-directory "/work.org")
+                     (concat org-directory "/school.org")
+                     (concat org-directory "/journal.org")
+                     (setq diary-file (concat org-directory "/anniversaires.org")))
+      (setq org-deadline-warning-days 7)
+      (setq org-agenda-include-diary) ; NOTE: We are including calendar holidays in diary.org, j'ai effacé nil à la fin
+      (setq org-agenda-span 7)
+      (setq org-agenda-start-on-weekday nil)
+      (setq org-agenda-start-day "-1d")
+      (setq org-agenda-start-with-log-mode t)
+      ;; TODO: org-agenda-custom-commands
+      (setq org-agenda-window-setup 'only-window)
 #+END_SRC
 
 #+RESULTS:

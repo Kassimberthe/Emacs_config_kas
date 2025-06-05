@@ -1,6 +1,7 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/kassim/Notes/orgfiles/journal.org" . 190)
- ("/home/kassim/.emacs.d/config_kas.org" . 87917)
+(("/home/kassim/.emacs.d/config_kas.org" . 69392)
+ ("/home/kassim/Notes/orgfiles/anniversaires.org" . 17)
+ ("/home/kassim/Notes/orgfiles/journal.org" . 190)
  ("/home/kassim/Documents/job_hvsa.org" . 155)
  ("/home/kassim/"
 	(dired-filename . "/home/kassim/auto_linux"))
