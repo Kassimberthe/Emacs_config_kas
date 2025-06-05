@@ -1755,6 +1755,17 @@ dépôt distant origin.
 : t
 
 * Raccourcis généraux
+#+begin_src emacs-lisp
+;; Fonction personnalisée pour insérer une date inactive
+(defun my/org-insert-inactive-timestamp ()
+  "Insert an inactive org timestamp."
+  (interactive)
+  (org-time-stamp nil t))
+#+end_src
+
+#+RESULTS:
+: my/org-insert-inactive-timestamp
+
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :config
@@ -1923,13 +1934,24 @@ dépôt distant origin.
       "m c s" (lambda () (interactive) (org-capture nil "s"))
       "m c j" (lambda () (interactive) (org-capture nil "j")))
 
-    (dt/leader-keys
-      "m b" '(:ignore t :wk "Tables")
-      "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
-  
+     (dt/leader-keys
+       "m b" '(:ignore t :wk "Tables")
+       "m b -" '(org-table-insert-hline :wk "Insert hline in table")
+       "m b r" '(org-table-insert-row :wk "Insert row")
+       "m b c" '(org-table-insert-column :wk "Insert column")
+       "m b e" '(org-table-edit-field :wk "Edit current field")
+       "m b a" '(org-table-align :wk "Align table")
+       "m b s" '(org-table-sort-lines :wk "Sort table"))
+
     (dt/leader-keys
       "m d" '(:ignore t :wk "Date/deadline")
-      "m d t" '(org-time-stamp :wk "Org time stamp"))
+      "m d t" '(org-time-stamp :wk "Insert timestamp")
+      "m d i" '(my/org-insert-inactive-timestamp :wk "Insert inactive timestamp")
+      "m d d" '(org-deadline :wk "Set deadline")
+      "m d s" '(org-schedule :wk "Set schedule")
+      "m d r" '(org-clock-report :wk "Clock report")
+      "m d n" '(org-timestamp-down :wk "Timestamp -1 day")
+      "m d p" '(org-timestamp-up :wk "Timestamp +1 day"))
 
     (dt/leader-keys
       "o" '(:ignore t :wk "Open")
