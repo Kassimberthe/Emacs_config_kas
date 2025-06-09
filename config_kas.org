@@ -177,7 +177,7 @@ n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+END_SRC
 
 #+RESULTS:
-| display-line-numbers-mode | hl-line-mode |
+| display-line-numbers-mode | hl-line-mode | rainbow-mode |
 
 ** Desactiver la numerotation pour certain mode
 
@@ -1267,7 +1267,6 @@ M-x irony-install-server
 : t
 
 * Exportation
-
 ** Markdown
 
 #+BEGIN_SRC emacs-lisp
@@ -1366,13 +1365,12 @@ essai
 : t
 
 ** Désactiver la numérotation des lignes pour Org Mode
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
-#+END_SRC
-
-#+RESULTS:
-| (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | turn-on-org-cdlatex | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+;#+BEGIN_SRC emacs-lisp
+;(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+;#+END_SRC
+;
+;#+RESULTS:
+;| (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | turn-on-org-cdlatex | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 * Fonctionnement de Git
 **  Envoi vers le dossier distant Git ↔ Magit
@@ -2148,3 +2146,18 @@ Quitter exit
 
 #+RESULTS:
 : t
+* Version
+#+BEGIN_SRC emacs-lisp
+  (org-version)
+#+END_SRC
+
+#+RESULTS:
+: 9.6.15
+
+#+BEGIN_SRC emacs-lisp
+(emacs-version)
+#+END_SRC
+
+#+RESULTS:
+: GNU Emacs 29.3 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.41, cairo version 1.18.0)
+:  of 2024-04-01, modified by Debian

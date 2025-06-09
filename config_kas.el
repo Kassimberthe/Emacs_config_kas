@@ -813,8 +813,6 @@
 ;; Load up doom-palenight for the System Crafters look
 ;(load-theme 'doom-palenight t)
 
-(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
-
 (require 'org)
 (require 'org-agenda)
 (require 'org-capture)
@@ -856,11 +854,13 @@
 (setq org-startup-folded t)
 
 (setq org-agenda-files (list (concat org-directory "/personal.org")
-							 (concat org-directory "/work.org")
-							 (concat org-directory "/school.org")
-							 (concat org-directory "/journal.org")))
+               (concat org-directory "/work.org")
+               (concat org-directory "/school.org")
+               (concat org-directory "/journal.org")))
+
+(setq diary-file (concat org-directory "/anniversaires.org"))
 (setq org-deadline-warning-days 7)
-(setq org-agenda-include-diary nil) ; NOTE: We are including calendar holidays in diary.org
+(setq org-agenda-include-diary t) ; NOTE: We are including calendar holidays in diary.org
 (setq org-agenda-span 7)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-start-day "-1d")
@@ -1303,3 +1303,7 @@
                  ;; (dedicated . t) ; dedicated supporté dans Emacs 27+
                  (reusable-frames . visible)
                  (window-height . 0.4))))
+
+(org-version)
+
+(emacs-version)
