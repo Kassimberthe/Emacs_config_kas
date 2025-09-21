@@ -1160,6 +1160,41 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 #+RESULTS:
 : python3
 
+*** Configuration Python + Virtualenv pour Org-Babel
+**** Activation de pyvenv et du virtualenv pythonvenv
+#+BEGIN_SRC emacs-lisp
+(use-package pyvenv
+  :ensure t
+  :config
+  ;; Active pyvenv automatiquement
+  (pyvenv-mode 1)
+  ;; Active le virtualenv situé ici :
+  (pyvenv-activate "/home/kassim/pythonvenv"))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+**** Mise à jour automatique du chemin Python d'Org-Babel
+#+BEGIN_SRC emacs-lisp
+(defun my/update-org-babel-python-command ()
+  (when (and (boundp 'pyvenv-virtual-env)
+             pyvenv-virtual-env)
+    (setq org-babel-python-command
+          (expand-file-name "bin/python" pyvenv-virtual-env))))
+(add-hook 'pyvenv-post-activate-hooks #'my/update-org-babel-python-command)
+#+END_SRC
+
+#+RESULTS:
+| my/update-org-babel-python-command |
+
+#+BEGIN_SRC emacs-lisp
+(my/update-org-babel-python-command)
+#+END_SRC
+
+#+RESULTS:
+: /home/kassim/pythonvenv/bin/python
+
 ** C/C++
 #+BEGIN_SRC emacs-lisp
 (add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))

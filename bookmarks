@@ -2,10 +2,10 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
- (filename . "~/Notes/orgfiles/school.org")
- (front-context-string . "* TODO revision ")
- (rear-context-string)
- (position . 2)
- (last-modified 26701 54061 980263 490000))
+(("bookmarkers"
+ (filename . "~/.emacs.d/config_kas.org")
+ (front-context-string . "    (dt/leader-k")
+ (rear-context-string . "late region\"))\n\n")
+ (position . 77706)
+ (last-modified 26830 50113 416181 467000))
 )
