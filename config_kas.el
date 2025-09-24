@@ -696,6 +696,23 @@
 ;; Utiliser Python 3 comme interpréteur pour Org-Babel
 (setq org-babel-python-command "python3")
 
+(use-package pyvenv
+  :ensure t
+  :config
+  ;; Active pyvenv automatiquement
+  (pyvenv-mode 1)
+  ;; Active le virtualenv situé ici :
+  (pyvenv-activate "/home/kassim/pythonvenv"))
+
+(defun my/update-org-babel-python-command ()
+  (when (and (boundp 'pyvenv-virtual-env)
+             pyvenv-virtual-env)
+    (setq org-babel-python-command
+          (expand-file-name "bin/python" pyvenv-virtual-env))))
+(add-hook 'pyvenv-post-activate-hooks #'my/update-org-babel-python-command)
+
+(my/update-org-babel-python-command)
+
 (add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))
 
 (use-package cmake-mode
