@@ -762,19 +762,19 @@
   :ensure nil
   :demand t
   :config
-  (dolist (item '(("sh"    . "src sh")               ;; Shell script
-                  ("el"    . "src emacs-lisp")       ;; Emacs Lisp
-                  ("li"    . "src lisp")             ;; Lisp
-                  ("sc"    . "src scheme")           ;; Scheme
-                  ("py"    . "src python")           ;; Python
-                  ("pys"   . "src python :session my_session") ;; Python session
-                  ("pyp"   . "src python :session my_session :results output") ;; Python with output
-                  ("pyv"   . "src python :session my_session :results value") ;; Python with value
-                  ("pyg"   . "src python :session my_session :results file :file graph.png") ;; Python with graph file
-                  ("yaml"  . "src yaml")             ;; YAML
-                  ("json"  . "src json")             ;; JSON
-                  ("cpp"   . "src C++")              ;; C++
-                  ("tex"   . "src latex")))          ;; LaTeX
+  (dolist (item '(("sh"    . "src sh")                      ;; Shell script
+                  ("el"    . "src emacs-lisp")              ;; Emacs Lisp
+                  ("li"    . "src lisp")                    ;; Lisp
+                  ("sc"    . "src scheme")                  ;; Scheme
+                  ("py"    . "src python")                  ;; Python simple
+                  ("pyp"   . "src python :results output")  ;; Python output (print)
+                  ("pyv"   . "src python :results value")   ;; Python value (return)
+                  ("pyr"   . "src python :results value")   ;; Python value (return)
+                  ("pyi"   . "src python :results file")    ;; Python graph (image file)
+                  ("yaml"  . "src yaml")                    ;; YAML
+                  ("json"  . "src json")                    ;; JSON
+                  ("cpp"   . "src C++")                     ;; C++
+                  ("tex"   . "src latex")))                 ;; LaTeX
     (add-to-list 'org-structure-template-alist item)))
 
 (use-package ox-pandoc
@@ -806,15 +806,16 @@
   (require 'ox-md)) ;; Charge l'exportateur Markdown
 
 ;; Ajouter ox-ipynb au chemin de chargement
-;;(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")
+(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")
 
 ;; Charger le paquet ox-ipynb
-;;(require 'ox-ipynb)
+(require 'ox-ipynb)
 
-;; Activer l'exportation vers Jupyter Notebook
-;;(setq org-export-backends '(ipynb)) ;; Ajoute `ipynb` comme backend d'exportation
+;; Ajouter ipynb aux backends d'exportation sans supprimer les autres
+(add-to-list 'org-export-backends 'ipynb)
 
-;; Assurez-vous d'avoir des blocs de code correctement formatés dans Org
+;; Message de debug pour confirmer le chargement
+(message "ox-ipynb chargé ? %s" (featurep 'ox-ipynb))
 
 ;; Équilibrer automatiquement les fenêtres après suppression
 (advice-add #'delete-window
