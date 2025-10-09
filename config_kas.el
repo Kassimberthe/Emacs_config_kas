@@ -1325,3 +1325,5 @@
 (org-version)
 
 (emacs-version)
+
+(menu-bar-mode -1)

@@ -525,6 +525,13 @@ suivi par git.
 #+RESULTS:
 : Diminish configuration applied successfully
 
+** Désactiver la barre de menu
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+#+end_src
+
+#+RESULTS:
+
 * Theme de font
 
 #+BEGIN_SRC emacs-lisp
@@ -2196,3 +2203,4 @@ Quitter exit
 #+RESULTS:
 : GNU Emacs 29.3 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.41, cairo version 1.18.0)
 :  of 2024-04-01, modified by Debian
+
