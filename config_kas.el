@@ -307,6 +307,8 @@
   (diminish 'subword-mode))
 "Diminish configuration applied successfully"
 
+(menu-bar-mode -1)
+
 ;; Définir le répertoire pour les thèmes personnalisés
 (setq custom-theme-directory
       (concat user-emacs-directory "themes"))
@@ -1325,5 +1327,3 @@
 (org-version)
 
 (emacs-version)
-
-(menu-bar-mode -1)
