@@ -1,5 +1,5 @@
 (undo-tree-save-format-version . 1)
-"f72d68509ea68c8c54430bb180edcb8a4a8b1f01"
+"5cb2dade98d43942e6fcc1c93273659aa9f25055"
 [nil nil nil nil (26677 63686 982175 531000) 0 nil]
 ([nil nil ((#("  ;; 1. Charger ob-ipython avant de configurer org-babel
   (use-package ob-ipython
@@ -478,6 +478,7 @@ Installation du package `hydra` via `use-package`.
 " 0 1 (face org-hide wrap-prefix #("*** " 0 1 (face org-indent) 1 4 (face org-indent)) line-prefix #("*" 0 1 (face org-indent)) fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show) 1 2 (composition (1 1 [10047]) face (org-superstar-header-bullet org-level-2) wrap-prefix #("*** " 0 1 (face org-indent) 1 4 (face org-indent)) line-prefix #("*" 0 1 (face org-indent)) fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show) 2 3 (face org-level-2 wrap-prefix #("*** " 0 1 (face org-indent) 1 4 (face org-indent)) line-prefix #("*" 0 1 (face org-indent)) fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show) 3 38 (face org-level-2 wrap-prefix #("*** " 0 1 (face org-indent) 1 4 (face org-indent)) line-prefix #("*" 0 1 (face org-indent)) fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . 16412) (undo-tree-id0 . -38) (undo-tree-id1 . -4) (undo-tree-id2 . -37) 16416) nil (26856 11126 652766 687000) 0 nil])
 ([nil nil ((#("
 " 0 1 (fontified t wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)))) . 16443)) nil (26856 11126 652735 300000) 0 nil])
-([nil current ((16496 . 16507) (#("
+([nil nil ((16496 . 16507) (#("
 " 0 1 (wrap-prefix #("    " 0 4 (face org-indent)) line-prefix #("    " 0 4 (face org-indent)) fontified nil)) . 16496) (16495 . 16497)) nil (26856 11126 652731 250000) 0 nil])
+([nil current ((nil rear-nonsticky nil 62149 . 62150) (nil fontified nil 62100 . 62150) (62100 . 62150) (62099 . 62100) (62097 . 62099) (#(":" 0 1 (src-block t face (org-block) font-lock-multiline t wrap-prefix #("      " 0 6 (face org-indent)) line-prefix #("      " 0 6 (face org-indent)) font-lock-fontified t fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -62097) (undo-tree-id0 . -1) (undo-tree-id1 . -1) 62098 (62097 . 62098) (#(":" 0 1 (src-block t face (org-block) font-lock-multiline t wrap-prefix #("      " 0 6 (face org-indent)) line-prefix #("      " 0 6 (face org-indent)) font-lock-fontified t fontified t isearch-open-invisible-temporary org-fold-core--isearch-show-temporary isearch-open-invisible org-fold-core--isearch-show)) . -62097) (undo-tree-id2 . -1) 62098 (62097 . 62098) (62098 . 62100) (62142 . 62144) (62191 . 62193) (62221 . 62223) (62242 . 62244) (62312 . 62314) (62355 . 62357) (62404 . 62406) 62097 (62096 . 62097) (t 26861 28520 844398 508000)) nil (26861 32797 309107 900000) 0 nil])
 nil
