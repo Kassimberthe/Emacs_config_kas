@@ -4,3 +4,4 @@
 *.elc
 .emacs.desktop
 .emacs.d/elpa/
+ox-ipynb/
