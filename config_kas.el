@@ -807,17 +807,18 @@
 (with-eval-after-load 'org
   (require 'ox-md)) ;; Charge l'exportateur Markdown
 
-;; Ajouter ox-ipynb au chemin de chargement
-(add-to-list 'load-path "~/.emacs.d/ox-ipynb/")
+;; git clone https://github.com/jkitchin/ox-ipynb.git
+  ;; Ajouter ox-ipynb au chemin de chargement
+  (add-to-list 'load-path "~/.emacs.d/ox-ipynb/")
 
-;; Charger le paquet ox-ipynb
-(require 'ox-ipynb)
+  ;; Charger le paquet ox-ipynb
+  (require 'ox-ipynb)
 
-;; Ajouter ipynb aux backends d'exportation sans supprimer les autres
-(add-to-list 'org-export-backends 'ipynb)
+  ;; Ajouter ipynb aux backends d'exportation sans supprimer les autres
+  (add-to-list 'org-export-backends 'ipynb)
 
-;; Message de debug pour confirmer le chargement
-(message "ox-ipynb chargé ? %s" (featurep 'ox-ipynb))
+  ;; Message de debug pour confirmer le chargement
+  (message "ox-ipynb chargé ? %s" (featurep 'ox-ipynb))
 
 ;; Équilibrer automatiquement les fenêtres après suppression
 (advice-add #'delete-window

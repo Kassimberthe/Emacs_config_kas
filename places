@@ -1,5 +1,6 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/kassim/.emacs.d/config_kas.org" . 51934)
+(("/home/kassim/.bashrc" . 4240)
+ ("/home/kassim/.emacs.d/config_kas.org" . 51934)
  ("/home/kassim/emacsData/emacsData.org" . 2317)
  ("/home/kassim/.config/.git/config" . 1387)
  ("/home/kassim/emacsData/emacsData.ipynb" . 3943)
@@ -19,7 +20,6 @@
  ("/home/kassim/Notes/orgfiles/school.org" . 91)
  ("/home/kassim/Documents/essai.txt" . 29)
  ("/home/kassim/Documents/processus_ponctuel/DM_kassim_berthé2.tex" . 13245)
- ("/home/kassim/.bashrc" . 3940)
  ("/home/kassim/Téléchargements/test.org" . 274)
  ("/home/kassim/Documents/job_hvsa.org" . 210)
  ("/home/kassim/"
