@@ -130,6 +130,30 @@ n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+RESULTS:
 | org-indent-mode | rainbow-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
+#+BEGIN_SRC emacs-lisp
+;; --------------------------------------------------------
+;; Définir la largeur des tabulations et l'indentation
+;; pour les modes de programmation
+;; --------------------------------------------------------
+
+;; Largeur globale des tabulations
+(setq tab-width 4)
+
+;; Fonction pour configurer les modes de programmation
+(defun my/prog-mode-tab-settings ()
+  "Configure indentation and tab width for programming modes."
+  (setq tab-width 4)              ;; largeur d'une tabulation
+  (setq evil-shift-width 4)       ;; décalage pour evil-mode
+  (setq python-indent-offset 4))  ;; indentation Python
+
+;; Ajouter le hook pour tous les modes de programmation
+(add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
+#+END_SRC
+
+#+RESULTS:
+| my/prog-mode-tab-settings | display-line-numbers-mode | hl-line-mode | rainbow-mode |
+
+
 ** Appel automatique du delimitateur fermant
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)
