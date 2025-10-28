@@ -555,6 +555,129 @@ suivi par git.
 #+RESULTS:
 : t
 
+#+BEGIN_SRC emacs-lisp
+    ;; ================================================================
+    ;; 🎨 CONFIGURATION DES COULEURS & FACES — COMPATIBLE TOUS THÈMES
+    ;; ================================================================
+
+  ;; 1️⃣ Détection du thème actif et définition des couleurs
+(pcase (car custom-enabled-themes)
+
+  ;; --- Thème Catppuccin Mocha ---
+  ('catppuccin
+   (setq my/black  (cdr (assoc 'base catppuccin-mocha-colors))
+         my/gray   (cdr (assoc 'mantle catppuccin-mocha-colors))
+         my/lgray  (cdr (assoc 'subtext0 catppuccin-mocha-colors))
+         my/lwhite (cdr (assoc 'subtext1 catppuccin-mocha-colors))
+         my/white  (cdr (assoc 'text catppuccin-mocha-colors))
+         my/red    (cdr (assoc 'red catppuccin-mocha-colors))
+         my/orange (cdr (assoc 'flamingo catppuccin-mocha-colors))
+         my/yellow (cdr (assoc 'yellow catppuccin-mocha-colors))
+         my/green  (cdr (assoc 'green catppuccin-mocha-colors))
+         my/lblue  (cdr (assoc 'sapphire catppuccin-mocha-colors))
+         my/blue   (cdr (assoc 'blue catppuccin-mocha-colors))
+         my/purple (cdr (assoc 'mauve catppuccin-mocha-colors))
+         my/brown  (cdr (assoc 'peach catppuccin-mocha-colors)))))
+
+;; --- 🎨 Couleurs personnalisées par défaut (aucun thème actif) ---
+(unless (eq (car custom-enabled-themes) 'catppuccin)
+  (setq my/black  "#1E1E2E"
+        my/gray   "#585B70"
+        my/lgray  "#A6ADC8"
+        my/lwhite "#D9E0EE"
+        my/white  "#D9E0EE"
+        my/red    "#F28FAD"
+        my/orange "#F8BD96"
+        my/yellow "#FAE3B0"
+        my/green  "#ABE9B3"
+        my/lblue  "#89DCEB"
+        my/blue   "#96CDFB"
+        my/purple "#DDB6F2"
+        my/brown  "#CBA6F7"))
+
+  
+    ;; ================================================================
+    ;; 2️⃣ Personnalisation des FACES (éléments visuels d’Emacs)
+    ;; ================================================================
+
+  ;  ;; 🔹 Liens cliquables
+  ;  (set-face-attribute 'link nil
+  ;                      :foreground my/blue
+  ;                      :underline t)
+  ;
+  ;  ;; 🔹 Recherche incrémentale (C-s / C-r)
+  ;  (set-face-attribute 'isearch nil
+  ;                      :weight 'normal
+  ;                      :background my/yellow
+  ;                      :foreground my/black)
+  ;
+  ;  ;; 🔹 Résultats secondaires de recherche
+  ;  (set-face-attribute 'lazy-highlight nil
+  ;                      :background my/lblue
+  ;                      :foreground my/white)
+  ;
+  ;  ;; 🔹 Région sélectionnée (C-SPC)
+  ;  (set-face-attribute 'region nil
+  ;                      :background my/lgray)
+  ;
+  ;  ;; 🔹 Numéros de ligne & frange (bande latérale)
+  ;  (dolist (face '(fringe line-number))
+  ;    (set-face-attribute face nil
+  ;                        :background my/gray
+  ;                        :foreground my/lwhite))
+  ;
+  ;  ;; 🔹 Modeline (barre d’état)
+  ;  (set-face-attribute 'mode-line nil
+  ;                      :background my/blue
+  ;                      :foreground my/lwhite
+  ;                      :box `(:line-width 1 :color ,my/gray))
+  ;
+  ;  (set-face-attribute 'mode-line-inactive nil
+  ;                      :background my/lgray
+  ;                      :foreground my/gray
+  ;                      :box `(:line-width 1 :color ,my/gray))
+  ;
+  ;  ;; 🔹 Curseur
+  ;  (set-face-attribute 'cursor nil :background my/red)
+
+
+  ;; ================================================================
+;; 4️⃣ Personnalisation de la ZONE DE COMMANDE (Minibuffer & Messages)
+;; ================================================================
+;
+;;; 🔹 Invite du minibuffer (ex: "M-x", "Find file: ")
+;(set-face-attribute 'minibuffer-prompt nil
+;                    :foreground my/blue
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'information (en vert)
+;(set-face-attribute 'success nil
+;                    :foreground my/green
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'avertissement (en jaune/orange)
+;(set-face-attribute 'warning nil
+;                    :foreground my/orange
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'erreur (en rouge)
+;(set-face-attribute 'error nil
+;                    :foreground my/red
+;                    :weight 'bold)
+
+    ;; ================================================================
+    ;; 3️⃣ Vérification visuelle (affiche les couleurs actives)
+    ;; ================================================================
+    (list
+     (cons "Thème actif" (car custom-enabled-themes))
+     (cons "Bleu principal" my/blue)
+     (cons "Fond modeline" (face-background 'mode-line))
+     (cons "Texte sélection" (face-background 'region)))
+#+END_SRC
+
+#+RESULTS:
+: ((Thème actif . dtmacs) (Bleu principal . #96CDFB) (Fond modeline . #24343e) (Texte sélection . #e81050))
+
 * Org mode
 ** Indentation
 
