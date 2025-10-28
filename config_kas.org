@@ -153,7 +153,6 @@ n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+RESULTS:
 | my/prog-mode-tab-settings | display-line-numbers-mode | hl-line-mode | rainbow-mode |
 
-
 ** Appel automatique du delimitateur fermant
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)
@@ -1840,6 +1839,32 @@ dépôt distant origin.
 
 #+RESULTS:
 : ~/Notes/orgfiles/mobile-flagged.org
+
+** Org super agenda
+#+BEGIN_SRC emacs-lisp
+;; --------------------------------------------------------
+;; Org Super Agenda : installation et configuration
+;; --------------------------------------------------------
+(use-package org-super-agenda
+  :ensure t
+  :config
+  (org-super-agenda-mode))
+
+;; Désactiver les raccourcis clavier dans les headers
+(setq org-super-agenda-header-map (make-sparse-keymap))
+
+;; Configuration générale de l'agenda
+(setq org-agenda-start-on-weekday nil)       ;; Commencer n'importe quel jour
+(setq org-agenda-show-all-dates nil)        ;; Masquer les dates vides
+(setq org-agenda-format-date "%A")          ;; Afficher le nom du jour
+(setq org-agenda-block-separator nil)       ;; Pas de séparation entre les blocs
+
+;; Désactiver la grille horaire
+(setq org-agenda-show-current-time-in-grid nil)
+(setq org-agenda-use-time-grid nil)
+#+END_SRC
+
+#+RESULTS:
 
 * mu4e
 #+BEGIN_SRC emacs-lisp
