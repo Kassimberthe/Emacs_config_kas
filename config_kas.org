@@ -2377,3 +2377,79 @@ Quitter exit
 : GNU Emacs 29.3 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.41, cairo version 1.18.0)
 :  of 2024-04-01, modified by Debian
 
+* Mode graphique
+#+BEGIN_SRC emacs-lisp
+        ;;; config_kas.el --- Configuration personnelle -*- lexical-binding: t; -*-
+
+        ;;; ===================== Prérequis =====================
+        (require 'cl-lib)
+        (require 'use-package)
+
+        ;;; ===================== GUI =====================
+        (when (display-graphic-p)
+          ;; Désactiver les éléments visuels
+          (menu-bar-mode -1)
+          (tool-bar-mode -1)
+          (scroll-bar-mode -1)
+          (setq horizontal-scroll-bar-mode nil)
+
+          ;; ==================== Doom Modeline ====================
+          (use-package all-the-icons
+            :ensure t)
+
+          (use-package doom-modeline
+            :ensure t
+            :init
+            (doom-modeline-mode 1)
+            :custom
+            (doom-modeline-height 25)
+            (doom-modeline-bar-width 3)
+            (doom-modeline-icon t)
+            (doom-modeline-major-mode-icon t)
+            (doom-modeline-buffer-file-name-style 'truncate-with-project)
+            (doom-modeline-vcs t)
+            (doom-modeline-lsp t)
+            (doom-modeline-minor-modes nil)
+            (doom-modeline-enable-word-count t)
+            (doom-modeline-percent-position t)
+            (doom-modeline-env-version t))
+
+          ;; Afficher heure + batterie
+          ;(display-time-mode 1)
+        ;  (display-battery-mode 1)
+         ; (setq display-time-format "%H:%M"
+          ;      display-time-default-load-average nil)
+           )
+
+        ;;; ===================== Evil Mode =====================
+        (with-eval-after-load 'doom-modeline
+        (setq doom-modeline-modal-icon nil))
+
+    (with-eval-after-load 'evil
+      ;; Normal state
+      (plist-put (plist-get evil-state-properties 'normal) :tag "[N]")
+      ;; Insert state
+      (plist-put (plist-get evil-state-properties 'insert) :tag "[I]")
+      ;; Visual state
+      (plist-put (plist-get evil-state-properties 'visual) :tag "[V]")
+      ;; Replace state
+      (plist-put (plist-get evil-state-properties 'replace) :tag "[R]")
+      ;; Motion state
+      (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
+      ;; Emacs state
+      (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
+
+        ;;; ==============================
+        ;;; 🎨 Couleurs façon Lualine
+        ;;; ==============================
+        (custom-set-faces
+         '(doom-modeline-evil-normal-state  ((t (:background "#98be65" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#98be65" :style released-button)))))
+         '(doom-modeline-evil-insert-state  ((t (:background "#ecbe7b" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#ecbe7b" :style released-button)))))
+         '(doom-modeline-evil-visual-state  ((t (:background "#c678dd" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#c678dd" :style released-button)))))
+         '(doom-modeline-evil-replace-state ((t (:background "#ff6c6b" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#ff6c6b" :style released-button)))))
+         '(doom-modeline-evil-motion-state  ((t (:background "#46d9ff" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#46d9ff" :style released-button)))))
+         '(doom-modeline-evil-emacs-state   ((t (:background "#51afef" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#51afef" :style released-button))))))
+
+#+end_src
+
+#+RESULTS:
