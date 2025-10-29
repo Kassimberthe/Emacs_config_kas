@@ -1753,11 +1753,11 @@ dépôt distant origin.
 	(setq home-directory "~"))
 
 ;; (setq org-directory (concat home-directory "/Notes/org"))
-(setq org-directory (concat home-directory "/Notes/orgfiles"))
+(setq org-directory (concat home-directory "/.emacs.d/Notes/orgfiles"))
 #+END_SRC
 
 #+RESULTS:
-: ~/Notes/orgfiles
+: ~/.emacs.d/Notes/orgfiles
 
 ** Options d'affichage
 
@@ -1865,6 +1865,160 @@ dépôt distant origin.
 #+END_SRC
 
 #+RESULTS:
+
+** Roam
+#+BEGIN_SRC text
+;; C-c n l : ouvrir/fermer la sidebar Org-roam
+;; C-c n f : chercher ou créer une note
+;; C-c n g : ouvrir le graphe visuel dans le navigateur
+;; C-c n i : insérer un lien vers une autre note
+;; C-c n c : capturer une nouvelle note
+;; C-c n t : ajouter un tag à une note
+;; C-c n a : ajouter un alias à une note
+;; C-c n j : créer ou ouvrir la note du jour (Daily)
+;; C-c n e : rechercher un fichier Org-roam via consult
+;; C-c n b : afficher les backlinks
+;; C-c n B : backlinks récursifs
+;; C-c n l : liens sortants
+;; C-c n r : rechercher dans toutes les notes (Consult)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "~/.emacs.d/Notes/roam/"))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-ui-open)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ("C-c n t" . org-roam-tag-add)
+           ("C-c n a" . org-roam-alias-add)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :config
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template
+          (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+END_SRC
+
+#+RESULTS:
+: org-roam-dailies-capture-today
+
+#+BEGIN_SRC emacs-lisp
+(setq org-roam-db-location "~/.cache/org-roam.db")
+#+END_SRC
+
+#+RESULTS:
+: ~/.cache/org-roam.db
+
+#+BEGIN_SRC emacs-lisp
+(use-package consult-org-roam
+  :ensure t
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor mode
+  (consult-org-roam-mode 1)
+  :custom
+  ;; Use `ripgrep' for searching with `consult-org-roam-search'
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  ;; Configure a custom narrow key for `consult-buffer'
+  (consult-org-roam-buffer-narrow-key ?r)
+  ;; Display org-roam buffers right after non-org-roam buffers
+  ;; in consult-buffer (and not down at the bottom)
+  (consult-org-roam-buffer-after-buffers t)
+  :bind
+  ;; Define some convenient keybindings as an addition
+  ("C-c n e" . consult-org-roam-file-find)
+  ("C-c n b" . consult-org-roam-backlinks)
+  ("C-c n B" . consult-org-roam-backlinks-recursive)
+  ("C-c n l" . consult-org-roam-forward-links)
+  ("C-c n r" . consult-org-roam-search))
+#+END_SRC
+
+#+RESULTS:
+: consult-org-roam-search
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam-ui
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+** Exemple
+#+BEGIN_SRC text
+Exemple de fonctionnement d'Org-roam
+
+1️⃣ Créer ta première note
+- Taper C-c n f
+- Saisir le titre : "Projet Alpha"
+- Emacs crée le fichier :
+  ~/.emacs.d/Notes/roam/projet-alpha.org
+- Contenu initial :
+  #+title: Projet Alpha
+  #+date: 2025-10-29
+
+2️⃣ Ajouter du contenu
+- Dans projet-alpha.org :
+  Nous devons créer une application web pour gérer les tâches.
+
+  Idées :
+  - Utiliser Emacs pour les notes.
+  - Prévoir un système de backlog.
+
+  Voir aussi :
+  - [[Projet Beta]]
+
+3️⃣ Créer une note liée (backlink)
+- Taper C-c n f
+- Nouvelle note : "Projet Beta"
+- Contenu :
+  #+title: Projet Beta
+  Cette note est liée à Projet Alpha.
+
+4️⃣ Insérer un lien dans une autre note
+- Dans Projet Alpha, positionner le curseur et taper C-c n i
+- Saisir le nom de la note cible : "Projet Beta"
+- Lien créé :
+  [[id:1234567890abcdef][Projet Beta]]
+- Ouvrir avec C-c C-o
+
+5️⃣ Voir les backlinks
+- Dans Projet Beta, taper C-c n b
+- Affiche toutes les notes qui pointent vers Projet Beta
+  (ici : Projet Alpha)
+
+6️⃣ Graphe visuel (org-roam-ui)
+- Taper C-c n g
+- Un navigateur s'ouvre avec un graphe interactif :
+  Projet Alpha → Projet Beta
+- Permet de visualiser le réseau des notes
+
+7️⃣ Notes journalières
+- Taper C-c n j
+- Emacs crée le fichier :
+  ~/.emacs.d/Notes/roam/daily/2025-10-29.org
+- Noter les tâches et idées du jour
+- Relier facilement aux autres notes
+
+✅ Résumé rapide des commandes
+
+| Action                     | Commande       | Résultat                                      |
+|-----------------------------|----------------|-----------------------------------------------|
+| Créer ou chercher une note  | C-c n f        | Fichier .org créé ou ouvert                   |
+| Insérer un lien             | C-c n i        | Lien interne créé                             |
+| Ajouter un tag              | C-c n t        | Tag ajouté à la note                           |
+| Ajouter un alias            | C-c n a        | Alias pour retrouver la note                  |
+| Notes journalières          | C-c n j        | Note du jour créée                             |
+| Backlinks                   | C-c n b        | Liste des notes pointant vers cette note      |
+| Graphe visuel               | C-c n g        | Graphe interactif dans le navigateur          |
+#+END_SRC
 
 * mu4e
 #+BEGIN_SRC emacs-lisp
@@ -2411,7 +2565,7 @@ Quitter exit
 
         ;;; ===================== Evil Mode =====================
         (with-eval-after-load 'doom-modeline
-        (setq doom-modeline-modal-icon nil))
+        (setq doom-modeline-modal-icon nil)
 
     (with-eval-after-load 'evil
       ;; Normal state
@@ -2426,7 +2580,7 @@ Quitter exit
       (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
       ;; Emacs state
       (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
-
+)
 #+end_src
 
 #+RESULTS:
