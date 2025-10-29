@@ -2406,19 +2406,7 @@ Quitter exit
             (doom-modeline-bar-width 3)
             (doom-modeline-icon t)
             (doom-modeline-major-mode-icon t)
-            (doom-modeline-buffer-file-name-style 'truncate-with-project)
-            (doom-modeline-vcs t)
-            (doom-modeline-lsp t)
-            (doom-modeline-minor-modes nil)
-            (doom-modeline-enable-word-count t)
-            (doom-modeline-percent-position t)
-            (doom-modeline-env-version t))
-
-          ;; Afficher heure + batterie
-          ;(display-time-mode 1)
-        ;  (display-battery-mode 1)
-         ; (setq display-time-format "%H:%M"
-          ;      display-time-default-load-average nil)
+           )
            )
 
         ;;; ===================== Evil Mode =====================
@@ -2439,17 +2427,7 @@ Quitter exit
       ;; Emacs state
       (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
 
-        ;;; ==============================
-        ;;; 🎨 Couleurs façon Lualine
-        ;;; ==============================
-        (custom-set-faces
-         '(doom-modeline-evil-normal-state  ((t (:background "#98be65" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#98be65" :style released-button)))))
-         '(doom-modeline-evil-insert-state  ((t (:background "#ecbe7b" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#ecbe7b" :style released-button)))))
-         '(doom-modeline-evil-visual-state  ((t (:background "#c678dd" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#c678dd" :style released-button)))))
-         '(doom-modeline-evil-replace-state ((t (:background "#ff6c6b" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#ff6c6b" :style released-button)))))
-         '(doom-modeline-evil-motion-state  ((t (:background "#46d9ff" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#46d9ff" :style released-button)))))
-         '(doom-modeline-evil-emacs-state   ((t (:background "#51afef" :foreground "#1c1f24" :weight bold :box (:line-width 5 :color "#51afef" :style released-button))))))
-
 #+end_src
 
 #+RESULTS:
+| :tag | [E] |
