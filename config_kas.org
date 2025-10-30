@@ -121,6 +121,30 @@ n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+RESULTS:
 : t
 
+** Switcher mode emacs et mode normal
+f12 = altgr + f12
+#+begin_src emacs-lisp
+;; ---- Passage entre Evil normal et Emacs ----
+(with-eval-after-load 'evil
+  ;; en mode normal → 'e' bascule en mode Emacs
+  (define-key evil-normal-state-map (kbd "e") 'evil-emacs-state)
+
+  ;; fonction pour repasser en normal
+  (defun my/emacs-to-normal ()
+    "Depuis le mode Emacs, repasse en Evil Normal state."
+    (interactive)
+    (when (evil-emacs-state-p)
+      (evil-normal-state)))
+
+  ;; Lier F12 uniquement en mode Emacs
+  (general-define-key
+   :states 'emacs
+   :keymaps 'override
+   "<f12>" #'my/emacs-to-normal))
+#+end_src
+
+#+RESULTS:
+
 * Traitement de texte
 ** Indentation
 #+BEGIN_SRC emacs-lisp
