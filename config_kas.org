@@ -2609,3 +2609,27 @@ Quitter exit
 
 #+RESULTS:
 | :tag | [E] |
+
+ #+begin_src emacs-lisp
+   ;; Désactive l'icône de l'état modal (Evil) dans Doom Modeline
+   (setq doom-modeline-modal-icon nil)
+   (use-package doom-modeline
+     :init
+     (setq doom-modeline-icon t
+           doom-modeline-buffer-encoding nil
+    ;       doom-modeline-major-mode-icon t
+           doom-modeline-battery t
+      ;     doom-modeline-vcs-icon t
+       ;    doom-modeline-vcs-bar-width 4
+        ;   doom-modeline-vcs-max-length 15
+       )
+     :config
+     (doom-modeline-mode 1)
+;     (doom-modeline-def-modeline 'main
+ ;      '(bar matches buffer-info remote-host buffer-position selection-info)  ;; gauche
+  ;     '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time))  ;; droite
+   )
+#+end_src
+
+#+RESULTS:
+: t
