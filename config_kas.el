@@ -1555,68 +1555,45 @@
 
 ;;; config_kas.el --- Configuration personnelle -*- lexical-binding: t; -*-
 
-        ;;; ===================== Prérequis =====================
-        (require 'cl-lib)
-        (require 'use-package)
+;;; ===================== Prérequis =====================
+(require 'cl-lib)
+(require 'use-package)
 
-        ;;; ===================== GUI =====================
-        (when (display-graphic-p)
-          ;; Désactiver les éléments visuels
-          (menu-bar-mode -1)
-          (tool-bar-mode -1)
-          (scroll-bar-mode -1)
-          (setq horizontal-scroll-bar-mode nil)
+;;; ===================== GUI =====================
+(when (display-graphic-p)
+  ;; Désactiver les éléments visuels
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (setq horizontal-scroll-bar-mode nil)
 
-          ;; ==================== Doom Modeline ====================
-          (use-package all-the-icons
-            :ensure t)
+  ;; ==================== Doom Modeline ====================
+  (use-package all-the-icons
+    :ensure t)
 
-          (use-package doom-modeline
-            :ensure t
-            :init
-            (doom-modeline-mode 1)
-            :custom
-            (doom-modeline-height 25)
-            (doom-modeline-bar-width 3)
-            (doom-modeline-icon t)
-            (doom-modeline-major-mode-icon t)
-           )
-           )
+  (use-package doom-modeline
+    :ensure t
+    :init
+    (setq doom-modeline-icon t
+          doom-modeline-buffer-encoding nil
+          doom-modeline-battery t)
+    :config
+    (doom-modeline-mode 1)
+    :custom
+    (doom-modeline-height 25)
+    (doom-modeline-bar-width 3)
+    (doom-modeline-icon t)
+    (doom-modeline-major-mode-icon t)))
 
-        ;;; ===================== Evil Mode =====================
-        (with-eval-after-load 'doom-modeline
-        (setq doom-modeline-modal-icon nil)
+;;; ===================== Evil Mode =====================
+(with-eval-after-load 'doom-modeline
+  (setq doom-modeline-modal-icon nil))
 
-    (with-eval-after-load 'evil
-      ;; Normal state
-      (plist-put (plist-get evil-state-properties 'normal) :tag "[N]")
-      ;; Insert state
-      (plist-put (plist-get evil-state-properties 'insert) :tag "[I]")
-      ;; Visual state
-      (plist-put (plist-get evil-state-properties 'visual) :tag "[V]")
-      ;; Replace state
-      (plist-put (plist-get evil-state-properties 'replace) :tag "[R]")
-      ;; Motion state
-      (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
-      ;; Emacs state
-      (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
-)
-
-;; Désactive l'icône de l'état modal (Evil) dans Doom Modeline
-   (setq doom-modeline-modal-icon nil)
-   (use-package doom-modeline
-     :init
-     (setq doom-modeline-icon t
-           doom-modeline-buffer-encoding nil
-    ;       doom-modeline-major-mode-icon t
-           doom-modeline-battery t
-      ;     doom-modeline-vcs-icon t
-       ;    doom-modeline-vcs-bar-width 4
-        ;   doom-modeline-vcs-max-length 15
-       )
-     :config
-     (doom-modeline-mode 1)
-;     (doom-modeline-def-modeline 'main
- ;      '(bar matches buffer-info remote-host buffer-position selection-info)  ;; gauche
-  ;     '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time))  ;; droite
-   )
+(with-eval-after-load 'evil
+  ;; Personnalisation des tags de mode pour Doom Modeline
+  (plist-put (plist-get evil-state-properties 'normal) :tag "[N]")
+  (plist-put (plist-get evil-state-properties 'insert) :tag "[I]")
+  (plist-put (plist-get evil-state-properties 'visual) :tag "[V]")
+  (plist-put (plist-get evil-state-properties 'replace) :tag "[R]")
+  (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
+  (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
