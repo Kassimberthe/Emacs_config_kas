@@ -1,7 +1,40 @@
-# Ignore Emacs backup and autosave files
+# -------------------------
+# Compiled
+# -------------------------
+*.elc
+
+# -------------------------
+# Packaging
+# -------------------------
+.cask/
+.eask/
+.eldev/
+.keg/
+
+# -------------------------
+# Built distribution
+# -------------------------
+dist/
+
+# -------------------------
+# Backup and autosave files
+# -------------------------
 *~
 .#*
-*.elc
+.~undo-tree~
 .emacs.desktop
-.emacs.d/elpa/
+
+# -------------------------
+# Emacs temporary files / caches
+# -------------------------
+elpa/
+history/
+places/
+eln-cache/
+
+# -------------------------
+# Other project-specific folders
+# -------------------------
 ox-ipynb/
+.emacs.d/elpa/
+
