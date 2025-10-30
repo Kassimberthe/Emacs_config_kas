@@ -67,7 +67,43 @@
 
   (evil-collection-init))
 
+;; ---- Passage entre Evil normal et Emacs ----
+(with-eval-after-load 'evil
+  ;; en mode normal → 'e' bascule en mode Emacs
+  (define-key evil-normal-state-map (kbd "e") 'evil-emacs-state)
+
+  ;; fonction pour repasser en normal
+  (defun my/emacs-to-normal ()
+    "Depuis le mode Emacs, repasse en Evil Normal state."
+    (interactive)
+    (when (evil-emacs-state-p)
+      (evil-normal-state)))
+
+  ;; Lier F12 uniquement en mode Emacs
+  (general-define-key
+   :states 'emacs
+   :keymaps 'override
+   "<f12>" #'my/emacs-to-normal))
+
 (add-hook 'org-mode-hook #'org-indent-mode)
+
+;; --------------------------------------------------------
+;; Définir la largeur des tabulations et l'indentation
+;; pour les modes de programmation
+;; --------------------------------------------------------
+
+;; Largeur globale des tabulations
+(setq tab-width 4)
+
+;; Fonction pour configurer les modes de programmation
+(defun my/prog-mode-tab-settings ()
+  "Configure indentation and tab width for programming modes."
+  (setq tab-width 4)              ;; largeur d'une tabulation
+  (setq evil-shift-width 4)       ;; décalage pour evil-mode
+  (setq python-indent-offset 4))  ;; indentation Python
+
+;; Ajouter le hook pour tous les modes de programmation
+(add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
 
 (electric-pair-mode 1)
 
@@ -324,6 +360,124 @@
 
   :config
   (catppuccin-reload))  ;; Recharge la configuration du thème
+
+;; ================================================================
+    ;; 🎨 CONFIGURATION DES COULEURS & FACES — COMPATIBLE TOUS THÈMES
+    ;; ================================================================
+
+  ;; 1️⃣ Détection du thème actif et définition des couleurs
+(pcase (car custom-enabled-themes)
+
+  ;; --- Thème Catppuccin Mocha ---
+  ('catppuccin
+   (setq my/black  (cdr (assoc 'base catppuccin-mocha-colors))
+         my/gray   (cdr (assoc 'mantle catppuccin-mocha-colors))
+         my/lgray  (cdr (assoc 'subtext0 catppuccin-mocha-colors))
+         my/lwhite (cdr (assoc 'subtext1 catppuccin-mocha-colors))
+         my/white  (cdr (assoc 'text catppuccin-mocha-colors))
+         my/red    (cdr (assoc 'red catppuccin-mocha-colors))
+         my/orange (cdr (assoc 'flamingo catppuccin-mocha-colors))
+         my/yellow (cdr (assoc 'yellow catppuccin-mocha-colors))
+         my/green  (cdr (assoc 'green catppuccin-mocha-colors))
+         my/lblue  (cdr (assoc 'sapphire catppuccin-mocha-colors))
+         my/blue   (cdr (assoc 'blue catppuccin-mocha-colors))
+         my/purple (cdr (assoc 'mauve catppuccin-mocha-colors))
+         my/brown  (cdr (assoc 'peach catppuccin-mocha-colors)))))
+
+;; --- 🎨 Couleurs personnalisées par défaut (aucun thème actif) ---
+(unless (eq (car custom-enabled-themes) 'catppuccin)
+  (setq my/black  "#1E1E2E"
+        my/gray   "#585B70"
+        my/lgray  "#A6ADC8"
+        my/lwhite "#D9E0EE"
+        my/white  "#D9E0EE"
+        my/red    "#F28FAD"
+        my/orange "#F8BD96"
+        my/yellow "#FAE3B0"
+        my/green  "#ABE9B3"
+        my/lblue  "#89DCEB"
+        my/blue   "#96CDFB"
+        my/purple "#DDB6F2"
+        my/brown  "#CBA6F7"))
+
+  
+    ;; ================================================================
+    ;; 2️⃣ Personnalisation des FACES (éléments visuels d’Emacs)
+    ;; ================================================================
+
+  ;  ;; 🔹 Liens cliquables
+  ;  (set-face-attribute 'link nil
+  ;                      :foreground my/blue
+  ;                      :underline t)
+  ;
+  ;  ;; 🔹 Recherche incrémentale (C-s / C-r)
+  ;  (set-face-attribute 'isearch nil
+  ;                      :weight 'normal
+  ;                      :background my/yellow
+  ;                      :foreground my/black)
+  ;
+  ;  ;; 🔹 Résultats secondaires de recherche
+  ;  (set-face-attribute 'lazy-highlight nil
+  ;                      :background my/lblue
+  ;                      :foreground my/white)
+  ;
+  ;  ;; 🔹 Région sélectionnée (C-SPC)
+  ;  (set-face-attribute 'region nil
+  ;                      :background my/lgray)
+  ;
+  ;  ;; 🔹 Numéros de ligne & frange (bande latérale)
+  ;  (dolist (face '(fringe line-number))
+  ;    (set-face-attribute face nil
+  ;                        :background my/gray
+  ;                        :foreground my/lwhite))
+  ;
+  ;  ;; 🔹 Modeline (barre d’état)
+  ;  (set-face-attribute 'mode-line nil
+  ;                      :background my/blue
+  ;                      :foreground my/lwhite
+  ;                      :box `(:line-width 1 :color ,my/gray))
+  ;
+  ;  (set-face-attribute 'mode-line-inactive nil
+  ;                      :background my/lgray
+  ;                      :foreground my/gray
+  ;                      :box `(:line-width 1 :color ,my/gray))
+  ;
+  ;  ;; 🔹 Curseur
+  ;  (set-face-attribute 'cursor nil :background my/red)
+
+
+  ;; ================================================================
+;; 4️⃣ Personnalisation de la ZONE DE COMMANDE (Minibuffer & Messages)
+;; ================================================================
+;
+;;; 🔹 Invite du minibuffer (ex: "M-x", "Find file: ")
+;(set-face-attribute 'minibuffer-prompt nil
+;                    :foreground my/blue
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'information (en vert)
+;(set-face-attribute 'success nil
+;                    :foreground my/green
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'avertissement (en jaune/orange)
+;(set-face-attribute 'warning nil
+;                    :foreground my/orange
+;                    :weight 'bold)
+;
+;;; 🔹 Messages d'erreur (en rouge)
+;(set-face-attribute 'error nil
+;                    :foreground my/red
+;                    :weight 'bold)
+
+    ;; ================================================================
+    ;; 3️⃣ Vérification visuelle (affiche les couleurs actives)
+    ;; ================================================================
+    (list
+     (cons "Thème actif" (car custom-enabled-themes))
+     (cons "Bleu principal" my/blue)
+     (cons "Fond modeline" (face-background 'mode-line))
+     (cons "Texte sélection" (face-background 'region)))
 
 (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
@@ -852,7 +1006,7 @@
 	(setq home-directory "~"))
 
 ;; (setq org-directory (concat home-directory "/Notes/org"))
-(setq org-directory (concat home-directory "/Notes/orgfiles"))
+(setq org-directory (concat home-directory "/.emacs.d/Notes/orgfiles"))
 
 (setopt org-startup-indented t
 		org-ellipsis " ▼"
@@ -909,6 +1063,76 @@
 ;; (setq org-mobile-files (list ()))
 (setq org-mobile-force-id-on-agenda-items nil)
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobile-flagged.org"))
+
+;; --------------------------------------------------------
+;; Org Super Agenda : installation et configuration
+;; --------------------------------------------------------
+(use-package org-super-agenda
+  :ensure t
+  :config
+  (org-super-agenda-mode))
+
+;; Désactiver les raccourcis clavier dans les headers
+(setq org-super-agenda-header-map (make-sparse-keymap))
+
+;; Configuration générale de l'agenda
+(setq org-agenda-start-on-weekday nil)       ;; Commencer n'importe quel jour
+(setq org-agenda-show-all-dates nil)        ;; Masquer les dates vides
+(setq org-agenda-format-date "%A")          ;; Afficher le nom du jour
+(setq org-agenda-block-separator nil)       ;; Pas de séparation entre les blocs
+
+;; Désactiver la grille horaire
+(setq org-agenda-show-current-time-in-grid nil)
+(setq org-agenda-use-time-grid nil)
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "~/.emacs.d/Notes/roam/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-ui-open)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n t" . org-roam-tag-add)
+         ("C-c n a" . org-roam-alias-add)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template
+        (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
+
+(setq org-roam-db-location "~/.cache/org-roam.db")
+
+(use-package consult-org-roam
+  :ensure t
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor mode
+  (consult-org-roam-mode 1)
+  :custom
+  ;; Use `ripgrep' for searching with `consult-org-roam-search'
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  ;; Configure a custom narrow key for `consult-buffer'
+  (consult-org-roam-buffer-narrow-key ?r)
+  ;; Display org-roam buffers right after non-org-roam buffers
+  ;; in consult-buffer (and not down at the bottom)
+  (consult-org-roam-buffer-after-buffers t)
+  :bind
+  ;; Define some convenient keybindings as an addition
+  ("C-c n e" . consult-org-roam-file-find)
+  ("C-c n b" . consult-org-roam-backlinks)
+  ("C-c n B" . consult-org-roam-backlinks-recursive)
+  ("C-c n l" . consult-org-roam-forward-links)
+  ("C-c n r" . consult-org-roam-search))
+
+(use-package org-roam-ui
+  :ensure t)
 
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.10.8"
@@ -1328,3 +1552,71 @@
 (org-version)
 
 (emacs-version)
+
+;;; config_kas.el --- Configuration personnelle -*- lexical-binding: t; -*-
+
+        ;;; ===================== Prérequis =====================
+        (require 'cl-lib)
+        (require 'use-package)
+
+        ;;; ===================== GUI =====================
+        (when (display-graphic-p)
+          ;; Désactiver les éléments visuels
+          (menu-bar-mode -1)
+          (tool-bar-mode -1)
+          (scroll-bar-mode -1)
+          (setq horizontal-scroll-bar-mode nil)
+
+          ;; ==================== Doom Modeline ====================
+          (use-package all-the-icons
+            :ensure t)
+
+          (use-package doom-modeline
+            :ensure t
+            :init
+            (doom-modeline-mode 1)
+            :custom
+            (doom-modeline-height 25)
+            (doom-modeline-bar-width 3)
+            (doom-modeline-icon t)
+            (doom-modeline-major-mode-icon t)
+           )
+           )
+
+        ;;; ===================== Evil Mode =====================
+        (with-eval-after-load 'doom-modeline
+        (setq doom-modeline-modal-icon nil)
+
+    (with-eval-after-load 'evil
+      ;; Normal state
+      (plist-put (plist-get evil-state-properties 'normal) :tag "[N]")
+      ;; Insert state
+      (plist-put (plist-get evil-state-properties 'insert) :tag "[I]")
+      ;; Visual state
+      (plist-put (plist-get evil-state-properties 'visual) :tag "[V]")
+      ;; Replace state
+      (plist-put (plist-get evil-state-properties 'replace) :tag "[R]")
+      ;; Motion state
+      (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
+      ;; Emacs state
+      (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
+)
+
+;; Désactive l'icône de l'état modal (Evil) dans Doom Modeline
+   (setq doom-modeline-modal-icon nil)
+   (use-package doom-modeline
+     :init
+     (setq doom-modeline-icon t
+           doom-modeline-buffer-encoding nil
+    ;       doom-modeline-major-mode-icon t
+           doom-modeline-battery t
+      ;     doom-modeline-vcs-icon t
+       ;    doom-modeline-vcs-bar-width 4
+        ;   doom-modeline-vcs-max-length 15
+       )
+     :config
+     (doom-modeline-mode 1)
+;     (doom-modeline-def-modeline 'main
+ ;      '(bar matches buffer-info remote-host buffer-position selection-info)  ;; gauche
+  ;     '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time))  ;; droite
+   )
