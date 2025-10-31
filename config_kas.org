@@ -2620,3 +2620,31 @@ Quitter exit
 
 #+RESULTS:
 | :tag | [E] |
+
+* Fonction personnalisée
+*** Kloc
+En faisant M-x select-kbloc, il selectionne le bloc commençant par #+BEGIN_SRC jusqu'à 
+la position du curseur.
+#+BEGIN_SRC emacs-lisp
+(defun select-kbloc ()
+  "Sélectionne le bloc commençant par #+BEGIN_SRC ... # +END_SRC)."
+  (interactive)
+  (save-excursion
+    (let (beg end)
+      ;; Trouver le début du bloc et aller au début de la ligne
+      (unless (re-search-backward "^[ \t]*#\\+BEGIN_SRC" nil t)
+        (error "Pas de début de bloc trouvé"))
+      (setq beg (line-beginning-position))
+      ;; Trouver la fin du bloc et aller à la fin de la ligne
+      (unless (re-search-forward "^[ \t]*#\\+END_SRC" nil t)
+        (error "Pas de fin de bloc trouvée"))
+      (setq end (line-end-position))
+      ;; Sélectionner la région entière
+      (goto-char beg)
+      (set-mark-command nil)
+      (goto-char end)
+      (message "Bloc sélectionné"))))
+#+END_SRC
+
+#+RESULTS:
+: select-kbloc
