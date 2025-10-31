@@ -289,6 +289,7 @@ suivi par git.
 : magenta
 
 ** Latex
+*** Avec pdf-tools
 #+BEGIN_SRC emacs-lisp
 (use-package auctex
   :defer t
@@ -396,31 +397,45 @@ suivi par git.
 
 #+RESULTS:
 
+;;;#+BEGIN_SRC emacs-lisp
+;;;(use-package pdf-tools
+;;;  :ensure t
+;;;  :defer t
+;;;  :config
+;;;  (pdf-tools-install))
+;;;
+;;;;; Sélection du viewer selon le type d'affichage
+;;;(add-hook 'after-init-hook
+;;;          (lambda ()
+;;;            (with-eval-after-load 'tex
+;;;              (if (display-graphic-p)
+;;;                  ;; mode graphique : pdf-tools
+;;;                  (progn
+;;;                    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+;;;                    (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+;;;                    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+;;;                ;; mode terminal / non-graphique : evince
+;;;                (setq TeX-view-program-selection '((output-pdf "Evince")))
+;;;                (setq TeX-view-program-list '(("Evince" "evince %o")))))))
+;;;
+;;;#+END_SRC
+;;;
+;;;#+RESULTS:
+;;;| (lambda nil (with-eval-after-load 'tex (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o)))))) | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o))))))) | org-persist-load-all | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
+
+*** Zathura
 #+BEGIN_SRC emacs-lisp
-(use-package pdf-tools
-  :ensure t
-  :defer t
-  :config
-  (pdf-tools-install))
-
-;; Sélection du viewer selon le type d'affichage
-(add-hook 'after-init-hook
-          (lambda ()
-            (with-eval-after-load 'tex
-              (if (display-graphic-p)
-                  ;; mode graphique : pdf-tools
-                  (progn
-                    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-                    (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-                    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-                ;; mode terminal / non-graphique : evince
-                (setq TeX-view-program-selection '((output-pdf "Evince")))
-                (setq TeX-view-program-list '(("Evince" "evince %o")))))))
-
+  ;; Configuration pour utiliser Zathura comme viewer PDF avec AUCTeX
+  (add-hook 'after-init-hook
+            (lambda ()
+              (with-eval-after-load 'tex
+                ;; Sélection du viewer Zathura
+                (setq TeX-view-program-selection '((output-pdf "Zathura")))
+                (setq TeX-view-program-list '(("Zathura" "zathura %o"))))))
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (with-eval-after-load 'tex (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o)))))) | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o))))))) | org-persist-load-all | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
+| (lambda nil (with-eval-after-load 'tex (setq TeX-view-program-selection '((output-pdf Zathura))) (setq TeX-view-program-list '((Zathura zathura %o))))) | org-persist-load-all | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o))))))) | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
 
 
 #+BEGIN_SRC emacs-lisp
