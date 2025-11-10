@@ -1,16 +1,4 @@
 # =====================================================
-# 🔒 Base rule — ignore everything by default
-# =====================================================
-*
-
-# =====================================================
-# ✅ Keep only my config files and bookmarks
-# =====================================================
-!config_kas.el
-!config_kas.org
-!bookmarks
-
-# =====================================================
 # 🧠 Compiled files
 # =====================================================
 *.elc
@@ -49,9 +37,3 @@ tramp/
 eshell/
 projectile-bookmarks.eld
 recentf
-
-!config_kas.el
-!config_kas.org
-!bookmarks
-!.gitignore
-!Notes
