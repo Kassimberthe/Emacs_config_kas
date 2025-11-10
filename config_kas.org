@@ -7,7 +7,6 @@
 Ceci est ma configuration personnelle d'Emacs, inspiré par la configuration de Derek Taylor, Harry et David Wilson and his System Crafters. 
 
 * Information personnelle
-
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Kassim Berthé")
 (setq user-mail-address "berthekassime@gmail.com")
@@ -530,6 +529,8 @@ suivi par git.
 : t
 
 ** Déplacement des lignes
+Le paquet drag-stuff permet de déplacer des lignes ou des blocs
+de texte vers le haut ou le bas avec des raccourcis clavier.
 #+begin_src emacs-lisp
 (use-package drag-stuff
   :ensure t
@@ -567,7 +568,7 @@ suivi par git.
 #+RESULTS:
 : t
 
-**  Mode mineur
+** Mode mineur
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
   :init
@@ -595,14 +596,11 @@ suivi par git.
 #+RESULTS:
 
 * Theme de font
-
+** theme catppucin
 #+BEGIN_SRC emacs-lisp
 ;; Définir le répertoire pour les thèmes personnalisés
 (setq custom-theme-directory
       (concat user-emacs-directory "themes"))
-
-;; Charger un thème personnalisé si nécessaire
-;; (load-theme 'witchhazel t)
 
 ;; Utiliser le thème Catppuccin avec la saveur 'macchiato'
 (use-package catppuccin-theme
@@ -617,128 +615,70 @@ suivi par git.
 #+RESULTS:
 : t
 
+*** Couleur du fichier après enregistrement
 #+BEGIN_SRC emacs-lisp
-    ;; ================================================================
-    ;; 🎨 CONFIGURATION DES COULEURS & FACES — COMPATIBLE TOUS THÈMES
-    ;; ================================================================
+  (set-face-attribute 'mode-line-buffer-id nil
+                    :foreground "#40a02b"  ;; vert
+                    :weight 'bold)
 
-  ;; 1️⃣ Détection du thème actif et définition des couleurs
-(pcase (car custom-enabled-themes)
-
-  ;; --- Thème Catppuccin Mocha ---
-  ('catppuccin
-   (setq my/black  (cdr (assoc 'base catppuccin-mocha-colors))
-         my/gray   (cdr (assoc 'mantle catppuccin-mocha-colors))
-         my/lgray  (cdr (assoc 'subtext0 catppuccin-mocha-colors))
-         my/lwhite (cdr (assoc 'subtext1 catppuccin-mocha-colors))
-         my/white  (cdr (assoc 'text catppuccin-mocha-colors))
-         my/red    (cdr (assoc 'red catppuccin-mocha-colors))
-         my/orange (cdr (assoc 'flamingo catppuccin-mocha-colors))
-         my/yellow (cdr (assoc 'yellow catppuccin-mocha-colors))
-         my/green  (cdr (assoc 'green catppuccin-mocha-colors))
-         my/lblue  (cdr (assoc 'sapphire catppuccin-mocha-colors))
-         my/blue   (cdr (assoc 'blue catppuccin-mocha-colors))
-         my/purple (cdr (assoc 'mauve catppuccin-mocha-colors))
-         my/brown  (cdr (assoc 'peach catppuccin-mocha-colors)))))
-
-;; --- 🎨 Couleurs personnalisées par défaut (aucun thème actif) ---
-(unless (eq (car custom-enabled-themes) 'catppuccin)
-  (setq my/black  "#1E1E2E"
-        my/gray   "#585B70"
-        my/lgray  "#A6ADC8"
-        my/lwhite "#D9E0EE"
-        my/white  "#D9E0EE"
-        my/red    "#F28FAD"
-        my/orange "#F8BD96"
-        my/yellow "#FAE3B0"
-        my/green  "#ABE9B3"
-        my/lblue  "#89DCEB"
-        my/blue   "#96CDFB"
-        my/purple "#DDB6F2"
-        my/brown  "#CBA6F7"))
-
-  
-    ;; ================================================================
-    ;; 2️⃣ Personnalisation des FACES (éléments visuels d’Emacs)
-    ;; ================================================================
-
-  ;  ;; 🔹 Liens cliquables
-  ;  (set-face-attribute 'link nil
-  ;                      :foreground my/blue
-  ;                      :underline t)
-  ;
-  ;  ;; 🔹 Recherche incrémentale (C-s / C-r)
-  ;  (set-face-attribute 'isearch nil
-  ;                      :weight 'normal
-  ;                      :background my/yellow
-  ;                      :foreground my/black)
-  ;
-  ;  ;; 🔹 Résultats secondaires de recherche
-  ;  (set-face-attribute 'lazy-highlight nil
-  ;                      :background my/lblue
-  ;                      :foreground my/white)
-  ;
-  ;  ;; 🔹 Région sélectionnée (C-SPC)
-  ;  (set-face-attribute 'region nil
-  ;                      :background my/lgray)
-  ;
-  ;  ;; 🔹 Numéros de ligne & frange (bande latérale)
-  ;  (dolist (face '(fringe line-number))
-  ;    (set-face-attribute face nil
-  ;                        :background my/gray
-  ;                        :foreground my/lwhite))
-  ;
-  ;  ;; 🔹 Modeline (barre d’état)
-  ;  (set-face-attribute 'mode-line nil
-  ;                      :background my/blue
-  ;                      :foreground my/lwhite
-  ;                      :box `(:line-width 1 :color ,my/gray))
-  ;
-  ;  (set-face-attribute 'mode-line-inactive nil
-  ;                      :background my/lgray
-  ;                      :foreground my/gray
-  ;                      :box `(:line-width 1 :color ,my/gray))
-  ;
-  ;  ;; 🔹 Curseur
-  ;  (set-face-attribute 'cursor nil :background my/red)
-
-
-  ;; ================================================================
-;; 4️⃣ Personnalisation de la ZONE DE COMMANDE (Minibuffer & Messages)
-;; ================================================================
-;
-;;; 🔹 Invite du minibuffer (ex: "M-x", "Find file: ")
-;(set-face-attribute 'minibuffer-prompt nil
-;                    :foreground my/blue
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'information (en vert)
-;(set-face-attribute 'success nil
-;                    :foreground my/green
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'avertissement (en jaune/orange)
-;(set-face-attribute 'warning nil
-;                    :foreground my/orange
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'erreur (en rouge)
-;(set-face-attribute 'error nil
-;                    :foreground my/red
-;                    :weight 'bold)
-
-    ;; ================================================================
-    ;; 3️⃣ Vérification visuelle (affiche les couleurs actives)
-    ;; ================================================================
-    (list
-     (cons "Thème actif" (car custom-enabled-themes))
-     (cons "Bleu principal" my/blue)
-     (cons "Fond modeline" (face-background 'mode-line))
-     (cons "Texte sélection" (face-background 'region)))
 #+END_SRC
 
 #+RESULTS:
-: ((Thème actif . dtmacs) (Bleu principal . #96CDFB) (Fond modeline . #24343e) (Texte sélection . #e81050))
+
+*** Couleur de la recherche
+#+begin_src emacs-lisp
+(set-face-attribute
+  'isearch nil
+  :weight 'normal
+  :background "#8bd5ca")
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+(set-face-attribute
+  'lazy-highlight nil
+  :background (cdr (assoc 'surface1 catppuccin-mocha-colors)))
+#+end_src
+
+#+RESULTS:
+
+*** Couleur du mode major
+#+begin_src emacs-lisp
+(set-face-attribute 'doom-modeline-buffer-major-mode nil
+                    :foreground "#fe640b"
+                    :weight 'bold)
+#+end_src
+
+#+RESULTS:
+
+*** Couleur des liens
+#+begin_src emacs-lisp
+(set-face-attribute
+  'link nil
+  :foreground "#8bd5ca")
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+;; Désactiver UTF-8
+(setq doom-modeline-buffer-encoding nil)
+#+end_src
+
+#+RESULTS:
+
+*** Couleur du texte dans le mini buffer
+#+begin_src emacs-lisp
+;; Changer la couleur du prompt dans le minibuffer (avant ton texte)
+(set-face-foreground 'minibuffer-prompt "#8839ef")  ;; violet
+
+;; Changer la couleur du texte que tu tapes dans le minibuffer
+;; Attention : cela change la couleur par défaut de tout le minibuffer
+;(set-face-foreground 'default "#8839ef")  ;; texte que tu tapes
+#+end_src
+
+#+RESULTS:
 
 * Org mode
 ** Indentation
@@ -2455,7 +2395,8 @@ Exemple de fonctionnement d'Org-roam
     (funcall (default-value 'electric-pair-inhibit-predicate) char)))
 
 (with-eval-after-load 'electric-pair
-  (setq-default electric-pair-inhibit-predicate #'my/inhibit-angle-brackets-pairing))
+  (setq-default electric-pair-inhibit-predicate
+                #'my/inhibit-angle-brackets-pairing))
 #+END_SRC
 
 #+RESULTS:

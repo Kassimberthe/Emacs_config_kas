@@ -223,25 +223,13 @@
   ;;                ("\\section{%s}" . "\\section*{%s}")))
   )
 
-(use-package pdf-tools
-  :ensure t
-  :defer t
-  :config
-  (pdf-tools-install))
-
-;; Sélection du viewer selon le type d'affichage
+;; Configuration pour utiliser Zathura comme viewer PDF avec AUCTeX
 (add-hook 'after-init-hook
           (lambda ()
             (with-eval-after-load 'tex
-              (if (display-graphic-p)
-                  ;; mode graphique : pdf-tools
-                  (progn
-                    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-                    (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-                    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-                ;; mode terminal / non-graphique : evince
-                (setq TeX-view-program-selection '((output-pdf "Evince")))
-                (setq TeX-view-program-list '(("Evince" "evince %o")))))))
+              ;; Sélection du viewer Zathura
+              (setq TeX-view-program-selection '((output-pdf "Zathura")))
+              (setq TeX-view-program-list '(("Zathura" "zathura %o"))))))
 
 ;; Liste des extensions de fichiers générés par LaTeX à supprimer automatiquement après export Org->PDF
 (setq org-latex-logfiles-extensions
@@ -349,9 +337,6 @@
 (setq custom-theme-directory
       (concat user-emacs-directory "themes"))
 
-;; Charger un thème personnalisé si nécessaire
-;; (load-theme 'witchhazel t)
-
 ;; Utiliser le thème Catppuccin avec la saveur 'macchiato'
 (use-package catppuccin-theme
   :demand t
@@ -361,123 +346,36 @@
   :config
   (catppuccin-reload))  ;; Recharge la configuration du thème
 
-;; ================================================================
-    ;; 🎨 CONFIGURATION DES COULEURS & FACES — COMPATIBLE TOUS THÈMES
-    ;; ================================================================
+(set-face-attribute 'mode-line-buffer-id nil
+                  :foreground "#40a02b"  ;; vert
+                  :weight 'bold)
 
-  ;; 1️⃣ Détection du thème actif et définition des couleurs
-(pcase (car custom-enabled-themes)
+(set-face-attribute
+  'isearch nil
+  :weight 'normal
+  :background "#8bd5ca")
 
-  ;; --- Thème Catppuccin Mocha ---
-  ('catppuccin
-   (setq my/black  (cdr (assoc 'base catppuccin-mocha-colors))
-         my/gray   (cdr (assoc 'mantle catppuccin-mocha-colors))
-         my/lgray  (cdr (assoc 'subtext0 catppuccin-mocha-colors))
-         my/lwhite (cdr (assoc 'subtext1 catppuccin-mocha-colors))
-         my/white  (cdr (assoc 'text catppuccin-mocha-colors))
-         my/red    (cdr (assoc 'red catppuccin-mocha-colors))
-         my/orange (cdr (assoc 'flamingo catppuccin-mocha-colors))
-         my/yellow (cdr (assoc 'yellow catppuccin-mocha-colors))
-         my/green  (cdr (assoc 'green catppuccin-mocha-colors))
-         my/lblue  (cdr (assoc 'sapphire catppuccin-mocha-colors))
-         my/blue   (cdr (assoc 'blue catppuccin-mocha-colors))
-         my/purple (cdr (assoc 'mauve catppuccin-mocha-colors))
-         my/brown  (cdr (assoc 'peach catppuccin-mocha-colors)))))
+(set-face-attribute
+  'lazy-highlight nil
+  :background (cdr (assoc 'surface1 catppuccin-mocha-colors)))
 
-;; --- 🎨 Couleurs personnalisées par défaut (aucun thème actif) ---
-(unless (eq (car custom-enabled-themes) 'catppuccin)
-  (setq my/black  "#1E1E2E"
-        my/gray   "#585B70"
-        my/lgray  "#A6ADC8"
-        my/lwhite "#D9E0EE"
-        my/white  "#D9E0EE"
-        my/red    "#F28FAD"
-        my/orange "#F8BD96"
-        my/yellow "#FAE3B0"
-        my/green  "#ABE9B3"
-        my/lblue  "#89DCEB"
-        my/blue   "#96CDFB"
-        my/purple "#DDB6F2"
-        my/brown  "#CBA6F7"))
+(set-face-attribute 'doom-modeline-buffer-major-mode nil
+                    :foreground "#fe640b"
+                    :weight 'bold)
 
-  
-    ;; ================================================================
-    ;; 2️⃣ Personnalisation des FACES (éléments visuels d’Emacs)
-    ;; ================================================================
+(set-face-attribute
+  'link nil
+  :foreground "#8bd5ca")
 
-  ;  ;; 🔹 Liens cliquables
-  ;  (set-face-attribute 'link nil
-  ;                      :foreground my/blue
-  ;                      :underline t)
-  ;
-  ;  ;; 🔹 Recherche incrémentale (C-s / C-r)
-  ;  (set-face-attribute 'isearch nil
-  ;                      :weight 'normal
-  ;                      :background my/yellow
-  ;                      :foreground my/black)
-  ;
-  ;  ;; 🔹 Résultats secondaires de recherche
-  ;  (set-face-attribute 'lazy-highlight nil
-  ;                      :background my/lblue
-  ;                      :foreground my/white)
-  ;
-  ;  ;; 🔹 Région sélectionnée (C-SPC)
-  ;  (set-face-attribute 'region nil
-  ;                      :background my/lgray)
-  ;
-  ;  ;; 🔹 Numéros de ligne & frange (bande latérale)
-  ;  (dolist (face '(fringe line-number))
-  ;    (set-face-attribute face nil
-  ;                        :background my/gray
-  ;                        :foreground my/lwhite))
-  ;
-  ;  ;; 🔹 Modeline (barre d’état)
-  ;  (set-face-attribute 'mode-line nil
-  ;                      :background my/blue
-  ;                      :foreground my/lwhite
-  ;                      :box `(:line-width 1 :color ,my/gray))
-  ;
-  ;  (set-face-attribute 'mode-line-inactive nil
-  ;                      :background my/lgray
-  ;                      :foreground my/gray
-  ;                      :box `(:line-width 1 :color ,my/gray))
-  ;
-  ;  ;; 🔹 Curseur
-  ;  (set-face-attribute 'cursor nil :background my/red)
+;; Désactiver UTF-8
+(setq doom-modeline-buffer-encoding nil)
 
+;; Changer la couleur du prompt dans le minibuffer (avant ton texte)
+(set-face-foreground 'minibuffer-prompt "#8839ef")  ;; violet
 
-  ;; ================================================================
-;; 4️⃣ Personnalisation de la ZONE DE COMMANDE (Minibuffer & Messages)
-;; ================================================================
-;
-;;; 🔹 Invite du minibuffer (ex: "M-x", "Find file: ")
-;(set-face-attribute 'minibuffer-prompt nil
-;                    :foreground my/blue
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'information (en vert)
-;(set-face-attribute 'success nil
-;                    :foreground my/green
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'avertissement (en jaune/orange)
-;(set-face-attribute 'warning nil
-;                    :foreground my/orange
-;                    :weight 'bold)
-;
-;;; 🔹 Messages d'erreur (en rouge)
-;(set-face-attribute 'error nil
-;                    :foreground my/red
-;                    :weight 'bold)
-
-    ;; ================================================================
-    ;; 3️⃣ Vérification visuelle (affiche les couleurs actives)
-    ;; ================================================================
-    (list
-     (cons "Thème actif" (car custom-enabled-themes))
-     (cons "Bleu principal" my/blue)
-     (cons "Fond modeline" (face-background 'mode-line))
-     (cons "Texte sélection" (face-background 'region)))
+;; Changer la couleur du texte que tu tapes dans le minibuffer
+;; Attention : cela change la couleur par défaut de tout le minibuffer
+;(set-face-foreground 'default "#8839ef")  ;; texte que tu tapes
 
 (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
@@ -1477,7 +1375,8 @@
     (funcall (default-value 'electric-pair-inhibit-predicate) char)))
 
 (with-eval-after-load 'electric-pair
-  (setq-default electric-pair-inhibit-predicate #'my/inhibit-angle-brackets-pairing))
+  (setq-default electric-pair-inhibit-predicate
+                #'my/inhibit-angle-brackets-pairing))
 
 ;; A function for easily creating multiple buffers of 'eshell'.
 ;; NOTE: `C-u M-x eshell` would also create new 'eshell' buffers.
@@ -1597,3 +1496,22 @@
   (plist-put (plist-get evil-state-properties 'replace) :tag "[R]")
   (plist-put (plist-get evil-state-properties 'motion) :tag "[M]")
   (plist-put (plist-get evil-state-properties 'emacs) :tag "[E]"))
+
+(defun select-kbloc ()
+  "Sélectionne le bloc commençant par #+BEGIN_SRC ... # +END_SRC)."
+  (interactive)
+  (save-excursion
+    (let (beg end)
+      ;; Trouver le début du bloc et aller au début de la ligne
+      (unless (re-search-backward "^[ \t]*#\\+BEGIN_SRC" nil t)
+        (error "Pas de début de bloc trouvé"))
+      (setq beg (line-beginning-position))
+      ;; Trouver la fin du bloc et aller à la fin de la ligne
+      (unless (re-search-forward "^[ \t]*#\\+END_SRC" nil t)
+        (error "Pas de fin de bloc trouvée"))
+      (setq end (line-end-position))
+      ;; Sélectionner la région entière
+      (goto-char beg)
+      (set-mark-command nil)
+      (goto-char end)
+      (message "Bloc sélectionné"))))
