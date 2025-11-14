@@ -2589,3 +2589,272 @@ la position du curseur.
 
 #+RESULTS:
 : select-kbloc
+
+* Les commandes
+** Mouvement
+*** du curseur
+| mode normal | Description                        |
+|-------------+------------------------------------|
+| k           | déplacer le curseur vers le haut   |
+| j           | déplacer le curseur vers le bas    |
+| h           | déplacer le curseur vers la gauche |
+| l           | déplacer le curseur vers la droite |
+|-------------+------------------------------------|
+*** sur les mots
+| normal | Description                            |
+|--------+----------------------------------------|
+| w (b)  | aller au debut de chaque mot (reculer) |
+| e (ge) | aller à la fin de chaque mot (reculer) |
+|--------+----------------------------------------|
+*** sur les lignes
+| normal | Description                              |
+|--------+------------------------------------------|
+| o  (^) | aller au debut de la ligne (sans espace) |
+| $ (g_) | aller à la fin de la ligne (sans espace) |
+|--------+------------------------------------------|
+*** sur le fichier
+| normal | Description                          |
+|--------+--------------------------------------|
+| gg (G) | aller au debut du fichier (à la fin) |
+|--------+--------------------------------------|
+*** sur l'ecran
+| normal     | Description                                                    |
+|------------+----------------------------------------------------------------|
+| C-e ou C-y | descendre ou monter l'ecran d'une ligne sans bouger le curseur |
+| C-b ou C-f | descendre ou monter l'ecran d'une hauteur(page))                |
+|------------+----------------------------------------------------------------|
+** Insertion
+| Insertion | Description                       |
+|-----------+-----------------------------------|
+| i ou a    | inserer avant ou après le curseur |
+| I ou A    | aller en debut ou fin de ligne    |
+|-----------+-----------------------------------|
+** Selection
+| Visual | Description                                   |
+|--------+-----------------------------------------------|
+| V      | selectionner ligne par ligne                  |
+| v      | selectionner caractère par caractère          |
+| C-v    | selectionner par bloc                         |
+| < ou > | décaler la selection vers la gauche ou droite |
+|--------+-----------------------------------------------|
+** Copier
+| Action                          | Normal | Emacs |
+|---------------------------------+--------+-------|
+| copier                          | y      | M-w   |
+| copier une ligne                | yy     |       |
+| copier le contenu de ",(,{ et w | yi(    |       |
+| copier l'objet et le contenu    | ya"    |       |
+|---------------------------------+--------+-------|
+** Coller
+| Action                           | Normal | Emacs |
+|----------------------------------+--------+-------|
+| coller avant ou après le curseur | P ou p | C-y   |
+|----------------------------------+--------+-------|
+** Supprimer = couper
+ | Normal  | Action              |
+ |---------+---------------------|
+ | d       | supprimer           |
+ | dd      | supprimer une ligne |
+ | d+ordre | supprimer ordre     |
+ |---------+---------------------|
+** Commenter
+| commande    | mode vim    | mode emac   |
+|-------------+-------------+-------------|
+| spc tab tab | spc tab tab | spc tab tab |
+|-------------+-------------+-------------|
+** Evaluer un bloc
+| mode vim | mode emacs |
+|----------+------------|
+| spc e r  | C-c C-c    |
+|----------+------------|
+** Recherche et remplacement
+| Action       | Normal      | Emacs           |
+|--------------+-------------+-----------------|
+| recherche    | /           |                 |
+|              | n=suivant   |                 |
+|              | N=precedent |                 |
+|--------------+-------------+-----------------|
+|              | M-%         | M-%             |
+| remplacement |             | n=passe         |
+|              |             | !=remplace tout |
+|              |             | entré=quitter   |
+|--------------+-------------+-----------------|
+** Generales
+| Commande    | Description                          | Rôle                                                            |
+|-------------+--------------------------------------+-----------------------------------------------------------------|
+| SPC SPC     | Counsel M-x                          | Exécute une commande Emacs via interface de recherche           |
+| SPC .       | Find file                            | Ouvre un fichier depuis le système de fichiers                  |
+| SPC =       | Perspective                          | Ouvre le menu de gestion des espaces de travail                 |
+| SPC TAB TAB | Comment lines                        | Commente ou décommente la/les ligne(s) courante(s)              |
+| SPC u       | Universal argument                   | Fournit un argument numérique universel à la prochaine commande |
+| SPC a       | A.I.                                 | Ouvre le sous-menu des fonctions d’intelligence artificielle    |
+| SPC a a     | Ask ellama about region              | Demande à Ellama des informations sur la région sélectionnée    |
+| SPC a e     | Ellama enhance                       | Ouvre le sous-menu d’amélioration de texte via Ellama           |
+| SPC a e g   | Ellama improve grammar               | Corrige la grammaire du texte sélectionné                       |
+| SPC a e w   | Ellama improve wording               | Améliore le style ou le choix des mots du texte sélectionné     |
+| SPC a i     | Ellama chat                          | Lance une session de discussion avec Ellama                     |
+| SPC a p     | Ellama provider select               | Change le fournisseur de modèle IA (Ellama)                     |
+| SPC a s     | Ellama summarize region              | Résume le texte sélectionné                                     |
+| SPC a t     | Ellama translate region              | Traduit le texte sélectionné                                    |
+| SPC b       | Bookmarks / Buffers                  | Fichiers & buffers                                              |
+| SPC b b     | Switch to buffer                     | Navigation entre buffers                                        |
+| SPC b c     | Clone indirect buffer (split)        | Duplication de buffer                                           |
+| SPC b C     | Clone indirect buffer (other window) | Duplication dans autre fenêtre                                  |
+| SPC b d     | Delete bookmark                      | Gestion de signets                                              |
+| SPC b i     | Ibuffer                              | Liste des buffers                                               |
+| SPC b f     | Kill current buffer                  | Fermer buffer courant                                           |
+| SPC b K     | Kill some buffers                    | Fermer plusieurs buffers                                        |
+| SPC b l     | List bookmarks                       | Voir les signets                                                |
+| SPC b m     | Bookmark set                         | Créer un signet                                                 |
+| SPC b k     | Next buffer                          | Naviguer vers le suivant                                        |
+| SPC b j     | Previous buffer                      | Naviguer vers le précédent                                      |
+| SPC b r     | Revert buffer                        | Recharger le buffer                                             |
+| SPC b R     | Rename buffer                        | Renommer un buffer                                              |
+| SPC b s     | Save buffer                          | Sauvegarder le buffer                                           |
+| SPC b S     | Save some buffers                    | Sauvegarder plusieurs buffers                                   |
+| SPC b w     | Bookmark save                        | Sauver les signets                                              |
+| SPC d       | Dired                                | Gestion de fichiers                                             |
+| SPC d d     | Open Dired                           | Ouvrir explorateur de fichiers                                  |
+| SPC d f     | Finish wdired edit                   | Finir édition dans Dired                                        |
+| SPC d j     | Dired jump                           | Aller à dossier du buffer                                       |
+| SPC d n     | Neotree dir                          | Ouvrir dans Neotree                                             |
+| SPC d p     | Peep Dired                           | Aperçu des fichiers                                             |
+| SPC d w     | Writable Dired                       | Mode édition Dired                                              |
+| SPC e       | Ediff / Eshell / Eval / EWW          | Évaluation & shell                                              |
+| SPC e b     | Eval buffer                          | Évaluer tout le buffer                                          |
+| SPC e d     | Eval defun                           | Évaluer la fonction actuelle                                    |
+| SPC e e     | Eval expression                      | Évaluer une expression                                          |
+| SPC e f     | Ediff files                          | Comparer deux fichiers                                          |
+| SPC e F     | Ediff files3                         | Comparer trois fichiers                                         |
+| SPC e h     | Eshell history                       | Historique Eshell                                               |
+| SPC e l     | Eval last sexp                       | Évaluer dernière expression                                     |
+| SPC e n     | Eshell new                           | Nouveau terminal Eshell                                         |
+| SPC e r     | Eval region                          | Évaluer une région                                              |
+| SPC e R     | EWW reload                           | Recharger la page web                                           |
+| SPC e s     | Eshell                               | Ouvrir un terminal                                              |
+| SPC e w     | EWW browser                          | Navigateur Web interne                                          |
+| SPC f       | Files                                | Gestion de fichiers                                             |
+| SPC f c     | Open config_kas.org                   | Fichier de configuration                                        |
+| SPC f e     | Open ~/.emacs.d in Dired             | Ouvrir répertoire Emacs                                         |
+| SPC f d     | Find-grep Dired                      | Rechercher texte dans dossier                                   |
+| SPC f g     | Counsel grep/swiper                  | Recherche dans le fichier                                       |
+| SPC f i     | Open init.el                         | Fichier principal de config                                     |
+| SPC f j     | File jump                            | Aller à un fichier                                              |
+| SPC f l     | Locate file                          | Trouver un fichier                                              |
+| SPC f r     | Counsel recentf                      | Fichiers récents                                                |
+| SPC f u     | Sudo find file                       | Ouvrir fichier en root                                          |
+| SPC f U     | Sudo edit file                       | Éditer fichier en root                                          |
+| SPC g       | Git                                  | Gestion de version Git                                          |
+| SPC g /     | Magit dispatch                       | Menu Git principal                                              |
+| SPC g .     | Magit file dispatch                  | Commandes Git fichier                                           |
+| SPC g b     | Switch branch                        | Changer de branche                                              |
+| SPC g c     | Create submenu                       | Création Git                                                    |
+| SPC g c b   | Branch and checkout                  | Créer et basculer branche                                       |
+| SPC g c c   | Commit create                        | Créer un commit                                                 |
+| SPC g c f   | Commit fixup                         | Fixup commit                                                    |
+| SPC g C     | Magit clone                          | Cloner un dépôt                                                 |
+| SPC g f     | Find submenu                         | Recherche Git                                                   |
+| SPC g f c   | Show commit                          | Voir un commit                                                  |
+| SPC g f f   | Magit find file                      | Trouver fichier Git                                             |
+| SPC g f g   | Find gitconfig file                  | Fichier de configuration Git                                    |
+| SPC g F     | Git fetch                            | Récupérer modifications                                         |
+| SPC g g     | Magit status                         | État du dépôt                                                   |
+| SPC g i     | Magit init                           | Initialiser dépôt Git                                           |
+| SPC g l     | Log buffer file                      | Historique Git du fichier                                       |
+| SPC g r     | VC revert                            | Revenir à version précédente                                    |
+| SPC g s     | Stage file                           | Ajouter fichier (stage)                                         |
+| SPC g t     | Git timemachine                      | Explorer historique Git                                         |
+| SPC g u     | Unstage file                         | Retirer du stage                                                |
+| SPC h       | Help                                 | Aide                                                            |
+| SPC h a     | Counsel apropos                      | Rechercher commandes                                            |
+| SPC h b     | Describe bindings                    | Voir raccourcis clavier                                         |
+| SPC h c     | Describe char                        | Infos sur caractère                                             |
+| SPC h d     | Documentation                        | Documentation Emacs                                             |
+| SPC h d a   | About Emacs                          | À propos d’Emacs                                                |
+| SPC h d d   | View debugging                       | Débogage                                                        |
+| SPC h d f   | View FAQ                             | Aide                                                            |
+| SPC h d m   | Manual                               | Manuel officiel                                                 |
+| SPC h d n   | News                                 | Nouveautés Emacs                                                |
+| SPC h d o   | Distribution info                    | Comment obtenir Emacs                                           |
+| SPC h d p   | Problems                             | Problèmes connus                                                |
+| SPC h d t   | Todo list                            | Liste de tâches internes                                        |
+| SPC h d w   | No warranty                          | Clause de non-garantie                                          |
+| SPC h e     | Echo messages                        | Voir messages d’écho                                            |
+| SPC h f     | Describe function                    | Décrire une fonction                                            |
+| SPC h F     | Describe face                        | Décrire un thème/fonte                                          |
+| SPC h g     | Describe GNU project                 | Infos sur GNU                                                   |
+| SPC h i     | Info browser                         | Navigateur d’aide                                               |
+| SPC h I     | Describe input method                | Méthode d’entrée                                                |
+| SPC h k     | Describe key                         | Voir quelle commande est liée                                   |
+| SPC h l     | View lossage                         | Historique de frappes                                           |
+| SPC h L     | Describe language env                | Environnement linguistique                                      |
+| SPC h m     | Describe mode                        | Infos sur le mode actuel                                        |
+| SPC h r r   | Reload config                        | Recharger la config Emacs                                       |
+| SPC h t     | Load theme                           | Changer le thème                                                |
+| SPC h v     | Describe variable                    | Variable d’Emacs                                                |
+| SPC h w     | Where is                             | Trouver raccourci                                               |
+| SPC h x     | Describe command                     | Documentation commande                                          |
+| SPC m       | Org mode                             | Organisation / notes                                            |
+| SPC m a     | Org agenda                           | Vue des tâches                                                  |
+| SPC m e     | Org export dispatch                  | Exportation                                                     |
+| SPC m i     | Org toggle item                      | Liste / checkbox                                                |
+| SPC m t     | Org todo                             | Gestion de tâches                                               |
+| SPC m B     | Org babel tangle                     | Extraire code Org                                               |
+| SPC m T     | Org todo list                        | Liste de tâches                                                 |
+| SPC m l     | Org store link                       | Enregistrer un lien Org                                         |
+| SPC m C     | Org capture                          | Capturer une note                                               |
+| SPC m c b   | Capture bookmark                     | Signet rapide                                                   |
+| SPC m c p   | Capture project                      | Note projet                                                     |
+| SPC m c w   | Capture work                         | Note travail                                                    |
+| SPC m c s   | Capture study                        | Note étude                                                      |
+| SPC m c j   | Capture journal                      | Entrée journal                                                  |
+| SPC m b -   | Insert hline                         | Ligne dans tableau                                              |
+| SPC m b r   | Insert row                           | Ligne tableau                                                   |
+| SPC m b c   | Insert column                        | Colonne tableau                                                 |
+| SPC m b e   | Edit field                           | Éditer cellule                                                  |
+| SPC m b a   | Align table                          | Aligner colonnes                                                |
+| SPC m b s   | Sort table                           | Trier tableau                                                   |
+| SPC m d t   | Insert timestamp                     | Insérer date                                                    |
+| SPC m d i   | Insert inactive timestamp            | Date non active                                                 |
+| SPC m d d   | Set deadline                         | Fixer une échéance                                              |
+| SPC m d s   | Set schedule                         | Planifier tâche                                                 |
+| SPC m d r   | Clock report                         | Rapport de temps                                                |
+| SPC m d n   | Timestamp -1 day                     | Retirer un jour                                                 |
+| SPC m d p   | Timestamp +1 day                     | Ajouter un jour                                                 |
+| SPC o d     | Dashboard                            | Écran d’accueil                                                 |
+| SPC o e     | Elfeed RSS                           | Lecteur de flux RSS                                             |
+| SPC o f     | Open buffer in frame                 | Ouvrir dans une autre fenêtre                                   |
+| SPC o F     | Select frame by name                 | Sélection de fenêtre                                            |
+| SPC p       | Projectile command map               | Projets                                                         |
+| SPC r p     | Radio play                           | Démarrer la radio                                               |
+| SPC r s     | Radio stop                           | Arrêter la radio                                                |
+| SPC r t     | Radio toggle                         | Basculer radio on/off                                           |
+| SPC s d     | Dictionary search                    | Recherche mot                                                   |
+| SPC s m     | Man pages                            | Documentation Unix                                              |
+| SPC s o     | PDF occur                            | Recherche dans PDF                                              |
+| SPC s t     | TLDR docs                            | Résumé commandes shell                                          |
+| SPC s w     | Woman                                | Documentation interne                                           |
+| SPC t e     | Eshell toggle                        | Terminal intégré                                                |
+| SPC t f     | Flycheck mode                        | Vérification syntaxique                                         |
+| SPC t l     | Display line numbers                 | Numéros de ligne                                                |
+| SPC t n     | Neotree toggle                       | Arborescence fichiers                                           |
+| SPC t o     | Org mode toggle                      | Activer Org-mode                                                |
+| SPC t r     | Rainbow mode                         | Couleurs dans le code                                           |
+| SPC t t     | Visual line mode                     | Casser lignes visuellement                                      |
+| SPC t v     | Vterm toggle                         | Terminal Vterm                                                  |
+| SPC w f     | Evil window delete                   | Fermer fenêtre                                                  |
+| SPC w n     | Evil window new                      | Nouvelle fenêtre                                                |
+| SPC w -     | Horizontal split                     | Séparation horizontale                                          |
+| SPC w v     | Vertical split                       | Séparation verticale                                            |
+| SPC w h     | Window left                          | Aller à gauche                                                  |
+| SPC w j     | Window down                          | Aller en bas                                                    |
+| SPC w k     | Window up                            | Aller en haut                                                   |
+| SPC w l     | Window right                         | Aller à droite                                                  |
+| SPC w w     | Window next                          | Fenêtre suivante                                                |
+| SPC w H     | Buffer move left                     | Déplacer à gauche                                               |
+| SPC w J     | Buffer move down                     | Déplacer en bas                                                 |
+| SPC w K     | Buffer move up                       | Déplacer en haut                                                |
+| SPC w L     | Buffer move right                    | Déplacer à droite                                               |
+| SPC w d     | Downcase word                        | Minuscule mot                                                   |
+| SPC w u     | Upcase word                          | Majuscule mot                                                   |
+| SPC w =     | Count words                          | Compter mots/lignes                                             |
