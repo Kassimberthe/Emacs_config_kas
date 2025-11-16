@@ -2590,7 +2590,7 @@ la position du curseur.
 #+RESULTS:
 : select-kbloc
 
-* Les commandes
+* Cheat sheet
 ** Mouvement
 *** du curseur
 | mode normal | Description                        |
@@ -2607,11 +2607,15 @@ la position du curseur.
 | e (ge) | aller à la fin de chaque mot (reculer) |
 |--------+----------------------------------------|
 *** sur les lignes
-| normal | Description                              |
-|--------+------------------------------------------|
-| o  (^) | aller au debut de la ligne (sans espace) |
-| $ (g_) | aller à la fin de la ligne (sans espace) |
-|--------+------------------------------------------|
+| normal | emacs     | Description                              |
+|--------+-----------+------------------------------------------|
+| 0  (^) | C-a (M-m) | aller au debut de la ligne (sans espace) |
+| $ (g_) | C-e       | aller à la fin de la ligne sans espace   |
+|        | M-a (M-e) | aller au debut (fin)  de la phrase       |
+|--------+-----------+------------------------------------------|
+Une ~phrase~ en emacs commence par un caractère autre que #, espace et
+se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.              
+
 *** sur le fichier
 | normal | Description                          |
 |--------+--------------------------------------|
@@ -2621,7 +2625,7 @@ la position du curseur.
 | normal     | Description                                                    |
 |------------+----------------------------------------------------------------|
 | C-e ou C-y | descendre ou monter l'ecran d'une ligne sans bouger le curseur |
-| C-b ou C-f | descendre ou monter l'ecran d'une hauteur(page))                |
+| C-b ou C-f | descendre ou monter l'ecran d'une hauteur(page)                |
 |------------+----------------------------------------------------------------|
 ** Insertion
 | Insertion | Description                       |
@@ -2651,12 +2655,13 @@ la position du curseur.
 | coller avant ou après le curseur | P ou p | C-y   |
 |----------------------------------+--------+-------|
 ** Supprimer = couper
- | Normal  | Action              |
- |---------+---------------------|
- | d       | supprimer           |
- | dd      | supprimer une ligne |
- | d+ordre | supprimer ordre     |
- |---------+---------------------|
+ | Normal  | Action                                 |
+ |---------+----------------------------------------|
+ | d       | supprimer                              |
+ | dd      | supprimer une ligne                    |
+ | d+ordre | supprimer ordre                        |
+ | x       | supprimer le caractère sous le curseur |
+ |---------+----------------------------------------|
 ** Commenter
 | commande    | mode vim    | mode emac   |
 |-------------+-------------+-------------|
@@ -2858,3 +2863,32 @@ la position du curseur.
 | SPC w d     | Downcase word                        | Minuscule mot                                                   |
 | SPC w u     | Upcase word                          | Majuscule mot                                                   |
 | SPC w =     | Count words                          | Compter mots/lignes                                             |
+
+* Clique
+** Activer la synchronisation entre emacs et le presse-papiers système
+#+begin_src emacs-lisp
+(setq x-select-enable-clipboard t)
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+
+#+RESULTS:
+: t
+
+** Activer la synchronisation entre evil et le presse-papiers système
+#+begin_src emacs-lisp
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+(setq save-interprogram-paste-before-kill t)
+(setq x-select-enable-clipboard t)
+#+end_src
+
+#+RESULTS:
+: t

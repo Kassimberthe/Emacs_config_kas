@@ -1515,3 +1515,5 @@
       (set-mark-command nil)
       (goto-char end)
       (message "Bloc sélectionné"))))
+
+(setq x-select-enable-clipboard t)
