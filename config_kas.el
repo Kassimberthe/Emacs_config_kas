@@ -1516,4 +1516,35 @@
       (goto-char end)
       (message "Bloc sélectionné"))))
 
-(setq x-select-enable-clipboard t)
+;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
+(unless (display-graphic-p)
+  ;; Copier vers le presse-papier système
+  (setq interprogram-cut-function
+        (lambda (text &optional push)
+          (when (executable-find "wl-copy")
+            (let ((process-connection-type nil))
+              (let ((proc (start-process "wl-copy" nil "wl-copy" "-f")))
+                (process-send-string proc text)
+                (process-send-eof proc))))))
+
+  ;; Coller depuis le presse-papier système
+  (setq interprogram-paste-function
+        (lambda ()
+          (when (executable-find "wl-paste")
+            (string-trim
+             (shell-command-to-string "wl-paste"))))))
+
+;; Menu contextuel sur clic droit
+(require 'easymenu)
+(defvar my-context-menu
+  '("Menu"
+    ["Cut" kill-region t]
+    ["Copy" kill-ring-save t]
+    ["Paste" yank t]))
+(define-key global-map [mouse-3] (lambda (event)
+                                   (interactive "e")
+                                   (popup-menu my-context-menu event)))
+
+(setq inhibit-startup-screen t)   ;; désactive la page d’accueil
+(setq inhibit-startup-message t)  ;; désactive le message de démarrage
+(setq initial-scratch-message "") ;; vide le buffer *scratch*

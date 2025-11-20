@@ -2865,30 +2865,53 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | SPC w =     | Count words                          | Compter mots/lignes                                             |
 
 * Clique
-** Activer la synchronisation entre emacs et le presse-papiers système
+** Activer la synchronisation entre emacs, evil et le presse-papiers système
+*** Mode terminal
 #+begin_src emacs-lisp
-(setq x-select-enable-clipboard t)
+;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
+(unless (display-graphic-p)
+  ;; Copier vers le presse-papier système
+  (setq interprogram-cut-function
+        (lambda (text &optional push)
+          (when (executable-find "wl-copy")
+            (let ((process-connection-type nil))
+              (let ((proc (start-process "wl-copy" nil "wl-copy" "-f")))
+                (process-send-string proc text)
+                (process-send-eof proc))))))
+
+  ;; Coller depuis le presse-papier système
+  (setq interprogram-paste-function
+        (lambda ()
+          (when (executable-find "wl-paste")
+            (string-trim
+             (shell-command-to-string "wl-paste"))))))
 #+end_src
 
 #+RESULTS:
-: t
+| lambda | nil | (when (executable-find wl-paste) (string-trim (shell-command-to-string wl-paste))) |
 
+*** Mode graphique
 #+begin_src emacs-lisp
-(setq select-enable-clipboard t)
-(setq select-enable-primary t)
-(setq save-interprogram-paste-before-kill t)
+;; Menu contextuel sur clic droit
+(require 'easymenu)
+(defvar my-context-menu
+  '("Menu"
+    ["Cut" kill-region t]
+    ["Copy" kill-ring-save t]
+    ["Paste" yank t]))
+(define-key global-map [mouse-3] (lambda (event)
+                                   (interactive "e")
+                                   (popup-menu my-context-menu event)))
 #+end_src
 
 #+RESULTS:
-: t
+| lambda | (event) | (interactive e) | (popup-menu my-context-menu event) |
 
-** Activer la synchronisation entre evil et le presse-papiers système
+* Desactiver l'écran d'accueil d'emacs
 #+begin_src emacs-lisp
-(setq select-enable-clipboard t)
-(setq select-enable-primary t)
-(setq save-interprogram-paste-before-kill t)
-(setq x-select-enable-clipboard t)
+(setq inhibit-startup-screen t)   ;; désactive la page d’accueil
+(setq inhibit-startup-message t)  ;; désactive le message de démarrage
+(setq initial-scratch-message "") ;; vide le buffer *scratch*
 #+end_src
 
 #+RESULTS:
-: t
