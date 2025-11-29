@@ -1576,3 +1576,17 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 (setq inhibit-startup-screen t)   ;; désactive la page d’accueil
 (setq inhibit-startup-message t)  ;; désactive le message de démarrage
 (setq initial-scratch-message "") ;; vide le buffer *scratch*
+
+;; Activer abbrev dans tous les buffers Org
+(add-hook 'org-mode-hook #'abbrev-mode)
+
+;; Abbrev pour Org Mode
+
+;; Insère une ligne TBLFM
+(define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
+
+;; Insère un nom pour un tableau ou un bloc
+(define-abbrev org-mode-abbrev-table "œn" "#+name:")
+
+;; Correction automatique du caractère œ → <
+(define-abbrev org-mode-abbrev-table "œ" "<")

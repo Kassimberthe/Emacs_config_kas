@@ -3138,3 +3138,24 @@ plt.savefig("kimg.png")
 #+end_src
 
 #+RESULTS:
+
+* Abbreviation dans org mode
+#+BEGIN_SRC emacs-lisp
+;; Activer abbrev dans tous les buffers Org
+(add-hook 'org-mode-hook #'abbrev-mode)
+
+;; Abbrev pour Org Mode
+
+;; Insère une ligne TBLFM
+(define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
+
+;; Insère un nom pour un tableau ou un bloc
+(define-abbrev org-mode-abbrev-table "œn" "#+name:")
+
+;; Correction automatique du caractère œ → <
+(define-abbrev org-mode-abbrev-table "œ" "<")
+#+END_SRC
+
+#+RESULTS:
+: œ
+
