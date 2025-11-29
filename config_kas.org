@@ -2787,17 +2787,126 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 | M-S-flèche bas    | ajouter une  ligne courante  |
 |-------------------+------------------------------|
 **** tableau vide
-C-c | + nbre__ligne x nbre__colonne
+C-c | + nbre__colonne x nbre__ligne  
 **** données brutes en tableau
 selection + C-c |   (quand le separateur est tab ou ,)
+**** position dans le tableau
+#+name: tab
+|  a |  b |  c |  d |  e |
+|----+----+----+----+----|
+|  1 |  5 |  7 |  8 |  3 |
+|  4 |  5 |  9 |  1 |  2 |
+| 14 | 26 | 85 | 48 | 75 |
+|----+----+----+----+----|
 
-*** permuter les lignes ou colonnes / les éléments du tableau
+| commande | explication          |
+|----------+----------------------|
+| @n$p     | ligne n et colonne p |
+| ..       | jusqu'à              |
+| tab[n]   | ligne n+1            |
+| tab[,p]  | colonne p+1          |
+| @<       | 1ère ligne           |
+| @>       | dernière ligne       |
+| $<       | 1ère colonne         |
+| $>       | dernière colonne     |
+| ::       | et                   |
+|----------+----------------------|
+Les lignes et colonnes commencent par 1 et tab par 0.
+
+*** Permuter les lignes ou colonnes / les éléments du tableau
 | commande         | action                          |
 |------------------+---------------------------------|
 | M- + les flèches | permuter les lignes ou colonnes |
 | S- + les flèches | permuter les elts du tableau    |
 |------------------+---------------------------------|
+*** Opération sur les tables
+**** Introduction des formules
+| sous le tableau  | dans la cellule |
+|------------------+-----------------|
+| #+TBLFM: syntaxe | egal syntaxe    |
+|------------------+-----------------|
+| compile: C-c C-c | compile: entrer |
+|------------------+-----------------|
 
+Quelques syntaxes
+
+| Type d’opération   | Syntaxe              | Explication                                                          |
+|--------------------+----------------------+----------------------------------------------------------------------|
+| Colonne (vertical) | $3 = $1 + $2         | La colonne 3 = col1 + col2                                           |
+| Ligne (horizontal) | @2 = @1 * 2          | La ligne 2 recevra touts les valeurs de la ligne 1 multipliéés par 2 |
+| Rectangle          | @2$2..@4$3 = $1 + 10 | Cette formule est appliquée à chaque cellule du rectangle            |
+| Rectangle          | @2$2..@4$3 = expr    | Applique expr au bloc ligne 2→4, colonne 2→3                         |
+| Cumul colonne      | $2 += 1              | Ajoute 1 à chaque cellule de la colonne 2                            |
+| Copier une ligne   | @2 = @1              | Copie toute la ligne 1 dans la ligne 2                               |
+| Copier une colonne | $3 = $1              | Copie la colonne 1 dans la colonne 3                                 |
+|--------------------+----------------------+----------------------------------------------------------------------|
+**** commandes
+| commande  | effet                                    |
+|-----------+------------------------------------------|
+| C-c*      | Recalculer les formules du tableau       |
+| C-c}      | Affiche les lignes et colonne du tableau |
+| C-c?      | Affiche la position de la cellule        |
+| C-u C-c * | Recalculer tous les tableaux du buffer   |
+|-----------+------------------------------------------|
+**** formules intégrés
+| Fonction            | Syntaxe          | Description                        | Exemple                   |
+|---------------------+------------------+------------------------------------+---------------------------|
+| Somme verticale     | vsum(range)      | Somme des valeurs d’une colonne    | @>$2 = vsum(@2..@-1)      |
+| Moyenne verticale   | vmean(range)     | Moyenne des valeurs d’une colonne  | @>$2 = vmean(@2..@-1)     |
+| Valeur min          | vmin(range)      | Valeur minimale d’une colonne      | @>$2 = vmin(@2..@-1)      |
+| Valeur max          | vmax(range)      | Valeur maximale d’une colonne      | @>$2 = vmax(@2..@-1)      |
+| Compte              | vcount(range)    | Nombre de valeurs numériques       | @>$2 = vcount(@2..@-1)    |
+| Produit             | vprod(range)     | Produit des valeurs d’une colonne  | @>$2 = vprod(@2..@-1)     |
+| Somme des carrés    | vsumsq(range)    | Somme des carrés des valeurs       | @>$2 = vsumsq(@2..@-1)    |
+| Écart-type          | vstd(range)      | Écart-type des valeurs             | @>$2 = vstd(@2..@-1)      |
+| Variance            | vvariance(range) | Variance des valeurs               | @>$2 = vvariance(@2..@-1) |
+| Médiane verticale   | vmedian(range)   | Médiane d’une colonne              | @>$2 = vmedian(@2..@-1)   |
+| Somme horizontale   | hsum(range)      | Somme des valeurs d’une ligne      | @2$4 = hsum($1..$3)       |
+| Moyenne horizontale | hmean(range)     | Moyenne des valeurs d’une ligne    | @2$4 = hmean($1..$3)      |
+| Valeur min ligne    | hmin(range)      | Minimum des valeurs d’une ligne    | @2$4 = hmin($1..$3)       |
+| Valeur max ligne    | hmax(range)      | Maximum des valeurs d’une ligne    | @2$4 = hmax($1..$3)       |
+| Compte ligne        | hcount(range)    | Nombre de valeurs numériques ligne | @2$4 = hcount($1..$3)     |
+|---------------------+------------------+------------------------------------+---------------------------|
+*** Sur les blocs
+**** syntaxe
+#+begin_src python option1 option2 .. option n
+
+#+end_src
+
+**** les options
+Note: X peut être le nom d'une table ou un extrait de la table
+
+| option                 | description                                                                             |
+|------------------------+-----------------------------------------------------------------------------------------|
+| :var tab=X             | recupère l'objet X et stocke   dans tab                                                 |
+| :colnames yes          | n'applique pas l'action sur la 1ère ligne du tableau                                    |
+| :colnames no           | applique l'action sur la 1ère ligne du tableau aussi                                    |
+| :results output        | affiche la sortie (à utiliser avec print ou printf)                                     |
+| table                  | convertir le output en tableau org                                                      |
+| :results graphics file | le résultat est un fichier graphique                                                    |
+| :file chemin/image.png | définit l’emplacement et le nom du fichier généré                                       |
+| :exports code          | n’exporte que le code du bloc                                                           |
+| :exports results       | n’exporte que les résultats du bloc                                                     |
+| :exports both          | exporte le code et les résultats.                                                       |
+| :results table         | Formate le résultat comme tableau Org                                                   |
+| :results value         | Récupère la valeur renvoyée par l’expression, utilisable dans d’autres blocs ou calculs |
+|------------------------+-----------------------------------------------------------------------------------------|
+
+C-c C-o pour ouvrir le lien
+
+#+BEGIN_SRC python :results graphics file :file kimg.png
+import matplotlib.pyplot as plt
+
+plt.plot([1, 2, 3], [4, 5, 6])
+plt.title("Exemple graphique")
+plt.savefig("kimg.png")
+#+END_SRC
+
+#+RESULTS:
+[[file:kimg.png]]
+
+*** Nommer un tableau
+#+name: sert à nommer un tableau ou la sortie du bloc
 ** Generales
 | Commande    | Description                          | Rôle                                                            |
 |-------------+--------------------------------------+-----------------------------------------------------------------|
