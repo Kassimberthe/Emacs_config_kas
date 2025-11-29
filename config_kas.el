@@ -270,6 +270,22 @@
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)             ;; Ajouter une annotation texte
   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))                         ;; Supprimer une annotation
 
+;; Utiliser Zathura pour les PDF depuis Org-mode
+(setq org-file-apps
+      '(("\\.pdf\\'" . "zathura %s")))
+
+;; Ouvrir automatiquement les PDF avec Zathura partout dans Emacs
+(use-package openwith
+  :ensure t
+  :config
+  (setq openwith-associations
+        '(("\\.pdf\\'" "zathura" (file))))
+  (openwith-mode 1))
+
+(setq openwith-associations
+      '(("\\.png\\'" "sxiv" (file))
+        ("\\.jpg\\'" "sxiv" (file))))
+
 (use-package company
   :ensure t
   :config
@@ -1515,6 +1531,18 @@
       (set-mark-command nil)
       (goto-char end)
       (message "Bloc sélectionné"))))
+
+(defun my/org-table-copy-down (&optional arg)
+  "Appeler `org-table-copy-down' si on est dans un tableau Org.
+ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
+  (interactive "P")
+  (unless (and (fboundp 'org-at-table-p) (org-at-table-p))
+    (user-error "Pas dans un tableau Org"))
+  ;; call-interactively gère correctement le prefix arg / arité
+  (call-interactively #'org-table-copy-down))
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-d") #'my/org-table-copy-down))
 
 ;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
 (unless (display-graphic-p)

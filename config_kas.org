@@ -466,7 +466,7 @@ suivi par git.
 | lof | lot | tex~ | aux | idx | log | out | toc | nav | snm | vrb | dvi | fdb_latexmk | blg | brf | fls | entoc | ps | spl | bbl |
 
 ** PDFs-tools
-
+*** Configurer pdf-tools
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
   :if (not (eq system-type 'windows-nt))
@@ -487,6 +487,35 @@ suivi par git.
 
 #+RESULTS:
 : t
+
+*** En mode terminal
+#+BEGIN_SRC emacs-lisp
+;; Utiliser Zathura pour les PDF depuis Org-mode
+(setq org-file-apps
+      '(("\\.pdf\\'" . "zathura %s")))
+
+;; Ouvrir automatiquement les PDF avec Zathura partout dans Emacs
+(use-package openwith
+  :ensure t
+  :config
+  (setq openwith-associations
+        '(("\\.pdf\\'" "zathura" (file))))
+  (openwith-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** Pour les images
+#+BEGIN_SRC emacs-lisp
+(setq openwith-associations
+      '(("\\.png\\'" "sxiv" (file))
+        ("\\.jpg\\'" "sxiv" (file))))
+#+END_SRC
+
+#+RESULTS:
+| \.png\' | sxiv | (file) |
+| \.jpg\' | sxiv | (file) |
 
 ** Autocomplétion
 #+BEGIN_SRC emacs-lisp
@@ -2609,8 +2638,8 @@ la position du curseur.
 *** sur les lignes
 | normal | emacs     | Description                              |
 |--------+-----------+------------------------------------------|
-| 0  (^) | C-a (M-m) | aller au debut de la ligne (sans espace) |
-| $ (g_) | C-e       | aller à la fin de la ligne sans espace   |
+| 0  (_) | C-a (M-m) | aller au debut de la ligne (sans espace) |
+| $ (g_) | C-e       | aller à la fin de la ligne (sans espace) |
 |        | M-a (M-e) | aller au debut (fin)  de la phrase       |
 |--------+-----------+------------------------------------------|
 Une ~phrase~ en emacs commence par un caractère autre que #, espace et
@@ -2627,6 +2656,14 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | C-e ou C-y | descendre ou monter l'ecran d'une ligne sans bouger le curseur |
 | C-b ou C-f | descendre ou monter l'ecran d'une hauteur(page)                |
 |------------+----------------------------------------------------------------|
+*** sur les headings
+| commande          | action                 |
+|-------------------+------------------------|
+| M-fleche droit    | deplace vers la droite |
+| M-fleche gauche   | deplace vers la gauche |
+| entrer + M-entrer | heading de même niveau |
+|-------------------+------------------------|
+
 ** Insertion
 | Insertion | Description                       |
 |-----------+-----------------------------------|
@@ -2636,11 +2673,29 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 ** Selection
 | Visual | Description                                   |
 |--------+-----------------------------------------------|
-| V      | selectionner ligne par ligne                  |
+| S-v    | selectionner ligne par ligne                  |
 | v      | selectionner caractère par caractère          |
 | C-v    | selectionner par bloc                         |
 | < ou > | décaler la selection vers la gauche ou droite |
 |--------+-----------------------------------------------|
+*** opération sur les selection par bloc
+**** pour copier ou supprimer
+| Visual | Description                               |
+|--------+-------------------------------------------|
+| tx     | aller jusqu'avant le caractère x          |
+| fx     | aller jusqu'au caractère x                |
+| $      | aller jusqu'à la fin de ligne             |
+| g_     | aller juqu'à la fin de ligne sans espace  |
+| 0      | aller jusqu'à debut de ligne             |
+| _      | aller jusqu'en debut de ligne sans espace |
+|--------+-------------------------------------------|
+**** faire une action après le bloc
+| Visual | Description      |
+|--------+------------------|
+| A      | après le bloc    |
+| I      | avant le bloc    |
+| esc    | applique au bloc |
+|--------+------------------|
 ** Copier
 | Action                          | Normal | Emacs |
 |---------------------------------+--------+-------|
@@ -2655,13 +2710,14 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | coller avant ou après le curseur | P ou p | C-y   |
 |----------------------------------+--------+-------|
 ** Supprimer = couper
- | Normal  | Action                                 |
- |---------+----------------------------------------|
- | d       | supprimer                              |
- | dd      | supprimer une ligne                    |
- | d+ordre | supprimer ordre                        |
- | x       | supprimer le caractère sous le curseur |
- |---------+----------------------------------------|
+ | Normal  | Action                                       |
+ |---------+----------------------------------------------|
+ | d       | supprimer                                    |
+ | dd      | supprimer une ligne                          |
+ | d+ordre | supprimer ordre                              |
+ | x       | supprimer le caractère sous le curseur       |
+ | S-d     | supprimer à partir du curseur jusqu'à la fin |
+ |---------+----------------------------------------------|
 ** Commenter
 | commande    | mode vim    | mode emac   |
 |-------------+-------------+-------------|
@@ -2684,6 +2740,64 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 |              |             | !=remplace tout |
 |              |             | entré=quitter   |
 |--------------+-------------+-----------------|
+** Tableau org
+#+BEGIN_SRC emacs-lisp
+(defun my/org-table-copy-down (&optional arg)
+  "Appeler `org-table-copy-down' si on est dans un tableau Org.
+ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
+  (interactive "P")
+  (unless (and (fboundp 'org-at-table-p) (org-at-table-p))
+    (user-error "Pas dans un tableau Org"))
+  ;; call-interactively gère correctement le prefix arg / arité
+  (call-interactively #'org-table-copy-down))
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-d") #'my/org-table-copy-down))
+#+END_SRC
+
+#+RESULTS:
+: my/org-table-copy-down
+*** Créer un tableau
+**** Outils
+| commande   | descriptin                                |
+|------------+-------------------------------------------|
+| pipe       | separateur des colonnes                   |
+|            |                                           |
+| C-c entrer | tracer la ligne horizontale en dessous du |
+|            | curseur + une ligne du tableau            |
+|            |                                           |
+| C-c -      | tracer le hline en dessous du curseur     |
+|            |                                           |
+| C-u C-c -  | tracer le hline en haut du curseur        |
+|            |                                           |
+| tab        | pour se deplacer entre cellule            |
+|            |                                           |
+| entrer     | pour se deplacer entre ligne              |
+|------------+-------------------------------------------|
+**** supprimer une colonne ou une ligne
+| commande          | action                        |
+|-------------------+-------------------------------|
+| M-S-flèche gauche | supprimer la colonne courante |
+| M-S-flèche haute  | supprimer la ligne courante   |
+|-------------------+-------------------------------|
+**** ajouter une colonne ou une ligne
+| commande          | action                       |
+|-------------------+------------------------------|
+| M-S-flèche droite | ajouter une colonne courante |
+| M-S-flèche bas    | ajouter une  ligne courante  |
+|-------------------+------------------------------|
+**** tableau vide
+C-c | + nbre__ligne x nbre__colonne
+**** données brutes en tableau
+selection + C-c |   (quand le separateur est tab ou ,)
+
+*** permuter les lignes ou colonnes / les éléments du tableau
+| commande         | action                          |
+|------------------+---------------------------------|
+| M- + les flèches | permuter les lignes ou colonnes |
+| S- + les flèches | permuter les elts du tableau    |
+|------------------+---------------------------------|
+
 ** Generales
 | Commande    | Description                          | Rôle                                                            |
 |-------------+--------------------------------------+-----------------------------------------------------------------|
