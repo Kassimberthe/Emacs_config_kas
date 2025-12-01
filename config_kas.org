@@ -3159,3 +3159,79 @@ plt.savefig("kimg.png")
 #+RESULTS:
 : œ
 
+* Exporter en excel
+** Configuration
+*** config
+#+begin_src emacs-lisp
+(defun org-current-table-to-xlsx-using-name ()
+  "Export the Org table at point to an .xlsx file using its #+NAME: property,
+and save it automatically into ~/EXCEL_TABLE_ORG/."
+  (interactive)
+
+  (save-excursion
+    ;; Vérifier qu'on est sur un tableau
+    (unless (org-at-table-p)
+      (error "Le curseur n'est pas sur un tableau Org"))
+
+    ;; Aller au début du tableau
+    (goto-char (org-table-begin))
+
+    ;; Récupération du #+NAME:
+    (let* ((name
+            (save-excursion
+              (or
+               ;; 1. Vérifier juste la ligne au-dessus
+               (when (progn
+                       (forward-line -1)
+                       (looking-at "^[ \t]*#\\+NAME:[ \t]*\\(.*\\)$"))
+                 (match-string-no-properties 1))
+
+               ;; 2. Sinon, chercher en arrière dans le fichier
+               (when (re-search-backward "^[ \t]*#\\+NAME:[ \t]*\\(.*\\)$" nil t)
+                 (match-string-no-properties 1))))))
+
+      (unless name
+        (error "Aucun #+NAME: trouvé pour ce tableau"))
+
+      ;; Répertoire de sortie
+      (let* ((output-dir (expand-file-name "~/EXCEL_TABLE_ORG/")))
+        ;; Création du dossier si nécessaire
+        (unless (file-directory-p output-dir)
+          (make-directory output-dir t))
+
+        ;; Nom de fichier sûr
+        (let* ((safe-name (replace-regexp-in-string "[^[:alnum:]-]+" "" name))
+               (outfile (expand-file-name (concat safe-name ".xlsx") output-dir))
+               (beg (org-table-begin))
+               (end (org-table-end))
+               (content (buffer-substring-no-properties beg end))
+               (tmpfile (make-temp-file "org-table-" nil ".org")))
+
+          ;; Écrire la table dans un fichier temporaire
+          (with-temp-file tmpfile
+            (insert content))
+
+          ;; Conversion vers XLSX via Pandoc
+          (shell-command
+           (format "pandoc %s -o %s"
+                   (shell-quote-argument tmpfile)
+                   (shell-quote-argument outfile)))
+
+          (message "Tableau exporté dans : %s" outfile))))))
+#+end_src
+
+#+RESULTS:
+: org-current-table-to-xlsx-using-name
+
+*** Chemin du dossier
+~/EXCEL_TABLE_ORG/
+
+*** Raccourci d'exportation
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c e x")
+    #'org-current-table-to-xlsx-using-name))
+#+end_src
+
+#+RESULTS:
+: org-current-table-to-xlsx-using-name
