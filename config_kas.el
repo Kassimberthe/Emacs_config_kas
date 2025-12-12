@@ -1532,6 +1532,11 @@
       (goto-char end)
       (message "Bloc sélectionné"))))
 
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "œ p")
+    (lambda () (interactive)
+      (evil-ex-execute "put"))))
+
 (defun my/org-table-copy-down (&optional arg)
   "Appeler `org-table-copy-down' si on est dans un tableau Org.
 ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
@@ -1543,6 +1548,34 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-c C-d") #'my/org-table-copy-down))
+
+(let ((t1 '(("col1" "col2") (1 2)))
+      (t2 '(("col3") (3))))
+(cl-mapcar #'append t1 t2)
+)
+
+(let ((ta '(("a" "b") ("col1" "col2") (1 2)))
+      (tb '(("c") ("col3") (3))))
+(cl-mapcar #'append ta tb)
+)
+
+(let ((tbl '((11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+)
+
+(let ((tbl '(("c1" "c2" "c3" "c4" "c5" "c6" "c7" "c8" "c9" "c10") (11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+)
 
 ;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
 (unless (display-graphic-p)
@@ -1581,7 +1614,6 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 (add-hook 'org-mode-hook #'abbrev-mode)
 
 ;; Abbrev pour Org Mode
-
 ;; Insère une ligne TBLFM
 (define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
 
@@ -1590,6 +1622,13 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 ;; Correction automatique du caractère œ → <
 (define-abbrev org-mode-abbrev-table "œ" "<")
+
+;; Abbrev pour insérer ton bloc Emacs Lisp
+(define-abbrev org-mode-abbrev-table
+  "œfh"
+  "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 :colnames no
+(cl-mapcar #'append ta tb)
+#+END_SRC")
 
 (defun org-current-table-to-xlsx-using-name ()
   "Export the Org table at point to an .xlsx file using its #+NAME: property,
@@ -1650,3 +1689,6 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-c e x")
     #'org-current-table-to-xlsx-using-name))
+
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)

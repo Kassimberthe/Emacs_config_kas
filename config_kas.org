@@ -1735,6 +1735,47 @@ dépôt distant origin.
 - Magit : `C x` (majuscule puis minuscule)
   
 * Org mode configuration
+** Sheet
+*** Pour capture
+| Code     | Nom       | Fichier cible | Description                          | Exemple de note générée                                   |
+|----------+-----------+---------------+--------------------------------------+-----------------------------------------------------------|
+| SPC m  b | Brouillon | brouillon.org | Note rapide ou brouillon             | * TODO Relire le chapitre 3\n 2025-12-08 Tue 14:30        |
+| SPC m  p | Personal  | personal.org  | Notes personnelles                   | * TODO Acheter du lait\n 2025-12-08 Tue 14:31             |
+| SPC m  w | Work      | work.org      | Notes liées au travail               | * TODO Envoyer le rapport\n 2025-12-08 Tue 14:32          |
+| SPC m  s | School    | school.org    | Notes scolaires ou devoirs           | * TODO Préparer le devoir de maths\n 2025-12-08 Tue 14:33 |
+| SPC m  j | Journal   | journal.org   | Entrée de journal organisée par date | * Réflexion du jour\nEntered on 2025-12-08 Tue 14:34      |
+|----------+-----------+---------------+--------------------------------------+-----------------------------------------------------------|
+*** Pour timestamp
+| Élément                  | Commande / Template                      | Description / Usage                                                                           |
+|--------------------------+------------------------------------------+-----------------------------------------------------------------------------------------------|
+| Timestamp actif          | C-c .                                    | Insère un timestamp actif <YYYY-MM-DD> ou <YYYY-MM-DD HH:MM>. Apparaît dans l’agenda.         |
+| Timestamp inactif        | C-c !                                    | Insère un timestamp inactif [YYYY-MM-DD]. Référence historique, n’apparaît pas dans l’agenda. |
+| Déplacer timestamp actif | S-<left> / S-<right> / S-<up> / S-<down> | Déplace la date du timestamp actif d’un jour ou d’un mois.                                    |
+| Deadline                 | C-c C-d                                  | Définit la date limite de la tâche. Apparaît dans l’agenda avec rappel.                       |
+| Schedule                 | C-c C-s                                  | Définit la date de début de la tâche. Apparaît dans l’agenda à partir de cette date.          |
+| Intervalle               | C-c C-x C-i                              | Insère un intervalle de dates <2025-12-08 10:00-12:00>.                                       |
+|--------------------------+------------------------------------------+-----------------------------------------------------------------------------------------------|
+
+| Type de TODO                       | Exemple Org-mode                                 | Comportement dans l’agenda                                                           |
+|------------------------------------+--------------------------------------------------+---------------------------------------------------------------------------------------|
+| TODO simple (timestamp actif)      | * TODO Préparer le rapport <2025-12-08 Mon>      | La tâche apparaît uniquement à la date du timestamp.                                  |
+| TODO avec SCHEDULED                | * TODO Préparer le rapport                       | La tâche apparaît à partir de la date scheduled et reste visible jusqu’à ce qu’elle   |
+|                                    |   SCHEDULED: <2025-12-05 Fri>                    | soit faite.                                                                          |
+| TODO avec DEADLINE                 | * TODO Préparer le rapport                       | La tâche doit être terminée au plus tard à cette date ; alerte si en retard.          |
+|                                    |   DEADLINE: <2025-12-08 Mon>                     |                                                                                       |
+| TODO complet (Scheduled + Deadline)| * TODO Préparer le rapport                       | La tâche apparaît à partir de la date scheduled et doit être terminée avant la        |
+|                                    |   SCHEDULED: <2025-12-05 Fri>                    | deadline.                                                                             |
+|                                    |   DEADLINE: <2025-12-08 Mon>                     |                                                                                       |
+|------------------------------------+--------------------------------------------------+---------------------------------------------------------------------------------------|
+C-c C-t  permet de basculer entre DONE et TODO.
+
+| Type de répétition  | Syntaxe | Exemple initial             | Comment ça se comporte si la tâche n’est pas faite                                                         |
+|---------------------+---------+-----------------------------+------------------------------------------------------------------------------------------------------------|
+| Standard            |     +1d | <2025-12-08 Mon 08:00 +1d>  | Les jours manqués ne sont pas rattrapés. La prochaine occurrence reste fixée depuis la date initiale.      |
+| Basé sur complétion |    ++1d | <2025-12-08 Mon 08:00 ++1d> | La répétition se calcule depuis la date où la tâche est marquée DONE. Les jours manqués sont ignorés.      |
+| Rattrapage          |    .+1d | <2025-12-08 Mon 08:00 .+1d> | Toutes les occurrences manquées apparaissent dans l’agenda. La prochaine occurrence part de la complétion. |
+|---------------------+---------+-----------------------------+------------------------------------------------------------------------------------------------------------|
+
 ** Configuration Org-mode
 #+BEGIN_SRC emacs-lisp
 (require 'org)
@@ -2132,6 +2173,221 @@ Exemple de fonctionnement d'Org-roam
 : t
 
 * Raccourcis généraux
+** Activer le Leader
+| Leader | Mode            | Comportement                           |
+|--------+-----------------+----------------------------------------|
+| SPC    | Normal / Visual | Active le leader                       |
+| M-SPC  | Insert / Emacs  | Active le leader sans insérer d’espace |
+|--------+-----------------+----------------------------------------|
+** Commandes
+| Raccourci                   | Description                                             |
+|-----------------------------+---------------------------------------------------------|
+| *A.I.*                        |                                                         |
+| a                           | Menu A.I.                                               |
+| a a                         | Demander à Ellama sur la sélection                      |
+| a e                         | Menu Ellama – améliorer                                 |
+| a e g                       | Améliorer la grammaire avec Ellama                      |
+| a e w                       | Améliorer la formulation avec Ellama                    |
+| a i                         | Chat avec Ellama                                        |
+| a p                         | Sélectionner le fournisseur Ellama                      |
+| a s                         | Résumer la sélection avec Ellama                        |
+| a t                         | Traduire la sélection avec Ellama                       |
+|                             |                                                         |
+| *Bookmarks / Buffers*         |                                                         |
+| b                           | Menu Bookmarks & Buffers                                |
+| b b                         | Aller à un buffer                                       |
+| b c                         | Créer une copie indirecte dans un split                 |
+| b C                         | Cloner un buffer indirect dans une nouvelle fenêtre     |
+| b d                         | Supprimer un bookmark                                   |
+| b f                         | Fermer le buffer actuel                                 |
+| b i                         | Ibuffer                                                 |
+| b j                         | Buffer précédent                                        |
+| b k                         | Buffer suivant                                          |
+| b K                         | Fermer plusieurs buffers                                |
+| b l                         | Lister les bookmarks                                    |
+| b m                         | Définir un bookmark                                     |
+| b r                         | Recharger le buffer                                     |
+| b R                         | Renommer le buffer                                      |
+| b s                         | Sauvegarder le buffer                                   |
+| b S                         | Sauvegarder plusieurs buffers                           |
+| b w                         | Sauvegarder les bookmarks dans le fichier bookmark      |
+|                             |                                                         |
+| *Capture*                     |                                                         |
+| m c                         | Menu Capture                                            |
+| m c b                       | Capture – modèle b                                      |
+| m c j                       | Capture – modèle j                                      |
+| m c p                       | Capture – modèle p                                      |
+| m c s                       | Capture – modèle s                                      |
+| m c w                       | Capture – modèle w                                      |
+|                             |                                                         |
+| *Dates / Deadlines*           |                                                         |
+| m d                         | Menu Dates & Deadlines                                  |
+| m d d                       | Définir un deadline                                     |
+| m d i                       | Insérer un timestamp inactif                            |
+| m d n                       | Timestamp -1 jour                                       |
+| m d p                       | Timestamp +1 jour                                       |
+| m d r                       | Rapport de clocking                                     |
+| m d s                       | Programmer (schedule)                                   |
+| m d t                       | Insérer un timestamp                                    |
+|                             |                                                         |
+| *Ediff / Eshell / Eval / EWW* |                                                         |
+| e                           | Menu Ediff / Eshell / Eval / EWW                        |
+| e b                         | Eval buffer (évaluer le buffer)                         |
+| e d                         | Eval defun (évaluer la fonction sous ou après le point) |
+| e e                         | Eval expression (évaluer une expression elisp)          |
+| e f                         | Ediff fichiers                                          |
+| e F                         | Ediff trois fichiers                                    |
+| e h                         | Historique Eshell                                       |
+| e l                         | Eval last sexp (évaluer l’expression avant le point)    |
+| e n                         | Nouveau buffer Eshell                                   |
+| e r                         | Eval region (évaluer la région)                         |
+| e R                         | Recharger la page EWW                                   |
+| e s                         | Eshell                                                  |
+| e w                         | EWW (navigateur web Emacs)                              |
+|                             |                                                         |
+| *Files*                       |                                                         |
+| f                           | Menu Fichiers                                           |
+| f c                         | Ouvrir config_kas.org                                    |
+| f d                         | Rechercher une chaîne dans les fichiers d’un répertoire |
+| f e                         | Ouvrir le répertoire Emacs utilisateur dans Dired       |
+| f g                         | Rechercher une chaîne dans le fichier courant           |
+| f i                         | Ouvrir init.el                                          |
+| f j                         | Aller à un fichier sous le répertoire courant           |
+| f l                         | Localiser un fichier                                    |
+| f r                         | Fichiers récents                                        |
+| f u                         | Ouvrir un fichier avec sudo                             |
+| f U                         | Editer un fichier avec sudo                             |
+|                             |                                                         |
+| *Git*                         |                                                         |
+| g                           | Menu Git                                                |
+| g /                         | Magit dispatch                                          |
+| g .                         | Magit file dispatch                                     |
+| g b                         | Changer de branche                                      |
+| g c                         | Créer                                                   |
+| g c b                       | Créer une branche et y passer                           |
+| g c c                       | Créer un commit                                         |
+| g c f                       | Créer un commit fixup                                   |
+| g C                         | Cloner un dépôt                                         |
+| g f                         | Trouver                                                 |
+| g f c                       | Afficher un commit                                      |
+| g f f                       | Magit find file                                         |
+| g f g                       | Trouver le fichier gitconfig                            |
+| g F                         | Git fetch                                               |
+| g g                         | Magit status                                            |
+| g i                         | Initialiser un dépôt git                                |
+| g l                         | Journal du buffer git                                   |
+| g r                         | Revert (annuler) un fichier git                         |
+| g s                         | Stage (mettre en scène) un fichier git                  |
+| g t                         | Git time machine                                        |
+| g u                         | Unstage (désindexer) un fichier git                     |
+|                             |                                                         |
+| *Help*                        |                                                         |
+| h                           | Menu Aide                                               |
+| h a                         | Apropos (recherche d'aide par mots-clés)                |
+| h b                         | Décrire les raccourcis (describe-bindings)              |
+| h c                         | Décrire le caractère sous le curseur                    |
+| h d                         | Documentation Emacs                                     |
+| h d a                       | À propos d’Emacs                                        |
+| h d d                       | Debugging Emacs                                         |
+| h d f                       | FAQ Emacs                                               |
+| h d m                       | Manuel Emacs                                            |
+| h d n                       | Nouvelles d’Emacs                                       |
+| h d o                       | Comment obtenir Emacs                                   |
+| h d p                       | Problèmes connus d’Emacs                                |
+| h d t                       | TODO officiel d’Emacs                                   |
+| h d w                       | Licence / absence de garantie                           |
+| h e                         | Messages de la zone d’écho                              |
+| h f                         | Décrire une fonction                                    |
+| h F                         | Décrire une face                                        |
+| h g                         | Infos sur le projet GNU                                 |
+| h i                         | Ouvrir Info                                             |
+| h I                         | Décrire la méthode de saisie                            |
+| h k                         | Décrire une touche                                      |
+| h l                         | Voir les dernières commandes tapées (lossage)           |
+| h L                         | Décrire l’environnement linguistique                    |
+| h m                         | Décrire le mode courant                                 |
+| h r                         | Recharger                                               |
+| h r r                       | Recharger la configuration Emacs                        |
+| h t                         | Charger un thème                                        |
+| h v                         | Décrire une variable                                    |
+| h w                         | Trouver le raccourci associé à une commande             |
+| h x                         | Décrire une commande                                    |
+|                             |                                                         |
+| *Leader de base*              |                                                         |
+| .                           | Ouvrir un fichier                                       |
+| =                           | Perspective (afficher les raccourcis perspective)       |
+| TAB TAB                     | Commenter des lignes                                    |
+| u                           | Argument universel                                      |
+|                             |                                                         |
+| *Open*                        |                                                         |
+| o                           | Menu Open                                               |
+| o d                         | Ouvrir le Dashboard                                     |
+| o e                         | Ouvrir Elfeed (RSS)                                     |
+| o f                         | Ouvrir un nouveau frame                                 |
+| o F                         | Sélectionner un frame par son nom                       |
+|                             |                                                         |
+| *Org*                         |                                                         |
+| m                           | Menu Org                                                |
+| m a                         | Agenda Org                                              |
+| m B                         | Tangle des blocs Babel                                  |
+| m C                         | Capture (général)                                       |
+| m e                         | Exporter depuis Org                                     |
+| m i                         | Basculer item (case à cocher / liste)                   |
+| m l                         | Enregistrer un lien Org                                 |
+| m t                         | Changer l’état TODO                                     |
+| m T                         | Voir la liste des TODO                                  |
+|                             |                                                         |
+| *Tables*                      |                                                         |
+| m b                         | Menu Tables                                             |
+| m b -                       | Insérer une ligne horizontale                           |
+| m b a                       | Aligner le tableau                                      |
+| m b c                       | Insérer une colonne                                     |
+| m b e                       | Modifier le champ courant                               |
+| m b r                       | Insérer une ligne                                       |
+| m b s                       | Trier le tableau                                        |
+|                             |                                                         |
+| *Projectile*                  |                                                         |
+| p                           | Menu Projectile                                         |
+|                             |                                                         |
+| *Search*                      |                                                         |
+| s                           | Menu Recherche                                          |
+| s d                         | Chercher dans le dictionnaire                           |
+| s m                         | Ouvrir une page man                                     |
+| s o                         | Rechercher une chaîne dans un PDF                       |
+| s t                         | Afficher la page TLDR d’une commande                    |
+| s w                         | Ouvrir Woman (similaire à man sans dépendances)         |
+|                             |                                                         |
+| *Toggle*                      |                                                         |
+| t                           | Menu Basculer                                           |
+| t e                         | Activer/désactiver eshell                               |
+| t f                         | Activer/désactiver Flycheck                             |
+| t l                         | Activer/désactiver les numéros de ligne                 |
+| t n                         | Activer/désactiver Neotree                              |
+| t o                         | Activer/désactiver Org mode                             |
+| t r                         | Activer/désactiver Rainbow mode                         |
+| t t                         | Activer/désactiver visual-line-mode                     |
+| t v                         | Activer/désactiver vterm                                |
+|                             |                                                         |
+| *Windows / Words*             |                                                         |
+| w                           | Menu Fenêtres & Mots                                    |
+| w -                         | Split horizontal                                        |
+| w H                         | Déplacer la fenêtre à gauche                            |
+| w J                         | Déplacer la fenêtre en bas                              |
+| w K                         | Déplacer la fenêtre en haut                             |
+| w L                         | Déplacer la fenêtre à droite                            |
+| w d                         | Mettre le mot en minuscules                             |
+| w f                         | Fermer la fenêtre                                       |
+| w h                         | Aller à la fenêtre de gauche                            |
+| w j                         | Aller à la fenêtre du bas                               |
+| w k                         | Aller à la fenêtre du haut                              |
+| w l                         | Aller à la fenêtre de droite                            |
+| w n                         | Nouvelle fenêtre                                        |
+| w u                         | Mettre le mot en majuscules                             |
+| w v                         | Split vertical                                          |
+| w w                         | Aller à la fenêtre suivante                             |
+| w =                         | Compter les mots / lignes du buffer                     |
+|-----------------------------+---------------------------------------------------------|
+** Configuration du Leader
 #+begin_src emacs-lisp
 ;; Fonction personnalisée pour insérer une date inactive
 (defun my/org-insert-inactive-timestamp ()
@@ -2619,6 +2875,17 @@ la position du curseur.
 #+RESULTS:
 : select-kbloc
 
+*** Coller sous le curseur: œp
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "œ p")
+    (lambda () (interactive)
+      (evil-ex-execute "put"))))
+#+END_SRC
+
+#+RESULTS:
+| lambda | nil | (interactive) | (evil-ex-execute put) |
+
 * Cheat sheet
 ** Mouvement
 *** du curseur
@@ -2741,6 +3008,7 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 |              |             | entré=quitter   |
 |--------------+-------------+-----------------|
 ** Tableau org
+*** Copier la valeur courante en dessous
 #+BEGIN_SRC emacs-lisp
 (defun my/org-table-copy-down (&optional arg)
   "Appeler `org-table-copy-down' si on est dans un tableau Org.
@@ -2907,6 +3175,81 @@ plt.savefig("kimg.png")
 
 *** Nommer un tableau
 #+name: sert à nommer un tableau ou la sortie du bloc
+*** fusionner deux tabkeaux org
+**** Horizontal sans entete 
+#+NAME: T1
+| col1 | col2 |
+|    1 | 2    |
+
+#+NAME: T2
+| col3 |
+| 3    |
+
+#+BEGIN_SRC emacs-lisp :var t1=T1 t2=T2
+(cl-mapcar #'append t1 t2)
+#+END_SRC
+
+#+RESULTS:
+| col1 | col2 | col3 |
+|    1 |    2 |    3 |
+
+**** Horizontal avec entete
+#+NAME: Ta
+| a    | b |
+|------+---|
+| col1 | col2 |
+|   1  |  2  |
+
+#+NAME: Tb
+| c    |
+|------|
+| col3 |
+|   3  |
+
+#+BEGIN_SRC emacs-lisp :var ta=Ta :var tb=Tb :colnames no
+(cl-mapcar #'append ta tb)
+#+END_SRC
+
+#+RESULTS:
+| a    | b    | c    |
+| col1 | col2 | col3 |
+| 1    | 2    | 3    |
+
+**** Extraction des colonnes
+#+NAME: T10
+| c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8 | c9 | c10 |
+|----+----+----+----+----+----+----+----+----+-----|
+| 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20  |
+| 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30  |
+
+
+#+BEGIN_SRC emacs-lisp :var tbl=T10 :colnames yes
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+#+END_SRC
+
+#+RESULTS:
+| 11 | 13 | 17 |
+| 21 | 23 | 27 |
+
+#+BEGIN_SRC emacs-lisp :var tbl=T10 :colnames no
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+#+END_SRC
+
+#+RESULTS:
+| c1 | c3 | c7 |
+| 11 | 13 | 17 |
+| 21 | 23 | 27 |
+
 ** Generales
 | Commande    | Description                          | Rôle                                                            |
 |-------------+--------------------------------------+-----------------------------------------------------------------|
@@ -3130,6 +3473,14 @@ plt.savefig("kimg.png")
 #+RESULTS:
 | lambda | (event) | (interactive e) | (popup-menu my-context-menu event) |
 
+#+begin_src emacs-lisp          
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)  
+#+end_src
+
+#+RESULTS:
+: t
+
 * Desactiver l'écran d'accueil d'emacs
 #+begin_src emacs-lisp
 (setq inhibit-startup-screen t)   ;; désactive la page d’accueil
@@ -3140,12 +3491,19 @@ plt.savefig("kimg.png")
 #+RESULTS:
 
 * Abbreviation dans org mode
+| code | correspondance                      |
+|------+-------------------------------------|
+| œt   | #+TBLFM:                            |
+| œn   | #+name:                             |
+| œ    | <                                   |
+| œfh  | fusion horizontale de deux tableaux |
+|      |                                     |
+
 #+BEGIN_SRC emacs-lisp
 ;; Activer abbrev dans tous les buffers Org
 (add-hook 'org-mode-hook #'abbrev-mode)
 
 ;; Abbrev pour Org Mode
-
 ;; Insère une ligne TBLFM
 (define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
 
@@ -3154,10 +3512,17 @@ plt.savefig("kimg.png")
 
 ;; Correction automatique du caractère œ → <
 (define-abbrev org-mode-abbrev-table "œ" "<")
+
+;; Abbrev pour insérer ton bloc Emacs Lisp
+(define-abbrev org-mode-abbrev-table
+  "œfh"
+  "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 :colnames no
+(cl-mapcar #'append ta tb)
+#+END_SRC")
 #+END_SRC
 
 #+RESULTS:
-: œ
+: œfh
 
 * Exporter en excel
 ** Configuration
@@ -3235,3 +3600,9 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
 
 #+RESULTS:
 : org-current-table-to-xlsx-using-name
+
+*** Vérification
+Dans le bash
++ file nom_fichier.xlsx
++ c'est bon si la sortie est nom_fichier.xlsx: Microsoft Excel 2007+
+
