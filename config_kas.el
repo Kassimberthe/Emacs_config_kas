@@ -288,18 +288,38 @@
 
 (use-package company
   :ensure t
+  :custom
+  ;; ❌ aucune complétion automatique
+  (company-idle-delay 0.3)
+
+  ;; longueur minimale
+  (company-minimum-prefix-length 3)
+
+  ;; affichage
+  (company-tooltip-align-annotations t)
+
+  ;; ne pas forcer un choix
+  (company-require-match nil)
+
+  :hook
+  (after-init . global-company-mode)
+
   :config
-  (setq company-tooltip-align-annotations t)
-  (add-hook 'after-init-hook 'global-company-mode) ;; actif partout
+  ;; TAB complète seulement si company est actif
+  (define-key company-active-map (kbd "TAB")
+    #'company-complete-common-or-cycle)
+  (define-key company-active-map (kbd "<tab>")
+    #'company-complete-common-or-cycle)
 
-  (add-to-list 'company-frontends 'company-tng-frontend)
+  (define-key company-active-map (kbd "S-TAB")
+    #'company-select-previous)
+  (define-key company-active-map (kbd "<backtab>")
+    #'company-select-previous)
 
-  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-  (define-key company-active-map [tab] 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
-  (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-
-  (define-key company-mode-map (kbd "C-<SPC>") 'company-complete))
+  ;; déclenchement manuel explicite
+;  (define-key company-mode-map (kbd "C-SPC")
+;    #'company-complete)
+)
 
 (use-package company-box
   :after company
@@ -429,6 +449,31 @@
 (use-package pulsar
   :ensure t ;; Assure que le package est installé s'il ne l'est pas
   :bind ("<f8>" . pulsar-pulse-line)) ;; Associe la touche F8 à la commande 'pulsar-pulse-line'
+
+;; Configuration Beacon : flash unique et rapide
+(use-package beacon
+  :ensure t
+  :custom
+  ;; Couleur du flash
+  (beacon-color "#666600")
+
+  ;; Taille du halo
+  (beacon-size 30)
+
+  ;; Durée réelle du flash (IMPORTANT)
+  (beacon-blink-duration 0.1)
+
+  ;; Pas de délai supplémentaire
+  (beacon-blink-delay 1)
+
+  ;; Désactiver les flashes répétitifs
+  (beacon-blink-when-point-moves-vertically nil)
+  (beacon-blink-when-point-moves-horizontally nil)
+  (beacon-blink-when-buffer-changes nil)
+  (beacon-blink-when-window-changes nil)
+
+  :config
+  (beacon-mode 1))
 
 (use-package all-the-icons
   :if (display-graphic-p)
@@ -902,6 +947,20 @@
 ;; Load up doom-palenight for the System Crafters look
 ;(load-theme 'doom-palenight t)
 
+(use-package winum
+ :ensure t
+ :config
+ (winum-mode)
+
+ (global-set-key (kbd "C-c 1")
+                 (lambda () (interactive) (winum-select-window-by-number 1)))
+ (global-set-key (kbd "C-c 2")
+                 (lambda () (interactive) (winum-select-window-by-number 2)))
+ (global-set-key (kbd "C-c 3")
+                 (lambda () (interactive) (winum-select-window-by-number 3)))
+ (global-set-key (kbd "C-c 4")
+                 (lambda () (interactive) (winum-select-window-by-number 4))))
+
 (require 'org)
 (require 'org-agenda)
 (require 'org-capture)
@@ -1048,56 +1107,98 @@
 (use-package org-roam-ui
   :ensure t)
 
-(use-package mu4e
-  :load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.10.8"
-  :demand t
-  :bind (("C-c m" . mu4e))
-  :hook (mu4e-compose-mode . flyspell-mode)
-  :config
-;  (require 'org-mu4e)
-  (require 'shr)
+(require 'mu4e)
 
-  (setq mail-user-agent 'mu4e-user-agent
-        mu4e-maildir "~/.maildir"
-        mu4e-sent-folder "/fastmail/Sent"
-        mu4e-drafts-folder "/fastmail/Drafts"
-        mu4e-trash-folder "/fastmail/Trash"
-        mu4e-refile-folder "/fastmail/Archive"
-        mu4e-completing-read-function 'ivy-completing-read
-        mu4e-confirm-quit nil
-        mu4e-kill-buffer-on-exit t
-        smtpmail-stream-type 'ssl
-        smtpmail-smtp-server "smtp.fastmail.com"
-        smtpmail-smtp-service 465
-        send-mail-function 'smtpmail-send-it
-        message-send-mail-function 'smtpmail-send-it
-        mu4e-view-date-format "%a %e %b %Y %T"
-        mu4e-headers-date-format "%d/%m/%Y"
-        mu4e-headers-time-format "%T"
-        mu4e-view-prefer-html t
-        shr-use-colors nil
-        shr-use-fonts nil
-        shr-width 79)
+;; Raccourci pour lancer mu4e
+(global-set-key (kbd "C-x t") #'mu4e)
 
-  (setq mu4e-bookmarks
-        '((:name "Unread messages"
-                 :query "flag:unread AND NOT flag:trashed AND NOT maildir:/fastmail/Spam AND NOT maildir:/fastmail/Trash"
-                 :key ?u)
-          (:name "Today's messages"
-                 :query "date:today..now"
-                 :key ?t)
-          (:name "Inbox"
-                 :query "maildir:/fastmail/INBOX"
-                 :key ?i))))
+;; Adresse réelle
+(setq user-mail-address "berthekassime@gmail.com"
+      user-full-name "Kassim")
 
-(setq auth-sources '("~/.password-store"))
+(setq mu4e-user-mail-address-list
+      '("berthekassime@gmail.com"))
 
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-auth-supported '(login)
-      smtpmail-stream-type 'ssl
-      smtpmail-smtp-server "smtp.fastmail.com"
-      smtpmail-smtp-service 465
-      smtpmail-smtp-user "berthekassime@fastmail.com")
+;; Comportement général
+(setq mu4e-context-policy 'pick-first
+      mu4e-confirm-quit nil
+      message-kill-buffer-on-exit t
+      mu4e-view-show-addresses t)
+
+;; Maildir
+(setq mu4e-maildir "~/Maildir")
+
+;; Raccourcis dossiers
+(setq mu4e-maildir-shortcuts
+      '(("/Gmail/INBOX" . ?i)
+        ("/Gmail/[Gmail]/Sent Mail" . ?s)
+        ("/Gmail/[Gmail]/Trash" . ?t)))
+
+;; Dossiers Gmail
+(setq mu4e-drafts-folder "/Gmail/[Gmail]/Drafts"
+      mu4e-sent-folder   "/Gmail/[Gmail]/Sent Mail"
+      mu4e-trash-folder  "/Gmail/[Gmail]/Trash"
+      mu4e-refile-folder "/Gmail/[Gmail]/All Mail")
+
+;; Pièces jointes
+(setq mu4e-attachment-dir "~/Downloads/MailAttachments")
+
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/elpa-src/mu4e-1.10.8")
+(require 'mu4e)
+
+(setq mu4e-get-mail-command "~/.emacs.d/mail-sync.sh")
+
+;; Ne pas afficher la fenêtre associée aux commandes shell asynchrones
+(add-to-list 'display-buffer-alist
+             (cons "\\*Async Shell Command\\*.*"
+                   (cons #'display-buffer-no-window nil)))
+
+;; ------------------------------------------------------------
+;; Configuration mu4e-alert optimisée
+;; ------------------------------------------------------------
+(with-eval-after-load 'mu4e
+  ;; Charger mu4e-alert
+  (require 'mu4e-alert)
+
+  ;; Activer l’affichage dans le mode-line
+  (mu4e-alert-enable-mode-line-display)
+
+  ;; Activer les notifications système (Linux/macOS)
+  (mu4e-alert-enable-notifications)
+
+  ;; Vérifier les nouveaux mails toutes les 5 minutes
+  (setq mu4e-alert-email-notification-interval 300)
+
+  ;; Afficher seulement les mails non lus et non supprimés
+  (setq mu4e-alert-interesting-mail-query
+        "flag:unread AND NOT flag:trashed"))
+
+;; ------------------------------------------------------------
+;; Optionnel : rafraîchir automatiquement mu4e toutes les 5 min
+;; (peut être commenté si vous utilisez mail-sync.sh)
+;; ------------------------------------------------------------
+;; (run-at-time "5 min" 300 #'mu4e-update-mail-and-index)
+
+;; ------------------------------------------------------------
+;; Envoi des mails via msmtp (mu4e / message-mode)
+;; ------------------------------------------------------------
+(setq send-mail-function 'sendmail-send-it
+      message-send-mail-function 'sendmail-send-it
+      sendmail-program "/usr/bin/msmtp"
+      mail-specify-envelope-from t
+      mail-envelope-from 'header)
+
+;; Authentification via gpg (si nécessaire)
+(setq auth-sources '("~/emails.gpg"))
+
+(setq mu4e-maildir-shortcuts
+'( ("/INBOX"             . ?i)
+("/Gmail/Sent Mail"   . ?s)
+("/Gmail/Trash"       . ?t)
+("/Gmail/Drafts"      . ?d)
+("/Gmail/Important"   . ?p)
+("/Gmail/Spam"        . ?x)
+("/Gmail/All Mail"    . ?a) ))
 
 ;; Activer l'affichage des numéros de lignes relatifs globalement
 (setq display-line-numbers-type 'relative)
@@ -1289,12 +1390,12 @@
     "m C" '(org-capture :wk "Org capture"))  ;; C majuscule = général
 
   (dt/leader-keys
-    "m c" '(:ignore t :wk "Capture")
-    "m c b" (lambda () (interactive) (org-capture nil "b"))
-    "m c p" (lambda () (interactive) (org-capture nil "p"))
-    "m c w" (lambda () (interactive) (org-capture nil "w"))
-    "m c s" (lambda () (interactive) (org-capture nil "s"))
-    "m c j" (lambda () (interactive) (org-capture nil "j")))
+    "c" '(:ignore t :wk "Capture")
+    "c b" (lambda () (interactive) (org-capture nil "b"))
+    "c p" (lambda () (interactive) (org-capture nil "p"))
+    "c w" (lambda () (interactive) (org-capture nil "w"))
+    "c s" (lambda () (interactive) (org-capture nil "s"))
+    "c j" (lambda () (interactive) (org-capture nil "j")))
 
    (dt/leader-keys
      "m b" '(:ignore t :wk "Tables")
@@ -1382,17 +1483,40 @@
 ;; Charger ton thème personnalisé 'dtmacs'
 (load-theme 'dtmacs t)
 
-(add-hook 'org-mode-hook (lambda () (company-mode -1)))
+(use-package company
+  :ensure t
+  :custom
+  ;; Délai avant affichage
+  (company-idle-delay 0.3)
 
-(defun my/inhibit-angle-brackets-pairing (char)
-  "Inhibit electric pairing for < only."
-  (if (eq char ?<)
-      t
-    (funcall (default-value 'electric-pair-inhibit-predicate) char)))
-
-(with-eval-after-load 'electric-pair
-  (setq-default electric-pair-inhibit-predicate
-                #'my/inhibit-angle-brackets-pairing))
+  ;; Nombre minimum de caractères pour déclencher
+  (company-minimum-prefix-length 3)
+  ;; Alignement des annotations
+  (company-tooltip-align-annotations t)
+  ;; Ne pas bloquer l’édition
+  (company-require-match nil)
+  ;; Navigation circulaire
+  (company-selection-wrap-around t)
+  :hook
+  (after-init . global-company-mode)
+  :config
+  ;; Couleurs du tooltip
+  (set-face-attribute 'company-tooltip nil
+                      :foreground "#ffffff"  ;; texte
+                      :background "#333333") ;; fond
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "#000000"  ;; texte sélection
+                      :background "#ffcc00") ;; fond sélection
+  (set-face-attribute 'company-tooltip-common nil
+                      :foreground "#00ff00"  ;; texte commun
+                      :background "#333333") ;; fond commun
+  (set-face-attribute 'company-tooltip-annotation nil
+                      :foreground "#ff6666"  ;; annotations
+                      :background "#333333") ;; fond annotations
+  (set-face-attribute 'company-scrollbar-bg nil
+                      :background "#222222") ;; scrollbar bg
+  (set-face-attribute 'company-scrollbar-fg nil
+                      :background "#ffcc00")) ;; scrollbar fg
 
 ;; A function for easily creating multiple buffers of 'eshell'.
 ;; NOTE: `C-u M-x eshell` would also create new 'eshell' buffers.
@@ -1606,6 +1730,9 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
                                    (interactive "e")
                                    (popup-menu my-context-menu event)))
 
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+
 (setq inhibit-startup-screen t)   ;; désactive la page d’accueil
 (setq inhibit-startup-message t)  ;; désactive le message de démarrage
 (setq initial-scratch-message "") ;; vide le buffer *scratch*
@@ -1690,5 +1817,21 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
   (define-key org-mode-map (kbd "C-c e x")
     #'org-current-table-to-xlsx-using-name))
 
-(setq select-enable-clipboard t)
-(setq select-enable-primary t)
+;; Ajouter NeoTree cloné localement
+(add-to-list 'load-path "/home/kassim/.emacs.d/neotree")
+(require 'neotree)
+
+;; Activer NeoTree avec F8
+(global-set-key [f8] 'neotree-toggle)
+
+;; Config Evil pour NeoTree
+(with-eval-after-load 'neotree
+  (evil-define-key 'normal neotree-mode-map
+    (kbd "n") 'neotree-next-line
+    (kbd "p") 'neotree-previous-line
+    (kbd "TAB") 'neotree-enter
+    (kbd "RET") 'neotree-enter
+    (kbd "q") 'neotree-hide
+    (kbd "r") 'neotree-refresh
+    (kbd "d") 'neotree-delete-node
+    (kbd "c") 'neotree-create-node))
