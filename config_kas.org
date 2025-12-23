@@ -2164,31 +2164,32 @@ Exemple de fonctionnement d'Org-roam
 #+END_SRC
 
 * mu4e
-
 ** Chaet sheet
-| Action                   | Touche / Commande | Exemple concret                | Résultat                     |
-|--------------------------+-------------------+--------------------------------+------------------------------|
-| Lancer mu4e              | M-x mu4e          | M-x mu4e                       | Ouvre l’interface mail       |
-| Aller dans l’INBOX       | Ji                | Ji → /Gmail/INBOX              | Affiche les mails reçus      |
-| Rechercher un mail       | s                 | s from:google subject:security | Liste des mails Google       |
-| Voir mails non lus       | bu                | bu                             | Affiche tous les non lus     |
-| Lire un mail             | RET               | RET sur un message             | Ouvre le mail                |
-| Aller au mail suivant    | n                 | n                              | Message suivant              |
-| Aller au mail précédent  | p                 | p                              | Message précédent            |
-| Répondre                 | r                 | r                              | Répond à l’expéditeur        |
-| Répondre à tous          | R                 | R                              | Répond à tous                |
-| Nouveau mail             | C                 | C                              | Ouvre le buffer de rédaction |
-| Envoyer un mail          | C-c C-c           | Écrire → C-c C-c               | Envoi via SMTP               |
-| Marquer comme lu         | !                 | !                              | Marque le mail comme lu      |
-| Marquer non lu           | ?                 | ?                              | Marque non lu                |
-| Supprimer (Gmail Trash)  | d                 | d                              | Déplace vers Corbeille       |
-| Archiver                 | a                 | a                              | Archive le mail              |
-| Ajouter un drapeau       | f                 | f                              | Ajoute un flag               |
-| Télécharger pièce jointe | A s               | A s                            | Sauve la pièce jointe        |
-| Voir pièces jointes      | A                 | A                              | Liste des PJ                 |
-| Changer de dossier       | J                 | J → sélectionner un dossier    | Navigation rapide            |
-| Mettre à jour les mails  | u                 | u                              | Sync + index                 |
-| Quitter mu4e             | q                 | q                              | Quitte mu4e                  |
+| Action                        | Touche / Commande | Exemple concret                | Résultat                     |
+|-------------------------------+-------------------+--------------------------------+------------------------------|
+| Lancer mu4e                   | M-x mu4e          | M-x mu4e                       | Ouvre l’interface mail       |
+| Aller dans l’INBOX            | Ji                | Ji → /Gmail/INBOX              | Affiche les mails reçus      |
+| Rechercher un mail            | s                 | s from:google subject:security | Liste des mails Google       |
+| Voir mails non lus            | bu                | bu                             | Affiche tous les non lus     |
+| Lire un mail                  | RET               | RET sur un message             | Ouvre le mail                |
+| Aller au mail suivant         | n                 | n                              | Message suivant              |
+| Aller au mail précédent       | p                 | p                              | Message précédent            |
+| Répondre                      | r                 | r                              | Répond à l’expéditeur        |
+| Répondre à tous               | R                 | R                              | Répond à tous                |
+| Nouveau mail                  | C                 | C                              | Ouvre le buffer de rédaction |
+| Envoyer un mail               | C-c C-c           | Écrire → C-c C-c               | Envoi via SMTP               |
+| Marquer comme lu              | !                 | !                              | Marque le mail comme lu      |
+| Marquer non lu                | ?                 | ?                              | Marque non lu                |
+| Supprimer (Gmail Trash)       | d                 | d                              | Déplace vers Corbeille       |
+| Archiver                      | a                 | a                              | Archive le mail              |
+| Ajouter un drapeau            | f                 | f                              | Ajoute un flag               |
+| Télécharger pièce jointe      | A s               | A s                            | Sauve la pièce jointe        |
+| Voir pièces jointes           | A                 | A                              | Liste des PJ                 |
+| Changer de dossier            | J                 | J → sélectionner un dossier    | Navigation rapide            |
+| Mettre à jour les mails       | u                 | u                              | Sync + index                 |
+| Quitter mu4e                  | q                 | q                              | Quitte mu4e                  |
+| Sortir de la redaction(mail)  | C-c C-k           |                                |                              |
+| Enregistrer dans le brouillon | C-c C-d           |                                |                              |
 
 ** Config
 #+begin_src emacs-lisp
@@ -2260,35 +2261,57 @@ Exemple de fonctionnement d'Org-roam
 | (lambda (buffer-or-name _) (let ((buffer (get-buffer buffer-or-name))) (with-current-buffer buffer (or (eq major-mode 'vterm-mode) (string-prefix-p vterm-buffer-name (buffer-name buffer)))))) | (display-buffer-reuse-window display-buffer-at-bottom) | (reusable-frames . visible) | (window-height . 0.4) |
 
 #+begin_src emacs-lisp
-;; ------------------------------------------------------------
-;; Configuration mu4e-alert optimisée
-;; ------------------------------------------------------------
-(with-eval-after-load 'mu4e
-  ;; Charger mu4e-alert
-  (require 'mu4e-alert)
+;; Notifications desktop et mode-line pour mu4e
+(use-package mu4e-alert
+  :ensure t
+  :after mu4e
 
-  ;; Activer l’affichage dans le mode-line
-  (mu4e-alert-enable-mode-line-display)
+  ;; Paramétrage utilisateur
+  :custom
+  ;; Emails considérés comme "intéressants"
+  (mu4e-alert-interesting-mail-query
+   "flag:unread maildir:/INBOX AND NOT flag:trashed")
 
-  ;; Activer les notifications système (Linux/macOS)
-  (mu4e-alert-enable-notifications)
+  ;; Style de notification (libnotify pour Linux)
+  (mu4e-alert-default-style 'libnotify)
 
-  ;; Vérifier les nouveaux mails toutes les 5 minutes
-  (setq mu4e-alert-email-notification-interval 300)
+  ;; Activation automatique après le démarrage d’Emacs
+  :hook
+  (after-init . mu4e-alert-enable-mode-line-display)
+  (after-init . mu4e-alert-enable-notifications)
 
-  ;; Afficher seulement les mails non lus et non supprimés
-  (setq mu4e-alert-interesting-mail-query
-        "flag:unread AND NOT flag:trashed"))
+  :init
+  ;; Timer global pour éviter les doublons
+  (defvar perso--mu4e-timer nil
+    "Timer utilisé pour rafraîchir mu4e et afficher les notifications.")
 
-;; ------------------------------------------------------------
-;; Optionnel : rafraîchir automatiquement mu4e toutes les 5 min
-;; (peut être commenté si vous utilisez mail-sync.sh)
-;; ------------------------------------------------------------
-;; (run-at-time "5 min" 300 #'mu4e-update-mail-and-index)
+  (defun perso--mu4e-check-mail ()
+    "Met à jour les emails et affiche les notifications."
+    (mu4e-update-mail-and-index t))
+
+  (defun perso--mu4e-start ()
+    "Démarrer mu4e et lancer la vérification automatique des emails."
+    (interactive)
+    ;; Lancement silencieux de mu4e (requis mu >= 1.3.8)
+    (mu4e t)
+
+    ;; Évite de lancer plusieurs timers
+    (when (timerp perso--mu4e-timer)
+      (cancel-timer perso--mu4e-timer))
+
+    ;; Vérification immédiate puis toutes les 5 minutes
+    (setq perso--mu4e-timer
+          (run-with-timer 0 300 #'perso--mu4e-check-mail))
+
+    (message "mu4e : notifications activées (rafraîchissement toutes les 5 min)"))
+
+  :bind
+  ;; F2 transforme Emacs en client mail
+  ("<f2>" . perso--mu4e-start))
 #+end_src
 
 #+RESULTS:
-: flag:unread AND NOT flag:trashed
+: perso--mu4e-start
 
 #+begin_src emacs-lisp
 ;; ------------------------------------------------------------
@@ -3856,3 +3879,17 @@ git clone https://github.com/jaypei/emacs-neotree.git neotree
 #+end_src
 
 #+RESULTS:
+
+* Taille du frame
+#+begin_src emacs-lisp
+(setq initial-frame-alist
+      `((width . 100)
+        (height . 40)
+        (top . 50)
+        (left . 50)))
+
+(setq default-frame-alist initial-frame-alist)
+#+end_src
+
+#+RESULTS:
+: ((width . 100) (height . 40) (top . 50) (left . 50))

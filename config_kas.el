@@ -1153,31 +1153,53 @@
              (cons "\\*Async Shell Command\\*.*"
                    (cons #'display-buffer-no-window nil)))
 
-;; ------------------------------------------------------------
-;; Configuration mu4e-alert optimisée
-;; ------------------------------------------------------------
-(with-eval-after-load 'mu4e
-  ;; Charger mu4e-alert
-  (require 'mu4e-alert)
+;; Notifications desktop et mode-line pour mu4e
+(use-package mu4e-alert
+  :ensure t
+  :after mu4e
 
-  ;; Activer l’affichage dans le mode-line
-  (mu4e-alert-enable-mode-line-display)
+  ;; Paramétrage utilisateur
+  :custom
+  ;; Emails considérés comme "intéressants"
+  (mu4e-alert-interesting-mail-query
+   "flag:unread maildir:/INBOX AND NOT flag:trashed")
 
-  ;; Activer les notifications système (Linux/macOS)
-  (mu4e-alert-enable-notifications)
+  ;; Style de notification (libnotify pour Linux)
+  (mu4e-alert-default-style 'libnotify)
 
-  ;; Vérifier les nouveaux mails toutes les 5 minutes
-  (setq mu4e-alert-email-notification-interval 300)
+  ;; Activation automatique après le démarrage d’Emacs
+  :hook
+  (after-init . mu4e-alert-enable-mode-line-display)
+  (after-init . mu4e-alert-enable-notifications)
 
-  ;; Afficher seulement les mails non lus et non supprimés
-  (setq mu4e-alert-interesting-mail-query
-        "flag:unread AND NOT flag:trashed"))
+  :init
+  ;; Timer global pour éviter les doublons
+  (defvar perso--mu4e-timer nil
+    "Timer utilisé pour rafraîchir mu4e et afficher les notifications.")
 
-;; ------------------------------------------------------------
-;; Optionnel : rafraîchir automatiquement mu4e toutes les 5 min
-;; (peut être commenté si vous utilisez mail-sync.sh)
-;; ------------------------------------------------------------
-;; (run-at-time "5 min" 300 #'mu4e-update-mail-and-index)
+  (defun perso--mu4e-check-mail ()
+    "Met à jour les emails et affiche les notifications."
+    (mu4e-update-mail-and-index t))
+
+  (defun perso--mu4e-start ()
+    "Démarrer mu4e et lancer la vérification automatique des emails."
+    (interactive)
+    ;; Lancement silencieux de mu4e (requis mu >= 1.3.8)
+    (mu4e t)
+
+    ;; Évite de lancer plusieurs timers
+    (when (timerp perso--mu4e-timer)
+      (cancel-timer perso--mu4e-timer))
+
+    ;; Vérification immédiate puis toutes les 5 minutes
+    (setq perso--mu4e-timer
+          (run-with-timer 0 300 #'perso--mu4e-check-mail))
+
+    (message "mu4e : notifications activées (rafraîchissement toutes les 5 min)"))
+
+  :bind
+  ;; F2 transforme Emacs en client mail
+  ("<f2>" . perso--mu4e-start))
 
 ;; ------------------------------------------------------------
 ;; Envoi des mails via msmtp (mu4e / message-mode)
@@ -1835,3 +1857,11 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
     (kbd "r") 'neotree-refresh
     (kbd "d") 'neotree-delete-node
     (kbd "c") 'neotree-create-node))
+
+(setq initial-frame-alist
+      `((width . 100)
+        (height . 40)
+        (top . 50)
+        (left . 50)))
+
+(setq default-frame-alist initial-frame-alist)
