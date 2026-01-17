@@ -828,45 +828,102 @@
 
 (my/update-org-babel-python-command)
 
-(add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))
+;; ----------------------------
+;; Style et indentation
+;; ----------------------------
+;; Style de code par défaut pour C et C++
+(setq c-default-style "linux"  ;; style Linux pour C/C++
+      c-basic-offset 4)        ;; indentation = 4 espaces
 
+;; Fonction utilitaire pour configurer C et C++
+(defun my-c-c++-mode-setup ()
+  "Setup for C/C++ modes."
+  ;; Utiliser des espaces au lieu de tabulations
+  (setq indent-tabs-mode nil
+        tab-width 4)
+  
+  ;; Activer Eglot (LSP) automatiquement pour C/C++
+  (eglot-ensure)
+  
+  ;; Flymake uniquement pour C
+  (when (derived-mode-p 'c-mode)
+    (flymake-mode))
+  
+  ;; Style Stroustrup uniquement pour C++
+  (when (derived-mode-p 'c++-mode)
+    (c-set-style "stroustrup")))
+
+;; Ajouter le hook pour C
+(add-hook 'c-mode-hook 'my-c-c++-mode-setup)
+
+;; Ajouter le hook pour C++
+(add-hook 'c++-mode-hook 'my-c-c++-mode-setup)
+
+;; Raccourci global pour compiler avec F5
+(global-set-key (kbd "<f5>") 'compile)
+
+;; ----------------------------
+;; Support CMake
+;; ----------------------------
 (use-package cmake-mode
-  :ensure t)
+  :ensure t) ;; Installer automatiquement si manquant
 
+;; ----------------------------
+;; Ggtags pour navigation et recherche de symboles
+;; ----------------------------
 (use-package ggtags
   :ensure t
-  :hook (c++-mode . ggtags-mode)
+  :hook (c++-mode . ggtags-mode)  ;; activer ggtags pour C++
   :bind (:map ggtags-mode-map
-         ("C-c g s" . ggtags-find-other-symbol)
-         ("C-c g h" . ggtags-view-tag-history)
-         ("C-c g r" . ggtags-find-reference)
-         ("C-c g f" . ggtags-find-file)
-         ("C-c g c" . ggtags-create-tags)
-         ("C-c g u" . ggtags-update-tags)
-         ("M-," . pop-tag-mark))
+         ("C-c g s" . ggtags-find-other-symbol)  ;; rechercher symbole
+         ("C-c g h" . ggtags-view-tag-history)    ;; historique
+         ("C-c g r" . ggtags-find-reference)      ;; références
+         ("C-c g f" . ggtags-find-file)           ;; ouvrir fichier
+         ("C-c g c" . ggtags-create-tags)         ;; créer tags
+         ("C-c g u" . ggtags-update-tags)         ;; mettre à jour tags
+         ("M-," . pop-tag-mark))                  ;; revenir à la position précédente
   :config
+  ;; Intégrer ggtags à Imenu pour lister les fonctions
   (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
 
+;; ----------------------------
+;; Company backend pour autocompletion des headers C/C++
+;; ----------------------------
 (use-package company-c-headers
   :ensure t
   :config
+  ;; Ajouter chemin système des headers C++ (ex: GCC 13)
   (add-to-list 'company-c-headers-path-system "/usr/include/c++/13")
+  
+  ;; Ajouter company-c-headers à company-backends
   (add-to-list 'company-backends 'company-c-headers))
 
+;; ----------------------------
+;; Semantic pour analyse statique et navigation
+;; ----------------------------
 (require 'semantic)
 
+;; Activer la base de données et le scheduler
 (global-semanticdb-minor-mode 1)
 (global-semantic-idle-scheduler-mode 1)
 
+;; Activer semantic-mode pour C++
 (add-hook 'c++-mode-hook #'semantic-mode)
 
+;; ----------------------------
+;; Irony mode pour autocomplétion intelligente C/C++
+;; ----------------------------
 (use-package irony
   :ensure t
   :config
+  ;; Activer irony-mode automatiquement pour C et C++
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
+  
+  ;; Configurer compilation options automatiquement
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
+;; Intégrer Irony à Company
 (use-package company-irony
   :ensure t
   :config
@@ -891,6 +948,11 @@
                   ("cpp"   . "src C++")                     ;; C++
                   ("tex"   . "src latex")))                 ;; LaTeX
     (add-to-list 'org-structure-template-alist item)))
+
+(use-package ess
+  :ensure t
+  :init
+  (setq ess-ask-for-ess-directory nil))
 
 (use-package ox-pandoc
   :ensure t)

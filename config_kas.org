@@ -1431,85 +1431,141 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 : /home/kassim/pythonvenv/bin/python
 
 ** C/C++
-#+BEGIN_SRC emacs-lisp
-(add-hook 'c++-mode-hook (lambda () (c-set-style "stroustrup")))
-#+END_SRC
+*** Configuration générale C/C++
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Style et indentation
+;; ----------------------------
+;; Style de code par défaut pour C et C++
+(setq c-default-style "linux"  ;; style Linux pour C/C++
+      c-basic-offset 4)        ;; indentation = 4 espaces
+
+;; Fonction utilitaire pour configurer C et C++
+(defun my-c-c++-mode-setup ()
+  "Setup for C/C++ modes."
+  ;; Utiliser des espaces au lieu de tabulations
+  (setq indent-tabs-mode nil
+        tab-width 4)
+  
+  ;; Activer Eglot (LSP) automatiquement pour C/C++
+  (eglot-ensure)
+  
+  ;; Flymake uniquement pour C
+  (when (derived-mode-p 'c-mode)
+    (flymake-mode))
+  
+  ;; Style Stroustrup uniquement pour C++
+  (when (derived-mode-p 'c++-mode)
+    (c-set-style "stroustrup")))
+
+;; Ajouter le hook pour C
+(add-hook 'c-mode-hook 'my-c-c++-mode-setup)
+
+;; Ajouter le hook pour C++
+(add-hook 'c++-mode-hook 'my-c-c++-mode-setup)
+
+;; Raccourci global pour compiler avec F5
+(global-set-key (kbd "<f5>") 'compile)
+#+end_src
 
 #+RESULTS:
-| lambda | nil | (c-set-style stroustrup) |
+: compile
 
-#+BEGIN_SRC emacs-lisp
+*** CMake mode
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Support CMake
+;; ----------------------------
 (use-package cmake-mode
-  :ensure t)
-#+END_SRC
+  :ensure t) ;; Installer automatiquement si manquant
+#+end_src
 
 #+RESULTS:
 
-#+BEGIN_SRC emacs-lisp
+*** Ggtags (navigation de code)
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Ggtags pour navigation et recherche de symboles
+;; ----------------------------
 (use-package ggtags
   :ensure t
-  :hook (c++-mode . ggtags-mode)
+  :hook (c++-mode . ggtags-mode)  ;; activer ggtags pour C++
   :bind (:map ggtags-mode-map
-         ("C-c g s" . ggtags-find-other-symbol)
-         ("C-c g h" . ggtags-view-tag-history)
-         ("C-c g r" . ggtags-find-reference)
-         ("C-c g f" . ggtags-find-file)
-         ("C-c g c" . ggtags-create-tags)
-         ("C-c g u" . ggtags-update-tags)
-         ("M-," . pop-tag-mark))
+         ("C-c g s" . ggtags-find-other-symbol)  ;; rechercher symbole
+         ("C-c g h" . ggtags-view-tag-history)    ;; historique
+         ("C-c g r" . ggtags-find-reference)      ;; références
+         ("C-c g f" . ggtags-find-file)           ;; ouvrir fichier
+         ("C-c g c" . ggtags-create-tags)         ;; créer tags
+         ("C-c g u" . ggtags-update-tags)         ;; mettre à jour tags
+         ("M-," . pop-tag-mark))                  ;; revenir à la position précédente
   :config
+  ;; Intégrer ggtags à Imenu pour lister les fonctions
   (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 
-#+BEGIN_SRC emacs-lisp
+*** Company headers (autocomplétion pour C/C++)
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Company backend pour autocompletion des headers C/C++
+;; ----------------------------
 (use-package company-c-headers
   :ensure t
   :config
+  ;; Ajouter chemin système des headers C++ (ex: GCC 13)
   (add-to-list 'company-c-headers-path-system "/usr/include/c++/13")
+  
+  ;; Ajouter company-c-headers à company-backends
   (add-to-list 'company-backends 'company-c-headers))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 : t
 
-#+BEGIN_SRC emacs-lisp
+*** Semantic
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Semantic pour analyse statique et navigation
+;; ----------------------------
 (require 'semantic)
 
+;; Activer la base de données et le scheduler
 (global-semanticdb-minor-mode 1)
 (global-semantic-idle-scheduler-mode 1)
 
+;; Activer semantic-mode pour C++
 (add-hook 'c++-mode-hook #'semantic-mode)
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-| semantic-mode | ggtags-mode | (lambda nil (c-set-style stroustrup)) |
+| my-c-c++-mode-setup | irony-mode | semantic-mode | ggtags-mode | (lambda nil (c-set-style stroustrup)) |
 
-M-x irony-install-server
-#+BEGIN_SRC emacs-lisp
+*** Irony (autocomplete + compile options)
+#+begin_src emacs-lisp
+;; ----------------------------
+;; Irony mode pour autocomplétion intelligente C/C++
+;; ----------------------------
 (use-package irony
   :ensure t
   :config
+  ;; Activer irony-mode automatiquement pour C et C++
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
+  
+  ;; Configurer compilation options automatiquement
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-#+END_SRC
 
-#+RESULTS:
-: t
-
-#+BEGIN_SRC emacs-lisp
+;; Intégrer Irony à Company
 (use-package company-irony
   :ensure t
   :config
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-irony)))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 : t
-
 ** Org-Tempo
 #+BEGIN_SRC emacs-lisp
 (use-package org-tempo
@@ -1535,6 +1591,39 @@ M-x irony-install-server
 #+RESULTS:
 : t
 
+** R
+*** Dans le terminal
++ sudo apt install r-base r-base-dev
++ sudo apt install build-essential libcurl4-openssl-dev \
+                 libssl-dev libxml2-dev
++ sudo apt install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libtiff5-dev \
+    libfreetype6-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfontconfig1-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    build-essential
+*** Dans R
+install.packages("ragg", repos = "https://cloud.r-project.org")
+install.packages("tidyverse", repos = "https://cloud.r-project.org")
+install.packages("tidyverse")
+install.packages("data.table")
+install.packages("ggplot2")
+*** Dans init
+#+begin_src emacs-lisp
+(use-package ess
+  :ensure t
+  :init
+  (setq ess-ask-for-ess-directory nil))
+#+end_src
+
+#+RESULTS:
+: t
 * Exportation
 ** Markdown
 
