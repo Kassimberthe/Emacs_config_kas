@@ -289,11 +289,11 @@
 (use-package company
   :ensure t
   :custom
-  ;; ❌ aucune complétion automatique
-  (company-idle-delay 0.3)
+  ;; complétion immédiate
+  (company-idle-delay 0.1)
 
   ;; longueur minimale
-  (company-minimum-prefix-length 3)
+  (company-minimum-prefix-length 1)
 
   ;; affichage
   (company-tooltip-align-annotations t)

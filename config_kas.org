@@ -522,11 +522,11 @@ suivi par git.
   (use-package company
     :ensure t
     :custom
-    ;; ❌ aucune complétion automatique
-    (company-idle-delay 0.3)
+    ;; complétion immédiate
+    (company-idle-delay 0.1)
 
     ;; longueur minimale
-    (company-minimum-prefix-length 3)
+    (company-minimum-prefix-length 1)
 
     ;; affichage
     (company-tooltip-align-annotations t)
@@ -1914,9 +1914,7 @@ dépôt distant origin.
 
 *** git clean
 - 🎯 **Rôle** : Supprime les fichiers non suivis
-- Git : `git clean -f`
-- Magit : `C x` (majuscule puis minuscule)
-  
+- Gi
 * Org mode configuration
 ** Sheet
 *** Pour capture
@@ -3982,3 +3980,123 @@ git clone https://github.com/jaypei/emacs-neotree.git neotree
 
 #+RESULTS:
 : ((width . 100) (height . 40) (top . 50) (left . 50))
+
+* Git sheet
+** Structure du dossier local
+*** Working directory
+**** Dossier suivi par git (tracked)
++ unmodified : les fichiers non modifiés par rapport au dernier commit.
++ modified : les fichiers modifiés par rapport au dernier commit.
+**** Dossier non suivi
++ untracked : les fichiers n'ayant jamais subi git add.
+*** Stage
+Lieu où les fichiers sont capturés/copiés.
+**** Envoyer les fichiers ou dossier dans le stage
+***** Envoyer un dossier ou fichier spécifique
++ git add nom__fichier ou git add nom__dossier/
++ git add -f nom__dossier/                     # Forcer git à envoyer le dossier sans rien enlever
++ git add -f nom__dossier/nom__fichier          # Forcer git à ajouter nom__fichier dans nom__dossier
+***** Envoyer tous les suivis
++ git add .
+**** Retirer un fichier ou un dossier du stage
++ git restore --staged nom__fichier ou git restore --staged nom__dossier 
+*** Repository
+Lieu où les captures sont enregistrées.
+**** Enregistrer un commit
++ git commit -m"commentaire à faire"
+**** Annuler un commit
++ git reset --soft HEAD~1   # uniquement le commit
++ git reset --mixed HEAD~1  # uniquement le commit et le staged
+** Structure du depot distant
+*** Repository distant
+Lieu où les fichiers sont enregistrés sur le net.
+**** Envoyer un commit vers le repository distant
++ git push : lorsque les commits du le depot local est en'avance sur le depot distant 
+** Mise à jour du depot local
++ git pull : lorsque les commits du le depot distant est en'avance sur le depot local. 
+  Le pull peut se decomposer en deux:
+  + git fetch # pour charger les mises à jour
+  + git merge # pour installer : Le merge affecte le staging, le tracked et le repository.
+** Les branches
+*** Créer une branche
++ git branch nom__branche
+*** Aller sur une branche
++ git checkout nom__branche
+*** Créer et aller sur une branche
++ git checkout -b nom__branche
+*** Lister les branches
++ git branch     # affecte le ripo local
+*** Supprimer une branche
++ git branch -d nom__branche # affecte le ripo local
+*** Mettre à jour une branche
+**** Avec le merge : cree un commit commun au deux branches
++ aller sur la branche à mettre à jour car HEAD suit le sens du 1er parent.
++ git merge
+**** Avec rebase : transfère tous les commits de la branche courant vers l'autre
++ aller sur la branche qui enverrais les commits
++ git rebase
+*** Envoyer les fichiers vers le depot distant à travers une branche tierce
++ git push origin nom__branche__tierce
+
+**  Etat des fichiers
+*** git status
++ montre l'état des fichiers tracked et untracked
++ montre les conflis s'il existe
+*** git diff
+compare le fichier modifié au dernier staged
+*** git --staged
+compare le dernier staged et le dernier commit
+*** git diff HEAD
+compare le fichier modifié au dernier commit
+** Les conflits
+*** Les zones dans git
+Supposons que nous avons un fichier ancetre dont les lignes sont
+contituées de A,B,C et D et lig une ligne insérée.
++ si lig est avant A, alors la zone est "zone avant A"
++ si lig est entre A et B, alors la zone est "zone entre A et B"
++ si lig est après D, alors la zone est "zone après D"
++ si B est modifiées, git considere que la ligne B a été supprimée donc la "zone B" et
+  la nouvelle ligne est dans la zone "zone entre A et C"
+*** Règle de conflits
+Il y'a conflit lorsqu'une même zone est modifiée.
+*** Conflits dans le depot local
+Ce conflit se produit lors un merge ou un rebase ou un pull.
+**** Resolution
+***** Annuler le merge ou le rebase
++ git merge --abort  # pour le merge
++ git rebase --abort # pour le rebase
+***** Corriger le fichier
++ Ouvre le fichier et corrige
++ git commit               # pour un merge
++ git rebase --continue    # pour un rebase  
+*** Conflits dans le depot distant
+Les branches divergent
+**** Resolution
+***** Avec un rebase
++ git pull --rebase
++ git push
+***** Avec un merge
++ git pull --no-rebase
++ git push
+***** Jeter le code de la branche
++ git checkout -b newbranche
++ git checkout newbranche
++ git reset --hard origin/main
+***** Initialiser le depot distant
++ git push --force
+** Costaumiser git
+Les couleurs sont à mettre en hexadecimales
+# Untracked files → noir sur jaune
+git config --global color.status.untracked "black yellow"
+
+# Modified → jaune sur noir
+git config --global color.status.changed "yellow black"
+
+# Added (staged) → vert vif
+git config --global color.status.added "brightgreen"
+
+# Deleted → rouge vif
+git config --global color.status.deleted "brightred"
+
+# Branch name (in status output)
+git config --global color.branch.current "yellow bold"
