@@ -105,7 +105,7 @@
 ;; Ajouter le hook pour tous les modes de programmation
 (add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
 
-(electric-pair-mode 1)
+;(electric-pair-mode 1)
 
 (use-package rainbow-delimiters
   :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
@@ -343,15 +343,21 @@
       (kbd "M-k") 'drag-stuff-up))
   )
 
+;; Police globale avec Nerd Font
+(set-face-attribute 'default nil
+                    :family "JetBrainsMono Nerd Font Propo"
+                    :height 110)
+
+;; Activation doom-modeline avec icônes
 (use-package doom-modeline
   :ensure t
   :init
   (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-height 35        ;; Hauteur de la barre de mode
-        doom-modeline-bar-width 5      ;; Largeur de la barre droite
-        doom-modeline-persp-name t     ;; Affiche le nom de la perspective
-        doom-modeline-persp-icon t))   ;; Affiche une icône de dossier près du nom
+  (setq doom-modeline-height 35
+        doom-modeline-bar-width 5
+        doom-modeline-persp-name t
+        doom-modeline-persp-icon t)) ;; icônes activées
 
 (use-package diminish
   :init

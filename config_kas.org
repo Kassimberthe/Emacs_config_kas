@@ -178,7 +178,7 @@ f12 = altgr + f12
 
 ** Appel automatique du delimitateur fermant
 #+BEGIN_SRC emacs-lisp
-(electric-pair-mode 1)
+;(electric-pair-mode 1)
 #+END_SRC
 
 #+RESULTS:
@@ -611,15 +611,22 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 * Personnalisation du mode line
 ** Mode line
 #+BEGIN_SRC emacs-lisp
+;; Police globale avec Nerd Font
+(set-face-attribute 'default nil
+                    :family "JetBrainsMono Nerd Font Propo"
+                    :height 110)
+
+;; Activation doom-modeline avec icônes
 (use-package doom-modeline
   :ensure t
   :init
   (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-height 35        ;; Hauteur de la barre de mode
-        doom-modeline-bar-width 5      ;; Largeur de la barre droite
-        doom-modeline-persp-name t     ;; Affiche le nom de la perspective
-        doom-modeline-persp-icon t))   ;; Affiche une icône de dossier près du nom
+  (setq doom-modeline-height 35
+        doom-modeline-bar-width 5
+        doom-modeline-persp-name t
+        doom-modeline-persp-icon t)) ;; icônes activées
+
 #+END_SRC
 
 #+RESULTS:
@@ -4100,3 +4107,205 @@ git config --global color.status.deleted "brightred"
 
 # Branch name (in status output)
 git config --global color.branch.current "yellow bold"
+
+* IDE pour programmation
+#+PROPERTY: header-args:python :session my_session :exports both
+
+| Élément            | Effet                                     |
+|--------------------+-------------------------------------------|
+| #+PROPERTY:        | Définit une propriété globale du document |
+| header-args        | S’applique à TOUS les blocs `#+begin_src`  |
+| header-args:python | S’applique uniquement aux blocs Python    |
+| :session my_session | Les blocs partagent la même session       |
+|                    | (variables persistantes)                  |
+| :exports both      | Code + résultats inclus à l’export        |
+| :exports code      | Seulement le code à l’export              |
+| :exports results   | Seulement les résultats à l’export        |
+| :exports none      | Rien n’est exporté                        |
+
++ #+PROPERTY: header-args :session my_session :exports both        # # accepte tous les langages
+
+
+| :results                          | Ce que Org récupère                   | Exemple Python                | Résultat Org                    |
+|-----------------------------------+---------------------------------------+-------------------------------+---------------------------------|
+| output                            | Texte affiché (stdout)                | print("Hi")                   | Hi                              |
+| value                             | Valeur retournée                      | 2 + 2                         | 4                               |
+| file                              | Nom de fichier généré                 | ["data.csv"]                  | [[file:data.csv]]                   |
+| table                             | Tableau Org (liste de listes)         | [[1,2],[3,4]]                 |                                 |
+| table replace                     | Tableau Org, remplace ancien résultat | [[1,2],[3,4]] → [[5,6],[7,8]] |                                 |
+| graphics file :file /tmp/plot.png | Image générée dans un fichier         | matplotlib plot               | [[file:/tmp/plot.png]]              |
+| raw                               | Insère le résultat tel quel           | "<b>Hi</b>"                   | <b>Hi</b>                       |
+| silent                            | Rien n’est inséré                     | print("Hi")                   | (rien)                          |
+| drawer                            | Résultat dans un drawer               | 2 + 2                         | :RESULTS:\n4\n:END:             |
+| replace                           | Remplace l’ancien résultat            | print("Hi")                   | Hi (remplace l’ancien résultat) |
+| append                            | Ajoute après l’ancien résultat        | print("Hi")                   | Ancien résultat\nHi             |
+| prepend                           | Ajoute avant l’ancien résultat        | print("Hi")                   | Hi\nAncien résultat             |
+| list                              | Force une liste                       | [1,2,3]                       | - 1\n- 2\n- 3                   |
+| scalar                            | Valeur simple                         | 42                            | 42                              |
+
++ #+BEGIN__SRC python :results graphics file replace :file chemin/nom__image.png
+
+| Ligne                   | Portée / effet                                    |
+|-------------------------+---------------------------------------------------|
+| #+HEADER:               | locale → seulement le bloc suivant                |
+| #+PROPERTY: header-args | globale → tous les blocs du langage ou du fichier |
+
+#+HEADER: <option1> <valeur1> <option2> <valeur2> ...
+#+BEGIN_SRC <langage>
+...
+#+END_SRC
+
+| Option                     | Rôle / Explication                                    | Exemple Python                                       | Résultat Org                        |
+|----------------------------+------------------------------------------------------+----------------------------------------------------+------------------------------------|
+| :var <nom>=<val>           | Passe une variable dans le bloc source              | :var dirs=["src","tests"]                           | dirs disponible dans le bloc       |
+| :results <type>            | Définit le type de résultat (value, output, table, file, graphics) | :results output                                    | texte affiché par print()          |
+| :session <nom>             | Spécifie la session partagée (persistante)          | :session my_session                                 | variables persistantes entre blocs |
+| :exports <mode>            | Ce qui sera exporté : code, results, both          | :exports both                                      | export code + résultat             |
+| :file <chemin>             | Spécifie un fichier de sortie                       | :file /tmp/plot.png                                | lien vers le fichier [[file:/tmp/plot.png]] |
+| :results table             | Force un tableau Org                                 | [[1,2],[3,4]]                                      | |1|2|\n|3|4|                        |
+| :results table replace     | Tableau Org, remplace l’ancien résultat             | [[5,6],[7,8]]                                      | |5|6|\n|7|8|                        |
+| :results graphics file :file <chemin> | Génère un graphique / image dans un fichier | matplotlib plot :file /tmp/plot.png               | [[file:/tmp/plot.png]]             |
+| :results raw               | Insère le résultat tel quel                          | "<b>Hi</b>"                                        | <b>Hi</b>                          |
+| :results silent            | N’insère rien                                        | print("Hi")                                        | (rien)                             |
+| :results drawer            | Met le résultat dans un drawer                       | 2 + 2                                              | :RESULTS:\n4\n:END:                |
+| :results append            | Ajoute après l’ancien résultat                        | print("Hi")                                        | Ancien résultat\nHi                 |
+| :results prepend           | Ajoute avant l’ancien résultat                        | print("Hi")                                        | Hi\nAncien résultat                 |
+| :results list              | Force une liste                                     | [1,2,3]                                           | - 1\n- 2\n- 3                       |
+| :results scalar            | Valeur simple                                       | 42                                                | 42                                  |
+
+
+** 1. Chargement des librairies
+
+#+BEGIN_SRC python :results output
+import matplotlib
+matplotlib.use('Agg')  # Backend non interactif (nécessaire pour l'export PNG)
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+print("Librairies chargées.")
+#+END_SRC
+
+#+RESULTS:
+: Librairies chargées.
+
+** 2. Création du DataFrame
+
+#+BEGIN_SRC python :results output
+df = pd.DataFrame({
+    "Nom": ["Alice", "Bob", "Claire"],
+    "Âge": [25, 30, 27],
+    "Score": np.random.rand(3)
+})
+print(df)
+#+END_SRC
+
+#+RESULTS:
+:       Nom  Âge     Score
+: 0   Alice   25  0.507505
+: 1     Bob   30  0.578912
+: 2  Claire   27  0.704731
+
+** 3. Analyse statistique
+
+#+BEGIN_SRC python :results output
+print("Âge moyen :", df["Âge"].mean())
+print("Score moyen :", df["Score"].mean())
+#+END_SRC
+
+#+RESULTS:
+: Âge moyen : 27.333333333333332
+: Score moyen : 0.5970496563702467
+
+** 4. Génération du graphique
+
+#+BEGIN_SRC python :results file
+plt.figure(figsize=(5,3))
+plt.bar(df["Nom"], df["Score"], color='skyblue')
+plt.title("Scores par personne")
+plt.ylabel("Score")
+
+filename = "graph.png"
+plt.savefig(filename)
+filename  # Org-mode affichera l'image automatiquement
+#+END_SRC
+
+#+RESULTS:
+[[file:graph.png]]
+
+# #####################################################################
+
+** Création d'une liste de carrés
+#+NAME: dire
+#+BEGIN_SRC python :results value
+# Renvoie une liste de carrés de 0 à 9
+squares = [x**2 for x in range(10)]
+squares
+#+END_SRC
+
+#+RESULTS: dire
+| 0 | 1 | 4 | 9 | 16 | 25 | 36 | 49 | 64 | 81 |
+
+#+RESULTS:
+| 0 | 1 | 4 | 9 | 16 | 25 | 36 | 49 | 64 | 81 |
+
+** Moyenne d'une colonne dans un DataFrame
+
+#+BEGIN_SRC python :results value
+import pandas as pd
+df = pd.DataFrame({
+    "Nom": ["Alice", "Bob", "Claire"],
+    "Âge": [25, 30, 27],
+    "Score": [88, 92, 79]
+})
+df["Score"].mean()  # Retourne une seule valeur
+#+END_SRC
+
+#+RESULTS:
+: 86.33333333333333
+
+** Retourner un DataFrame entier
+
+#+BEGIN_SRC python :results value
+df  # Affiche le DataFrame complet comme valeur
+#+END_SRC
+
+#+RESULTS:
+:       Nom  Âge  Score
+: 0   Alice   25     88
+: 1     Bob   30     92
+: 2  Claire   27     79
+
+| Nom    | Âge | Score |
+|--------+-----+-------|
+| Alice  |  25 |    88 |
+| Bob    |  30 |    92 |
+| Claire |  27 |    79 |
+|        |     |       |
+|        |     |       |
+
+#+BEGIN_SRC python :results graphics file :file plot.png
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.savefig("plot.png")  # obligatoire pour matplotlib
+plt.close()
+#+END_SRC
+
+#+RESULTS:
+[[file:plot.png]]
+
+
+#+HEADER: :var dirs=dire() :exports both
+#+BEGIN_SRC python :results output
+for d in dirs:
+    print(d, end=' ')
+#+END_SRC
+
+#+RESULTS:
+: 0 1 4 9 16 25 36 49 64 81
