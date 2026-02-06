@@ -33,13 +33,57 @@ dist/
 # =====================================================
 *~
 \#*\#
-.\#*
-.~undo-tree~
-.emacs.desktop
+# ======================================================
+#      Sur les fichiers
+# =====================================================
 
+## ignorer les fichiers fichier.extension
+## dans le dossier racine (dossier mère) et sous dossier
+
+.env
+
+
+
+## Ignorer tou les fichiers d'extension *.extension partout 
+
+
+
+## Ignorer ex /fichier.extension dans le dossier courant
+
+
+
+
+#======================================================
+#         Sur le dossier
+#=====================================================
+
+## Ignore le dossier /nom_dossier à la racine et son contenu
+
+
+
+## Ignore tous les fichiers et sous dossiers à l’intérieur
+##de /nom_dossier/*  mais les fichiers du dossier ne sont
+## jamais versionnés et le dossier reste présent
+
+
+
+#=====================================================
+# Laisser passer avec ! malgré une condition
+#==============================================
+!init.el
+!config_kas.el
+!config_kas.org
+!bookmarks
+!.gitignore
+!Notes
+!data_science_sheet.org
+!config_mu4e.org
 # =====================================================
 # 🧹 Emacs temporary files / caches
 # =====================================================
+.\#*
+.~undo-tree~
+.emacs.desktop
 elpa/
 eln-cache/
 history/
@@ -49,9 +93,3 @@ tramp/
 eshell/
 projectile-bookmarks.eld
 recentf
-
-!config_kas.el
-!config_kas.org
-!bookmarks
-!.gitignore
-!Notes
