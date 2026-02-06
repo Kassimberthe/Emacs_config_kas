@@ -258,17 +258,30 @@
   :if (not (eq system-type 'windows-nt))
   :config
   (pdf-loader-install)
+
   ;; Ouvrir les PDF ajustés pour tenir sur la page
   (setq-default pdf-view-display-size 'fit-page)
+
   ;; Zoom plus précis avec un facteur de 1.1
   (setq pdf-view-resize-factor 1.1)
+
+  ;; Navigation style Vim
+  (define-key pdf-view-mode-map (kbd "g") #'pdf-view-first-page)
+  (define-key pdf-view-mode-map (kbd "G")   #'pdf-view-last-page)
+  (define-key pdf-view-mode-map (kbd "e")   #'pdf-view-goto-page)
+  (define-key pdf-view-mode-map (kbd "r")   #'pdf-view-revert-buffer)
+
   ;; Utiliser la recherche standard d'Emacs
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-  (define-key pdf-view-mode-map (kbd "C-r") 'isearch-backward)
+  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "C-r") #'isearch-backward)
+
   ;; Raccourcis clavier pour les annotations
-  (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation) ;; Ajouter une surbrillance
-  (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)             ;; Ajouter une annotation texte
-  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))                         ;; Supprimer une annotation
+  (define-key pdf-view-mode-map (kbd "h") #'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "t") #'pdf-annot-add-text-annotation)
+  (define-key pdf-view-mode-map (kbd "u") #'pdf-annot-add-underline-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "s") #'pdf-annot-add-strikeout-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "~") #'pdf-annot-add-squiggly-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "d") #'pdf-annot-delete))
 
 ;; Utiliser Zathura pour les PDF depuis Org-mode
 (setq org-file-apps
@@ -282,9 +295,18 @@
         '(("\\.pdf\\'" "zathura" (file))))
   (openwith-mode 1))
 
-(setq openwith-associations
-      '(("\\.png\\'" "sxiv" (file))
-        ("\\.jpg\\'" "sxiv" (file))))
+(use-package openwith
+  :config
+  (setq openwith-associations
+        (unless (display-graphic-p)
+          '(("\\.png\\'" "sxiv" (file))
+            ("\\.jpg\\'" "sxiv" (file))
+            ("\\.jpeg\\'" "sxiv" (file)))))
+  (openwith-mode 1))
+
+;; Définir un raccourci pour afficher/rafraîchir les images inline
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c i") 'org-display-inline-images))
 
 (use-package company
   :ensure t
@@ -1933,3 +1955,12 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
         (left . 50)))
 
 (setq default-frame-alist initial-frame-alist)
+
+;; Créer un bookmark avec C-c c
+(global-set-key (kbd "C-c c") 'bookmark-set)
+
+;; Aller à un bookmark avec C-c a
+(global-set-key (kbd "C-c a") 'bookmark-jump)
+
+;; Lister tous les bookmarks avec C-c b
+(global-set-key (kbd "C-c b") 'bookmark-bmenu-list)
