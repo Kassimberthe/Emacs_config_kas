@@ -1,0 +1,240 @@
+#+PROPERTY: header-args :session pandas
+* Pandas
+** Charger les modules
+#+begin_src python :results output 
+  import numpy as np
+  import pandas as pd
+
+  print("ok pour les modules")
+#+end_src
+
+#+RESULTS:
+: ok pour les modules
+** Series
+*** syntaxe
+S = pd.Series(data=liste, name="nom", index)
+*** Exemple
+#+begin_src python :results value
+  S1 = pd.Series(data=range(4), name="nom", index=["s","a","g","h"])
+  S1
+#+end_src
+
+#+RESULTS:
+: s    0
+: a    1
+: g    2
+: h    3
+: Name: nom, dtype: int64
+
+** Structure du DataFrame
+| index par default des lignes | index labelisé |   | 0    |   |   | p-1  | index par default des colonnes |
+|------------------------------+----------------+---+------+---+---+------+--------------------------------|
+| .iloc                        | .loc           |   | col1 |   |   | colp |                                |
+|------------------------------+----------------+---+------+---+---+------+--------------------------------|
+| 0                            | l1             |   | a1   |   |   | b1   |                                |
+|                              |                |   |      |   |   |      |                                |
+|                              |                |   |      |   |   |      |                                |
+|                              |                |   |      |   |   |      |                                |
+|                              |                |   |      |   |   |      |                                |
+| n-1                          | ln             |   | an   |   |   | bn   |                                |
+
++ iloc ne fonctionne que pour les index par default
++ loc est général
+** Création du DataFrame
+*** avec un dico
+#+begin_src python :results value
+  dico = {"col1" : [1,5,9], "col2" : [7,5,3]}
+  df1 = pd.DataFrame(dico)
+  df1
+#+end_src
+
+#+RESULTS:
+:    col1  col2
+: 0     1     7
+: 1     5     5
+: 2     9     3
+*** avec un array ou liste de liste
+#+begin_src python :results value :replace
+  df2 = pd.DataFrame(np.random.rand(3,3), index = ["l0","l1","l2"], columns=["col1", "col2", "col3"])
+  df2
+#+end_src
+
+#+RESULTS:
+:         col1      col2      col3
+: l0  0.084316  0.722785  0.277065
+: l1  0.635991  0.038104  0.671831
+: l2  0.616858  0.461467  0.331659
+** Comparaison
+les Series et les DataFrames ne diffèrent que par les index
+** Extraction des Series
+*** par colonne
++ df["col1"] ou df.col1
++ df["col1", "col2"]
+*** par ligne
++ df.loc["l1"]
++ df.loc[:,"col1"]
++ df.loc["l1", :]
+*** Exemple
++ "li" ou i accède aux valeurs de la ligne li ou i
+  #+begin_src python :results value
+    df2.loc["l1"]
+  #+end_src
+
+  #+RESULTS:
+  : col1    0.635991
+  : col2    0.038104
+  : col3    0.671831
+  : Name: l1, dtype: float64
+
+  #+begin_src python :results value
+    df2.iloc[1]
+  #+end_src
+
+  #+RESULTS:
+  : col1    0.635991
+  : col2    0.038104
+  : col3    0.671831
+  : Name: l1, dtype: float64
+
++ idem pour les colonnes
+  #+begin_src python :results value
+    df2.loc[:,"col2"]
+  #+end_src
+
+  #+RESULTS:
+  : l0    0.722785
+  : l1    0.038104
+  : l2    0.461467
+  : Name: col2, dtype: float64
+
+  #+begin_src python :results value :replace
+    df2.iloc[:, 1]
+  #+end_src
+
+  #+RESULTS:
+  : l0    0.722785
+  : l1    0.038104
+  : l2    0.461467
+  : Name: col2, dtype: float64
+** Extraction des sous DataFrame
++ df[liste] ou df.loc[liste] ou df.loc[liste,liste] ou df.loc[slicing,slicing] ou df.loc[condition] 
+** Convertir une serie en liste
++ Series.tolist
+  
+#+begin_src python :results output
+  print(type(df2["col1"].to_numpy()))
+#+end_src
+
+#+RESULTS:
+: <class 'numpy.ndarray'>
+** Extraire un tableau numpy
++ df.to__numpy() ou series.to__numpy()
+NB: On obtient un array dont les types peuvent être int, float et objet.
+** Renommer les colonnes d'un DataFrame
+*** avec un dico: clé=ancien nom   valeur=nouveau nom
++ df.rename(columns=dico, inplace=True)
+*** avec str.methode
++ df.rename(str.upper, axis="columns")
+*** avec une lambda fonction
++ df.rename(lambda x: x.replace(" ", "_"), axis="columns")
+** Index du DataFrame 
+*** Déplacer une colonne en index
++ df.set__index("col__i", inplace=True)
+*** Déplacer l'index en colonne
++ df["nom__col"]=df.index  ou df.insert(0, "nom__col", df.index)
+*** Supprimer l'index
++ df.reset__index(inplace=True)
+** Supprimer les colonnes ou lignes dans un DataFrame
+*** les colonnes
+df.drop(columns="col" ou liste__cols, inplace=True)
+*** les lignes
+df.drop(index=liste, inplace=True)
+*** les dupliquées
+Nb: keep="first" ie garde le 1er, last le dernier et False rien
+**** suivant une colonne
++ df.drop__duplicates("col__i", keep=..)
+**** suivant plusieurs colonnes
++ df.drop__duplicates(["col1",..,"coln"], keep=..)
+**** Les lignes toutes identiques
++ df.drop__duplicates(keep=..)
+** Filtrer les lignes
+*** avec condition
++ df.loc[condition]
+*** suivant les valeurs d'une colonne
++ df.loc[df.col__i.isin("val1",...,"valn")] : ie supprime les lignes de col__i dont
+  les valeurs ne sont pas val1,...,valn
++ df.loc[df.col__i.between(val1,valn)] : ie supprime les lignes de col__i dont
+  les valeurs ne sont pas comprises entre val1 et valn
+** Transformer les données
+*** assign : créer des nouvelles colonnes en fonction des autres
++ df.assign(N__col1= lambda L: lamb([(fonct des col)], N__col2= lambda L: lamb(L[fonct des col)])
+*** map : agit sur les valeurs d'une serie
++ df.col__i.map(lambda val: lam)
+*** applymap : agit sur les valeurs du DataFrame
++ df.applymap(lambda val: lam)
+*** apply : agit sur chaque colonne ou ligne du Dataframe ou serie
++ df.apply(lambda Lig: lam, axis="columns ou rows")
+** Scaling et standarisation
+*** Z score scaling
+#+begin_src python
+  def z_score(x):
+      return (x-np.mean(x))/np.std(x)
+
+  f = df.apply(z_score, axis="rows")
+#+end_src
+
+*** Min max scaling
+#+begin_src python
+  def min_max(x):
+      return (x-np.min(x))/(np.max(x)-np.min(x))
+
+  f1 = df.apply(min_max, axis="rows")
+#+end_src
+
+*** Maximum absolute scaling
+#+begin_src python
+  def max_absolute(x):
+      return x/np.max(x)
+
+  f2 = df.apply(max_absolute, axis="rows")
+#+end_src
+
+*** Robust scaling : pour les données aberrantes
+#+begin_src python
+  def robuste(x):
+      return x-np.median(x)/(Q3-Q1)
+
+  f3 = df.apply(robuste, axis="rows")
+#+end_src
+** Groupby et agg
+*** df.groupby("col__i")
++ for name, sdf in df.groupby("col__i")
+Il crée des mini dataframes dont les noms sont les valeurs
+distinctes de col__i et filtre df de sorte que le sous
+dataframe ne garde que les lignes dont dont la valeur
+de col__i valle le nom.
+***  objet.agg({"col": np.mean ou lam ou [np.min, np.max, np.sum]})
+ie sur chaque objet, selectionne col et applique np.mean ou lam.
+** Fusion des dataframes 
+*** merge : l'un à coté de l'autre
+**** suivant une colonne avec le même nom
+***** left ie prendre tout le df1 et complete les colonnes ace df2
++ df__merge = pd.merge(df1, df2, on="col__commune", how="left")
+*****  inner ie prendre les lignes ayant le même valeur de col__name et complete les colonnes avec df2
++ df__merge = pd.merge(df1, df2, on="col__commune", how="inner")
+**** suivant des noms diffèrent
++ df__merge = pd.merge(df1, df2, left__on="col1", right__on="col2", how="left")
+*** concatenate : coller
+**** coller l'un en dessous de l'autre
++ df__concatenate = pd.concat([df1, df2], axis="rows") 
+**** coller l'un à côté de l'autre
++ df__concatenate = pd.concat([df1, df2], axis="columns")
+** Valeurs manquantes
+*** .isnull() et notnull()
++ df.isnull() ou series.isnull() renvoie un mask__bool : nan=true et false sinon
++ df.notnull() ou series.notnull() renvoie un mask__bool : nan=false et true sinon
+*** df.dropna()
++ supprime toutes les lignes ayant une valeur manquante
+*** df.dropna(thresh=n, axis=..)
++ conserver la ligne ou colonne si le nbre de valeur different de nan >= n.
+  

@@ -1,0 +1,88 @@
+* Appli à installtaller
+mkdir ~/Maildir
+sudo apt-get install offlineimap
+sudo apt-get install maildir-utils
+
+* créer le fichier ~/.offlineimaprc
+[general]                                                                                                                                                                              accounts = GmailAccount                                                                                                                                                               
+maxsyncaccounts = 1                                                                                                                                                                   
+ui = basic                                                                                                                                                                            
+pythonfile = ~/.emacs.d/offlineimap.py                                                                                                                                                
+                                                                                                                                                                                      
+# =====================                                                                                                                                                               
+# ===== GMAIL =========                                                                                                                                                               
+# =====================                                                                                                                                                               
+                                                                                                                                                                                      
+[Account GmailAccount]                                                                                                                                                                
+localrepository = LocalGmailAccount                                                                                                                                                   
+remoterepository = RemoteGmailAccount                                                                                                                                                 
+quick = 10                                                                                                                                                                            
+                                                                                                                                                                                      
+[Repository LocalGmailAccount]                                                                                                                                                        
+type = Maildir                                                                                                                                                                        
+localfolders = ~/Maildir/Gmail                                                                                                                                                        
+                                                                                                                                                                                      
+[Repository RemoteGmailAccount]                                                                                                                                                       
+type = Gmail                                                                                                                                                                          
+remoteuser = berthekassime@gmail.com                                                                                                                                                  
+remotepasseval = mailpasswd("berthekassime@gmail.com")                                                                                                                                
+maxconnections = 2                                                                                                                                                                    
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt   
+
+* Faire dans le bash
++ chmod 700 ~/.emacs.d/offlineimap.py
++ echo "ktxk pkyk fyfi qspo" > ~/emails
++ gpg --symmetric ~/emails
++ rm ~/emails
+* créer ~/.emacs.d/offlineimap.py
+#!/usr/bin/env python3                                                                                                                                                               
+import subprocess                                                                                                                                                                    
+import os                                                                                                                                                                            
+                                                                                                                                                                                     
+AUTH_FILE = os.path.expanduser("~/emails.gpg")                                                                                                                                       
+                                                                                                                                                                                     
+def mailpasswd(acct):                                                                                                                                                                
+    try:                                                                                                                                                                             
+        return subprocess.check_output(                                                                                                                                              
+            ["gpg", "--quiet", "--batch", "--use-agent", "--decrypt", AUTH_FILE]                                                                                                     
+        ).decode("utf-8").strip()                                                                                                                                                    
+    except subprocess.CalledProcessError:                                                                                                                                            
+        return ""           
+* bash
++ offlineimap
++ offlineimap -a GmailAccount
++ mu index
++ sudo apt-get install mu4e
+* dernier
+** em ~/.emacs.d/mail-sync.sh
+#!/usr/bin/env sh
+
+echo "📥 Synchronisation Gmail..."
+offlineimap -a GmailAccount || exit 1
+
+echo "🔎 Indexation mu..."
+mu index
+
+echo "✅ Mails à jour"
+
+** chmod +x ~/.emacs.d/mail-sync.sh
+* Pour envoyer un mail
++ sudo apt install msmtp msmtp-mta
+** créer em ~/.msmtprc
+# Compte par défaut
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+account gmail
+host smtp.gmail.com
+port 587
+from berthekassime@gmail.com
+user berthekassime@gmail.com
+passwordeval "gpg -q -d ~/emails.gpg"
+
+account default : gmail
+** chmod 600 ~/.msmtprc
+ 
