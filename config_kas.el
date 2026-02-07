@@ -1117,7 +1117,7 @@
     ("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
      "* TODO %?\n %U\n" :empty-lines 1)
      ("j" "Journal" entry (file+datetree (lambda () (concat org-directory "/journal.org")))
-   "* %?\nEntered on %U\n" :empty-lines 1)))
+  "* %?\nEntered on %U\n")))
 
 (setq org-mobile-directory (concat home-directory "/Dropbox/Apps/MobileOrg"))
 ;; (setq org-mobile-directory (concat home-directory "/Dropbox/Applications/MobileOrg"))
@@ -1345,249 +1345,252 @@
 (use-package general
   :config
   (general-evil-setup)
-  ;; set up 'SPC' as the global leader key
+
+  ;; Leader key
   (general-create-definer dt/leader-keys
     :states '(normal insert visual emacs)
     :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC") ;; access leader in insert mode
+    :prefix "SPC"
+    :global-prefix "M-SPC")
 
+  ;;-----------------------------------------------------------------
+  ;;       Recherche/organisation
+  ;;-----------------------------------------------------------------
+    (dt/leader-keys
+     "SPC" '(counsel-M-x :wk "Counsel M-x")
+     "."   '(find-file :wk "Find file")
+     "="   '(perspective-map :wk "Perspective")
+     "TAB TAB" '(comment-line :wk "Comment lines")
+     "u"   '(universal-argument :wk "Universal argument"))
+
+  ;; ------------------------------------------------------------------
+  ;; a — A.I.
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
-    "SPC" '(counsel-M-x :wk "Counsel M-x")
-    "." '(find-file :wk "Find file")
-    "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
-    "TAB TAB" '(comment-line :wk "Comment lines")
-    "u" '(universal-argument :wk "Universal argument"))
-
-   (dt/leader-keys
     "a" '(:ignore t :wk "A.I.")
     "a a" '(ellama-ask-about :wk "Ask ellama about region")
     "a e" '(:ignore t :wk "Ellama enhance")
-    "a e g" '(ellama-improve-grammar :wk "Ellama enhance wording")
-    "a e w" '(ellama-improve-wording :wk "Ellama enhance grammar")
+    "a e g" '(ellama-improve-grammar :wk "Improve grammar")
+    "a e w" '(ellama-improve-wording :wk "Improve wording")
     "a i" '(ellama-chat :wk "Ask ellama")
-    "a p" '(ellama-provider-select :wk "Ellama provider select")
-    "a s" '(ellama-summarize :wk "Ellama summarize region")
-    "a t" '(ellama-translate :wk "Ellama translate region"))
+    "a p" '(ellama-provider-select :wk "Provider select")
+    "a s" '(ellama-summarize :wk "Summarize region")
+    "a t" '(ellama-translate :wk "Translate region"))
 
+  ;; ------------------------------------------------------------------
+  ;; b — Buffers / Bookmarks
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
-    "b" '(:ignore t :wk "Bookmarks/Buffers")
-    "b b" '(switch-to-buffer :wk "Switch to buffer")
-    "b c" '(clone-indirect-buffer :wk "Create indirect buffer copy in a split")
-    "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
+    "b" '(:ignore t :wk "Buffers/Bookmarks")
+    "b b" '(switch-to-buffer :wk "Switch buffer")
+    "b c" '(clone-indirect-buffer :wk "Clone buffer")
+    "b C" '(clone-indirect-buffer-other-window :wk "Clone buffer other window")
     "b d" '(bookmark-delete :wk "Delete bookmark")
+    "b f" '(kill-current-buffer :wk "Kill buffer")
+    "b g" '(bookmark-jump :wk "Jump to bookmark")
     "b i" '(ibuffer :wk "Ibuffer")
-    "b f" '(kill-current-buffer :wk "Kill current buffer")
+    "b j" '(previous-buffer :wk "Previous buffer")
+    "b k" '(next-buffer :wk "Next buffer")
     "b K" '(kill-some-buffers :wk "Kill multiple buffers")
     "b l" '(list-bookmarks :wk "List bookmarks")
     "b m" '(bookmark-set :wk "Set bookmark")
-    "b k" '(next-buffer :wk "Next buffer")
-    "b j" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
     "b R" '(rename-buffer :wk "Rename buffer")
     "b s" '(basic-save-buffer :wk "Save buffer")
     "b S" '(save-some-buffers :wk "Save multiple buffers")
-    "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file"))
+    "b w" '(bookmark-save :wk "Save bookmarks"))
 
-  (dt/leader-keys
-    "d" '(:ignore t :wk "Dired")
-    "d d" '(dired :wk "Open dired")
-    "d f" '(wdired-finish-edit :wk "Writable dired finish edit")
-    "d j" '(dired-jump :wk "Dired jump to current")
-    "d n" '(neotree-dir :wk "Open directory in neotree")
-    "d p" '(peep-dired :wk "Peep-dired")
-    "d w" '(wdired-change-to-wdired-mode :wk "Writable dired"))
-
-  (dt/leader-keys
-    "e" '(:ignore t :wk "Ediff/Eshell/Eval/EWW")    
-    "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
-    "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-    "e e" '(eval-expression :wk "Evaluate and elisp expression")
-    "e f" '(ediff-files :wk "Run ediff on a pair of files")
-    "e F" '(ediff-files3 :wk "Run ediff on three files")
-    "e h" '(counsel-esh-history :which-key "Eshell history")
-    "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
-    "e n" '(eshell-new :wk "Create new eshell buffer")
-    "e r" '(eval-region :wk "Evaluate elisp in region")
-    "e R" '(eww-reload :which-key "Reload current page in EWW")
-    "e s" '(eshell :which-key "Eshell")
-    "e w" '(eww :which-key "EWW emacs web wowser"))
-
-  (dt/leader-keys
-    "f" '(:ignore t :wk "Files")    
-    "f c" '((lambda () (interactive)
-              (find-file "~/.emacs.d/config_kas.org")) 
-            :wk "Open emacs -nw config_kas.org")
-    "f e" '((lambda () (interactive)
-              (dired "~/.emacs.d")) 
-            :wk "Open user-emacs-directory in dired")
-    "f d" '(find-grep-dired :wk "Search for string in files in DIR")
-    "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
-    "f i" '((lambda () (interactive)
-              (find-file "~/.emacs.d/init.el")) 
-            :wk "Open emacs -nw init.el")
-    "f j" '(counsel-file-jump :wk "Jump to a file below current directory")
-    "f l" '(counsel-locate :wk "Locate a file")
-    "f r" '(counsel-recentf :wk "Find recent files")
-    "f u" '(sudo-edit-find-file :wk "Sudo find file")
-    "f U" '(sudo-edit :wk "Sudo edit file"))
-
-  (dt/leader-keys
-    "g" '(:ignore t :wk "Git")    
-    "g /" '(magit-displatch :wk "Magit dispatch")
-    "g ." '(magit-file-displatch :wk "Magit file dispatch")
-    "g b" '(magit-branch-checkout :wk "Switch branch")
-    "g c" '(:ignore t :wk "Create") 
-    "g c b" '(magit-branch-and-checkout :wk "Create branch and checkout")
-    "g c c" '(magit-commit-create :wk "Create commit")
-    "g c f" '(magit-commit-fixup :wk "Create fixup commit")
-    "g C" '(magit-clone :wk "Clone repo")
-    "g f" '(:ignore t :wk "Find") 
-    "g f c" '(magit-show-commit :wk "Show commit")
-    "g f f" '(magit-find-file :wk "Magit find file")
-    "g f g" '(magit-find-git-config-file :wk "Find gitconfig file")
-    "g F" '(magit-fetch :wk "Git fetch")
-    "g g" '(magit-status :wk "Magit status")
-    "g i" '(magit-init :wk "Initialize git repo")
-    "g l" '(magit-log-buffer-file :wk "Magit buffer log")
-    "g r" '(vc-revert :wk "Git revert file")
-    "g s" '(magit-stage-file :wk "Git stage file")
-    "g t" '(git-timemachine :wk "Git time machine")
-    "g u" '(magit-stage-file :wk "Git unstage file"))
-
- (dt/leader-keys
-    "h" '(:ignore t :wk "Help")
-    "h a" '(counsel-apropos :wk "Apropos")
-    "h b" '(describe-bindings :wk "Describe bindings")
-    "h c" '(describe-char :wk "Describe character under cursor")
-    "h d" '(:ignore t :wk "Emacs documentation")
-    "h d a" '(about-emacs :wk "About Emacs")
-    "h d d" '(view-emacs-debugging :wk "View Emacs debugging")
-    "h d f" '(view-emacs-FAQ :wk "View Emacs FAQ")
-    "h d m" '(info-emacs-manual :wk "The Emacs manual")
-    "h d n" '(view-emacs-news :wk "View Emacs news")
-    "h d o" '(describe-distribution :wk "How to obtain Emacs")
-    "h d p" '(view-emacs-problems :wk "View Emacs problems")
-    "h d t" '(view-emacs-todo :wk "View Emacs todo")
-    "h d w" '(describe-no-warranty :wk "Describe no warranty")
-    "h e" '(view-echo-area-messages :wk "View echo area messages")
-    "h f" '(describe-function :wk "Describe function")
-    "h F" '(describe-face :wk "Describe face")
-    "h g" '(describe-gnu-project :wk "Describe GNU Project")
-    "h i" '(info :wk "Info")
-    "h I" '(describe-input-method :wk "Describe input method")
-    "h k" '(describe-key :wk "Describe key")
-    "h l" '(view-lossage :wk "Display recent keystrokes and the commands run")
-    "h L" '(describe-language-environment :wk "Describe language environment")
-    "h m" '(describe-mode :wk "Describe mode")
-    "h r" '(:ignore t :wk "Reload")
-    "h r r" '((lambda () (interactive)
-                (load-file "~/.emacs.d/init.el")
-                (ignore (elpaca-process-queues)))
-              :wk "Reload emacs config_kas")
-    "h t" '(load-theme :wk "Load theme")
-    "h v" '(describe-variable :wk "Describe variable")
-    "h w" '(where-is :wk "Prints keybinding for command if set")
-    "h x" '(describe-command :wk "Display full documentation for command"))
-
-  (dt/leader-keys
-    "m" '(:ignore t :wk "Org")
-    "m a" '(org-agenda :wk "Org agenda")
-    "m e" '(org-export-dispatch :wk "Org export dispatch")
-    "m i" '(org-toggle-item :wk "Org toggle item")
-    "m t" '(org-todo :wk "Org todo")
-    "m B" '(org-babel-tangle :wk "Org babel tangle")
-    "m T" '(org-todo-list :wk "Org todo list")
-    "m l" '(org-store-link :wk "Store Org link")
-    "m C" '(org-capture :wk "Org capture"))  ;; C majuscule = général
-
+  ;; ------------------------------------------------------------------
+  ;; c — Capture
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "c" '(:ignore t :wk "Capture")
+  ;  "c c" '(org-capture :wk "Org capture")
     "c b" (lambda () (interactive) (org-capture nil "b"))
     "c p" (lambda () (interactive) (org-capture nil "p"))
     "c w" (lambda () (interactive) (org-capture nil "w"))
     "c s" (lambda () (interactive) (org-capture nil "s"))
     "c j" (lambda () (interactive) (org-capture nil "j")))
 
-   (dt/leader-keys
-     "m b" '(:ignore t :wk "Tables")
-     "m b -" '(org-table-insert-hline :wk "Insert hline in table")
-     "m b r" '(org-table-insert-row :wk "Insert row")
-     "m b c" '(org-table-insert-column :wk "Insert column")
-     "m b e" '(org-table-edit-field :wk "Edit current field")
-     "m b a" '(org-table-align :wk "Align table")
-     "m b s" '(org-table-sort-lines :wk "Sort table"))
-
+  ;; ------------------------------------------------------------------
+  ;; d — Dired
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
-    "m d" '(:ignore t :wk "Date/deadline")
-    "m d t" '(org-time-stamp :wk "Insert timestamp")
-    "m d i" '(my/org-insert-inactive-timestamp :wk "Insert inactive timestamp")
-    "m d d" '(org-deadline :wk "Set deadline")
-    "m d s" '(org-schedule :wk "Set schedule")
-    "m d r" '(org-clock-report :wk "Clock report")
-    "m d n" '(org-timestamp-down :wk "Timestamp -1 day")
-    "m d p" '(org-timestamp-up :wk "Timestamp +1 day"))
+    "d" '(:ignore t :wk "Dired")
+    "d d" '(dired :wk "Open dired")
+    "d f" '(wdired-finish-edit :wk "Finish wdired")
+    "d j" '(dired-jump :wk "Jump to current")
+    "d n" '(neotree-dir :wk "Open in neotree")
+    "d p" '(peep-dired :wk "Peep dired")
+    "d w" '(wdired-change-to-wdired-mode :wk "Writable dired"))
 
+  ;; ------------------------------------------------------------------
+  ;; e — Eval / Eshell / EWW / Ediff
+  ;; ------------------------------------------------------------------
+  (dt/leader-keys
+    "e" '(:ignore t :wk "Eval/Eshell/EWW")
+    "e b" '(eval-buffer :wk "Eval buffer")
+    "e d" '(eval-defun :wk "Eval defun")
+    "e e" '(eval-expression :wk "Eval expression")
+    "e f" '(ediff-files :wk "Ediff files")
+    "e F" '(ediff-files3 :wk "Ediff 3 files")
+    "e h" '(counsel-esh-history :wk "Eshell history")
+    "e l" '(eval-last-sexp :wk "Eval last sexp")
+    "e n" '(eshell-new :wk "New eshell")
+    "e r" '(eval-region :wk "Eval region")
+    "e R" '(eww-reload :wk "Reload EWW")
+    "e s" '(eshell :wk "Eshell")
+    "e w" '(eww :wk "EWW"))
+
+  ;; ------------------------------------------------------------------
+  ;; f — Files
+  ;; ------------------------------------------------------------------
+  (dt/leader-keys
+    "f" '(:ignore t :wk "Files")
+    "f c" (lambda () (interactive) (find-file "~/.emacs.d/config_kas.org"))
+    "f d" '(find-grep-dired :wk "Search in dir")
+    "f e" (lambda () (interactive) (dired "~/.emacs.d"))
+    "f g" '(counsel-grep-or-swiper :wk "Search file")
+    "f i" (lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+    "f j" '(counsel-file-jump :wk "Jump file")
+    "f l" '(counsel-locate :wk "Locate file")
+    "f r" '(counsel-recentf :wk "Recent files")
+    "f u" '(sudo-edit-find-file :wk "Sudo find")
+    "f U" '(sudo-edit :wk "Sudo edit"))
+
+  ;; ------------------------------------------------------------------
+  ;; g — Git
+  ;; ------------------------------------------------------------------
+  (dt/leader-keys
+    "g" '(:ignore t :wk "Git")
+    "g /" '(magit-dispatch :wk "Magit dispatch")
+    "g ." '(magit-file-dispatch :wk "Magit file dispatch")
+    "g b" '(magit-branch-checkout :wk "Checkout branch")
+    "g c" '(:ignore t :wk "Create")
+    "g c b" '(magit-branch-and-checkout :wk "Create branch")
+    "g c c" '(magit-commit-create :wk "Commit")
+    "g c f" '(magit-commit-fixup :wk "Fixup commit")
+    "g C" '(magit-clone :wk "Clone repo")
+    "g f" '(:ignore t :wk "Find")
+    "g f c" '(magit-show-commit :wk "Show commit")
+    "g f f" '(magit-find-file :wk "Find file")
+    "g f g" '(magit-find-git-config-file :wk "Find gitconfig")
+    "g F" '(magit-fetch :wk "Fetch")
+    "g g" '(magit-status :wk "Status")
+    "g i" '(magit-init :wk "Init repo")
+    "g l" '(magit-log-buffer-file :wk "Buffer log")
+    "g r" '(vc-revert :wk "Revert file")
+    "g s" '(magit-stage-file :wk "Stage file")
+    "g t" '(git-timemachine :wk "Time machine")
+    "g u" '(magit-unstage-file :wk "Unstage file"))
+
+  ;; ------------------------------------------------------------------
+  ;; h — Help
+  ;; ------------------------------------------------------------------
+  (dt/leader-keys
+    "h" '(:ignore t :wk "Help")
+    "h a" '(counsel-apropos :wk "Apropos")
+    "h b" '(describe-bindings :wk "Bindings")
+    "h c" '(describe-char :wk "Describe char")
+    "h d" '(:ignore t :wk "Docs")
+    "h d a" '(about-emacs :wk "About")
+    "h d f" '(view-emacs-FAQ :wk "FAQ")
+    "h d m" '(info-emacs-manual :wk "Manual")
+    "h e" '(view-echo-area-messages :wk "Echo messages")
+    "h f" '(describe-function :wk "Function")
+    "h k" '(describe-key :wk "Key")
+    "h m" '(describe-mode :wk "Mode")
+    "h r r" (lambda () (interactive)
+              (load-file "~/.emacs.d/init.el")
+              (ignore (elpaca-process-queues)))
+    "h t" '(load-theme :wk "Theme")
+    "h v" '(describe-variable :wk "Variable"))
+
+  ;; ------------------------------------------------------------------
+  ;; m — Org
+  ;; ------------------------------------------------------------------
+  (dt/leader-keys
+    "m" '(:ignore t :wk "Org")
+    "m a" '(org-agenda :wk "Agenda")
+    "m B" '(org-babel-tangle :wk "Tangle")
+    "m C" '(org-capture :wk "Capture")
+    "m e" '(org-export-dispatch :wk "Export")
+    "m i" '(org-toggle-item :wk "Toggle item")
+    "m l" '(org-store-link :wk "Store link")
+    "m t" '(org-todo :wk "Todo")
+    "m T" '(org-todo-list :wk "Todo list"))
+
+  ;; ------------------------------------------------------------------
+  ;; o — Open
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "o" '(:ignore t :wk "Open")
     "o d" '(dashboard-open :wk "Dashboard")
-    "o e" '(elfeed :wk "Elfeed RSS")
-    "o f" '(make-frame :wk "Open buffer in new frame")
-    "o F" '(select-frame-by-name :wk "Select frame by name"))
+    "o e" '(elfeed :wk "Elfeed")
+    "o f" '(make-frame :wk "New frame")
+    "o F" '(select-frame-by-name :wk "Select frame"))
 
-  ;; projectile-command-map already has a ton of bindings 
-  ;; set for us, so no need to specify each individually.
+  ;; ------------------------------------------------------------------
+  ;; p — Projectile
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "p" '(projectile-command-map :wk "Projectile"))
 
+  ;; ------------------------------------------------------------------
+  ;; r — Radio
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "r" '(:ignore t :wk "Radio")
-    "r p" '(eradio-play :wk "Eradio play")
-    "r s" '(eradio-stop :wk "Eradio stop")
-    "r t" '(eradio-toggle :wk "Eradio toggle"))
+    "r p" '(eradio-play :wk "Play")
+    "r s" '(eradio-stop :wk "Stop")
+    "r t" '(eradio-toggle :wk "Toggle"))
 
+  ;; ------------------------------------------------------------------
+  ;; s — Search
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "s" '(:ignore t :wk "Search")
-    "s d" '(dictionary-search :wk "Search dictionary")
-    "s m" '(man :wk "Man pages")
-    "s o" '(pdf-occur :wk "Pdf search lines matching STRING")
-    "s t" '(tldr :wk "Lookup TLDR docs for a command")
-    "s w" '(woman :wk "Similar to man but doesn't require man"))
+    "s d" '(dictionary-search :wk "Dictionary")
+    "s m" '(man :wk "Man")
+    "s o" '(pdf-occur :wk "PDF search")
+    "s t" '(tldr :wk "TLDR")
+    "s w" '(woman :wk "Woman"))
 
+  ;; ------------------------------------------------------------------
+  ;; t — Toggle
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "t" '(:ignore t :wk "Toggle")
-    "t e" '(eshell-toggle :wk "Toggle eshell")
-    "t f" '(flycheck-mode :wk "Toggle flycheck")
-    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-    "t n" '(neotree-toggle :wk "Toggle neotree file viewer")
-    "t o" '(org-mode :wk "Toggle org mode")
-    "t r" '(rainbow-mode :wk "Toggle rainbow mode")
-    "t t" '(visual-line-mode :wk "Toggle truncated lines")
-    "t v" '(vterm-toggle :wk "Toggle vterm"))
+    "t e" '(eshell-toggle :wk "Eshell")
+    "t f" '(flycheck-mode :wk "Flycheck")
+    "t l" '(display-line-numbers-mode :wk "Line numbers")
+    "t n" '(neotree-toggle :wk "Neotree")
+    "t o" '(org-mode :wk "Org mode")
+    "t r" '(rainbow-mode :wk "Rainbow")
+    "t t" '(visual-line-mode :wk "Visual line")
+    "t v" '(vterm-toggle :wk "Vterm"))
 
+  ;; ------------------------------------------------------------------
+  ;; w — Windows / Words
+  ;; ------------------------------------------------------------------
   (dt/leader-keys
     "w" '(:ignore t :wk "Windows/Words")
-    ;; Window splits
+    "w -" '(evil-window-split :wk "Split horizontal")
+    "w v" '(evil-window-vsplit :wk "Split vertical")
     "w f" '(evil-window-delete :wk "Close window")
     "w n" '(evil-window-new :wk "New window")
-    "w -" '(evil-window-split :wk "Horizontal split window")
-    "w v" '(evil-window-vsplit :wk "Vertical split window")
-    ;; Window motions
-    "w h" '(evil-window-left :wk "Window left")
-    "w j" '(evil-window-down :wk "Window down")
-    "w k" '(evil-window-up :wk "Window up")
-    "w l" '(evil-window-right :wk "Window right")
-    "w w" '(evil-window-next :wk "Goto next window")
-    ;; Move Windows
-    "w H" '(buf-move-left :wk "Buffer move left")
-    "w J" '(buf-move-down :wk "Buffer move down")
-    "w K" '(buf-move-up :wk "Buffer move up")
-    "w L" '(buf-move-right :wk "Buffer move right")
-    ;; Words
-    "w d" '(downcase-word :wk "Downcase word")
-    "w u" '(upcase-word :wk "Upcase word")
-    "w =" '(count-words :wk "Count words/lines for buffer"))
-)
+    "w h" '(evil-window-left :wk "Left")
+    "w j" '(evil-window-down :wk "Down")
+    "w k" '(evil-window-up :wk "Up")
+    "w l" '(evil-window-right :wk "Right")
+    "w w" '(evil-window-next :wk "Next window")
+    "w H" '(buf-move-left :wk "Move buffer left")
+    "w J" '(buf-move-down :wk "Move buffer down")
+    "w K" '(buf-move-up :wk "Move buffer up")
+    "w L" '(buf-move-right :wk "Move buffer right")
+    "w d" '(downcase-word :wk "Downcase")
+    "w u" '(upcase-word :wk "Upcase")
+    "w =" '(count-words :wk "Count words")))
 
 ;; Ajouter le dossier contenant ton thème personnalisé au chemin des thèmes
 (add-to-list 'custom-theme-load-path "~/.emacs/themes/")
@@ -1773,46 +1776,6 @@
     (lambda () (interactive)
       (evil-ex-execute "put"))))
 
-(defun my/org-table-copy-down (&optional arg)
-  "Appeler `org-table-copy-down' si on est dans un tableau Org.
-ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
-  (interactive "P")
-  (unless (and (fboundp 'org-at-table-p) (org-at-table-p))
-    (user-error "Pas dans un tableau Org"))
-  ;; call-interactively gère correctement le prefix arg / arité
-  (call-interactively #'org-table-copy-down))
-
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-c C-d") #'my/org-table-copy-down))
-
-(let ((t1 '(("col1" "col2") (1 2)))
-      (t2 '(("col3") (3))))
-(cl-mapcar #'append t1 t2)
-)
-
-(let ((ta '(("a" "b") ("col1" "col2") (1 2)))
-      (tb '(("c") ("col3") (3))))
-(cl-mapcar #'append ta tb)
-)
-
-(let ((tbl '((11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
-(mapcar
- (lambda (row)
-   (list (nth 0 row)   ;; col1
-         (nth 2 row)   ;; col3
-         (nth 6 row))) ;; col7
- tbl)
-)
-
-(let ((tbl '(("c1" "c2" "c3" "c4" "c5" "c6" "c7" "c8" "c9" "c10") (11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
-(mapcar
- (lambda (row)
-   (list (nth 0 row)   ;; col1
-         (nth 2 row)   ;; col3
-         (nth 6 row))) ;; col7
- tbl)
-)
-
 ;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
 (unless (display-graphic-p)
   ;; Copier vers le presse-papier système
@@ -1956,11 +1919,57 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
 
 (setq default-frame-alist initial-frame-alist)
 
-;; Créer un bookmark avec C-c c
-(global-set-key (kbd "C-c c") 'bookmark-set)
+(defun my/org-table-copy-down (&optional arg)
+  "Appeler `org-table-copy-down' si on est dans un tableau Org.
+ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
+  (interactive "P")
+  (unless (and (fboundp 'org-at-table-p) (org-at-table-p))
+    (user-error "Pas dans un tableau Org"))
+  ;; call-interactively gère correctement le prefix arg / arité
+  (call-interactively #'org-table-copy-down))
 
-;; Aller à un bookmark avec C-c a
-(global-set-key (kbd "C-c a") 'bookmark-jump)
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-d") #'my/org-table-copy-down))
 
-;; Lister tous les bookmarks avec C-c b
+(let ((t1 '(("col1" "col2") (1 2)))
+      (t2 '(("col3") (3))))
+(cl-mapcar #'append t1 t2)
+)
+
+(let ((ta '(("a" "b") ("col1" "col2") (1 2)))
+      (tb '(("c") ("col3") (3))))
+(cl-mapcar #'append ta tb)
+)
+
+(let ((tbl '((11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+)
+
+(let ((tbl '(("c1" "c2" "c3" "c4" "c5" "c6" "c7" "c8" "c9" "c10") (11 12 13 14 15 16 17 18 19 20) (21 22 23 24 25 26 27 28 29 30))))
+(mapcar
+ (lambda (row)
+   (list (nth 0 row)   ;; col1
+         (nth 2 row)   ;; col3
+         (nth 6 row))) ;; col7
+ tbl)
+)
+
+;; Créer un bookmark
+(global-set-key (kbd "C-c m") 'bookmark-set)
+
+;; Aller à un bookmark
+(global-set-key (kbd "C-c g") 'bookmark-jump)
+
+;; Lister tous les bookmarks
 (global-set-key (kbd "C-c b") 'bookmark-bmenu-list)
+
+;; Supprimer un bookmark
+(global-set-key (kbd "C-c d") 'bookmark-delete)
+
+;; Enregistrer les bookmarks sur disque
+(global-set-key (kbd "C-c s") 'bookmark-save)
