@@ -3953,22 +3953,25 @@ Les branches divergent
 + git reset --hard origin/main
 ***** Initialiser le depot distant
 + git push --force
-** Costaumiser git
+** Customiser git
+*** De manière globale (le bash)
 Les couleurs sont à mettre en hexadecimales
 # Untracked files → noir sur jaune
-git config --global color.status.untracked "black yellow"
-
++ git config --global color.status.untracked "black #ffff00"
 # Modified → jaune sur noir
-git config --global color.status.changed "yellow black"
-
++ git config --global color.status.changed "#ff66cc"
 # Added (staged) → vert vif
-git config --global color.status.added "brightgreen"
-
++ git config --global color.status.added "#55ff00"
+# En conflit
++ git config --global color.status.unmerged "magenta italic"
 # Deleted → rouge vif
-git config --global color.status.deleted "brightred"
-
++ git config --global color.status.deleted "red bold underline"
 # Branch name (in status output)
-git config --global color.branch.current "yellow bold"
++ git config --global color.branch.current "yellow bold"
+*** De manière locale (.git.config)
++ st = status -s
++ graph = log --oneline --graph --all
++ acp = "!f() { git add . && git commit -m \"$*\" && git push; }; f"
 
 * IDE pour programmation
 #+PROPERTY: header-args:python :session my_session :exports both
