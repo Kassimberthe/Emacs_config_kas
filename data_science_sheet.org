@@ -237,4 +237,3 @@ ie sur chaque objet, selectionne col et applique np.mean ou lam.
 + supprime toutes les lignes ayant une valeur manquante
 *** df.dropna(thresh=n, axis=..)
 + conserver la ligne ou colonne si le nbre de valeur different de nan >= n.
-  

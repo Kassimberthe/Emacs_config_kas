@@ -153,7 +153,7 @@ f12 = altgr + f12
 #+RESULTS:
 | org-indent-mode | rainbow-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 ;; --------------------------------------------------------
 ;; Définir la largeur des tabulations et l'indentation
 ;; pour les modes de programmation
@@ -171,7 +171,7 @@ f12 = altgr + f12
 
 ;; Ajouter le hook pour tous les modes de programmation
 (add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 | my/prog-mode-tab-settings | display-line-numbers-mode | hl-line-mode | rainbow-mode |
@@ -288,8 +288,7 @@ suivi par git.
 : magenta
 
 ** Latex
-*** Avec pdf-tools
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package auctex
   :defer t
   :config
@@ -297,23 +296,21 @@ suivi par git.
   (setq TeX-parse-self t)
   (setq TeX-engine 'luatex)
   (setq-default TeX-master nil)) 
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-: t
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package company-auctex
   :after (auctex company)         ;; Charger après AUCTeX et company
   :ensure t                       ;; S’assurer que le paquet est installé
   :config
   (company-auctex-init))         ;; Initialiser company-auctex pour compléter les macros, environnements, etc.
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-: t
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package cdlatex
   :ensure t                                  ;; S'assurer que cdlatex est installé
   :diminish org-cdlatex-mode                 ;; Ne pas afficher le mode mineur dans la barre de mode
@@ -321,12 +318,12 @@ suivi par git.
          (org-mode . turn-on-org-cdlatex))   ;; Activer cdlatex en org-mode
   :config
   (setq cdlatex-use-dollar-to-ensure-math nil)) ;; Option : éviter les conflits avec les dollars dans org
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-| turn-on-org-cdlatex | (lambda nil (display-line-numbers-mode -1)) | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+| turn-on-org-cdlatex | abbrev-mode | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ox-latex
   :ensure nil                                        ;; ox-latex fait déjà partie de Org-mode
   :after org
@@ -356,12 +353,12 @@ suivi par git.
   :config
   ;; Ajouter .tex à la liste des fichiers à supprimer après export
   (add-to-list 'org-latex-logfiles-extensions "tex"))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 : t
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package auctex
   :ensure t
   :defer t
@@ -372,72 +369,9 @@ suivi par git.
                  "latexmk -xelatex -shell-escape -interaction=nonstopmode -f %s"
                  TeX-run-TeX nil t))
   (setq TeX-command-default "Latexmk with shell-escape"))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-: t
-
-
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package ox-beamer
-  :ensure nil                  ;; ox-beamer est inclus avec org-mode, donc inutile de l'installer
-  :after ox-latex              ;; Charger après ox-latex (export LaTeX)
-  :config
-  ;; Tu peux ici personnaliser la classe Beamer si nécessaire
-  ;; (par exemple, ajouter une classe personnalisée)
-  ;; (add-to-list 'org-latex-classes
-  ;;              '("beamer"
-  ;;                "\\documentclass[presentation]{beamer}"
-  ;;                ("\\section{%s}" . "\\section*{%s}")))
-  )
-#+END_SRC
-
-#+RESULTS:
-
-*** Zathura
-#+BEGIN_SRC emacs-lisp
-  ;; Configuration pour utiliser Zathura comme viewer PDF avec AUCTeX
-  (add-hook 'after-init-hook
-            (lambda ()
-              (with-eval-after-load 'tex
-                ;; Sélection du viewer Zathura
-                (setq TeX-view-program-selection '((output-pdf "Zathura")))
-                (setq TeX-view-program-list '(("Zathura" "zathura %o"))))))
-#+END_SRC
-
-#+RESULTS:
-| (lambda nil (with-eval-after-load 'tex (setq TeX-view-program-selection '((output-pdf Zathura))) (setq TeX-view-program-list '((Zathura zathura %o))))) | org-persist-load-all | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (if (display-graphic-p) (progn (setq TeX-view-program-selection '((output-pdf PDF Tools))) (setq TeX-view-program-list '((PDF Tools TeX-pdf-tools-sync-view))) (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)) (setq TeX-view-program-selection '((output-pdf Evince))) (setq TeX-view-program-list '((Evince evince %o))))))) | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
-
-
-#+BEGIN_SRC emacs-lisp
-;; Liste des extensions de fichiers générés par LaTeX à supprimer automatiquement après export Org->PDF
-(setq org-latex-logfiles-extensions
-      '("lof"          ;; List of Figures
-        "lot"          ;; List of Tables
-        "tex~"         ;; Fichier tex sauvegardé temporairement
-        "aux"          ;; Fichier auxiliaire
-        "idx"          ;; Index
-        "log"          ;; Journal de compilation
-        "out"          ;; Fichier de sortie auxiliaire
-        "toc"          ;; Table des matières
-        "nav"          ;; Navigation pour beamer
-        "snm"          ;; Slideshow notes for beamer
-        "vrb"          ;; Verbose log
-        "dvi"          ;; Fichier DVI
-        "fdb_latexmk"  ;; Fichier de suivi latexmk
-        "blg"          ;; Bibliographie bibtex log
-        "brf"          ;; Bibliographie
-        "fls"          ;; Fichier de dépendances latex
-        "entoc"        ;; ?
-        "ps"           ;; Postscript
-        "spl"          ;; ?
-        "bbl"))        ;; Bibliographie bbl
-#+END_SRC
-
-#+RESULTS:
-| lof | lot | tex~ | aux | idx | log | out | toc | nav | snm | vrb | dvi | fdb_latexmk | blg | brf | fls | entoc | ps | spl | bbl |
 
 ** PDFs-tools
 | Touche | Action                               | Détails / Couleur              |
@@ -461,7 +395,7 @@ suivi par git.
 | r      | Recharger le PDF                     | Rafraîchit le document         |
 
 + clique droit pour changer de couleur ou supprimer un soulignement
-+  C-s et C-r peuvent être tapés plusieurs fois pour sauter d’une occurrence à l’autre
++ C-s et C-r peuvent être tapés plusieurs fois pour sauter d’une occurrence à l’autre
 *** Configurer pdf-tools
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
@@ -776,23 +710,32 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 #+RESULTS:
 
 ** Bullets
-
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
   :custom
-  (org-superstar-headline-bullets-list '("✸" "✿" "◆" "◉" "✯"))  ; Puces pour les titres
-  (org-superstar-item-bullet-alist '((?* . "•")      ; Puce pour * list
-                                     (?+ . "➤")      ; Puce pour + list
-                                     (?1 . "➀")      ; Puce pour 1 list
-                                     (?2 . "❖")      ; Puce pour 2 list
-                                     (?3 . "☀")      ; Puce pour 3 list
-                                     (?4 . "◆"))))    ; Puce pour 4 list
-#+END_SRC
+  ;; Puces pour les titres de niveaux 1 à 5
+  (org-superstar-headline-bullets-list '("✸" "✿" "◆" "◉" "✯"))
 
+  ;; Activer la décoration des puces dans les listes
+  (org-superstar-prettify-item-bullets t)
+
+  ;; Puces pour les listes non numérotées
+  ;; Remarque : les listes numérotées ne peuvent pas être personnalisées avec org-superstar
+  (org-superstar-item-bullet-alist
+   '((?* . ?•)   ; Puce pour les listes commençant par *
+     (?+ . ?➤)   ; Puce pour les listes commençant par +
+     (?- . ?–)   ; Puce pour les listes commençant par -
+     (?1 . ?①)   ; Puce pour niveau 1 (titre de section ou liste custom)
+     (?2 . ?②)   ; Puce pour niveau 2
+     (?3 . ?③)   ; Puce pour niveau 3
+     (?4 . ?④)))) ; Puce pour niveau 4
+
+#+END_SRC
+ 
 #+RESULTS:
-| org-superstar-mode | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-                                                                      
+| abbrev-mode | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | turn-on-org-cdlatex | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
 ** Personnalisation des titres et sous titres
 
 #+BEGIN_SRC emacs-lisp
@@ -1044,67 +987,23 @@ Il prose des racourcis de clavier
 : t
 
 #+BEGIN_SRC emacs-lisp
-;; Chargement du paquet `dired-open` pour ouvrir des fichiers avec des applications externes depuis Dired.
-(use-package dired-open
-  :demand t  ;; Force le chargement immédiat du paquet.
-  
-  :config
-  ;; Définition des extensions de fichiers et des programmes à utiliser pour ouvrir ces fichiers.
-  (setq dired-open-extensions
-        `(("avi" . "mpv")  ;; Les fichiers `.avi` sont ouverts avec `mpv`.
-          ("cbr" . "zathura")  ;; Les fichiers `.cbr` (bandes dessinées) sont ouverts avec `zathura`.
-          ("cbz" . "zathura")  ;; Les fichiers `.cbz` (bandes dessinées) sont ouverts avec `zathura`.
-          ("doc" . "abiword")  ;; Les fichiers `.doc` sont ouverts avec `abiword`.
-          ("docx" . "abiword")  ;; Les fichiers `.docx` sont ouverts avec `abiword`.
-          ("epub" . "foliate")  ;; Les fichiers `.epub` (ebooks) sont ouverts avec `foliate`.
-          ("flac" . "mpv")  ;; Les fichiers `.flac` sont ouverts avec `mpv` (lecture audio).
-          ("gif" . "ffplay")  ;; Les fichiers `.gif` sont ouverts avec `ffplay`.
-          ("gnumeric" . "gnumeric")  ;; Les fichiers `.gnumeric` sont ouverts avec `gnumeric` (tableur).
-          ("jpeg" . ,(executable-find "feh"))  ;; Les fichiers `.jpeg` sont ouverts avec `feh`.
-          ("jpg" . ,(executable-find "feh"))  ;; Les fichiers `.jpg` sont ouverts avec `feh`.
-          ("m3u8" . "mpv")  ;; Les fichiers de playlist `.m3u8` sont ouverts avec `mpv`.
-          ("m4a" . "mpv")  ;; Les fichiers `.m4a` (audio) sont ouverts avec `mpv`.
-          ("mkv" . "mpv")  ;; Les fichiers `.mkv` sont ouverts avec `mpv` (vidéo).
-          ("mobi" . "foliate")  ;; Les fichiers `.mobi` (ebooks) sont ouverts avec `foliate`.
-          ("mov" . "mpv")  ;; Les fichiers `.mov` (vidéo) sont ouverts avec `mpv`.
-          ("mp3" . "mpv")  ;; Les fichiers `.mp3` (audio) sont ouverts avec `mpv`.
-          ("mp4" . "mpv")  ;; Les fichiers `.mp4` (vidéo) sont ouverts avec `mpv`.
-          ("mpg" . "mpv")  ;; Les fichiers `.mpg` (vidéo) sont ouverts avec `mpv`.
-          ("pdf" . "zathura")  ;; Les fichiers `.pdf` sont ouverts avec `zathura`.
-          ("png" . ,(executable-find "feh"))  ;; Les fichiers `.png` sont ouverts avec `feh`.
-          ("webm" . "mpv")  ;; Les fichiers `.webm` sont ouverts avec `mpv`.
-          ("webp" . ,(executable-find "feh"))  ;; Les fichiers `.webp` sont ouverts avec `feh`.
-          ("wmv" . "mpv")  ;; Les fichiers `.wmv` (vidéo) sont ouverts avec `mpv`.
-          ("xcf" . "gimp")  ;; Les fichiers `.xcf` (format de GIMP) sont ouverts avec `gimp`.
-          ("xls" . "gnumeric")  ;; Les fichiers `.xls` (tableurs Excel) sont ouverts avec `gnumeric`.
-          ("xlsx" . "gnumeric")))  ;; Les fichiers `.xlsx` (tableurs Excel) sont ouverts avec `gnumeric`.
+  ;; Vérification des paquets système nécessaires
+(dolist (pkg '(("mpv" . "mpv")
+               ("gnumeric" . "gnumeric")
+               ("feh" . "feh")
+               ("zathura" . "zathura")
+               ("abiword" . "abiword")
+               ("gimp" . "gimp")
+               ("foliate" . "foliate")))
+  (let ((exe (car pkg))
+        (name (cdr pkg)))
+    (unless (executable-find exe)
+      (message "Le paquet système '%s' n'est pas installé. Veuillez l'installer dans un terminal : sudo apt install %s"
+               name name))))
 
-  ;; Installation des paquets système nécessaires si non installés via une commande shell.
-  (unless (executable-find "mpv")
-    (shell-command "sudo apt-get install mpv"))
-  
-  (unless (executable-find "gnumeric")
-    (shell-command "sudo apt-get install gnumeric"))
-  
-  (unless (executable-find "feh")
-    (shell-command "sudo apt-get install feh"))
-  
-  (unless (executable-find "zathura")
-    (shell-command "sudo apt-get install zathura"))
-  
-  (unless (executable-find "abiword")
-    (shell-command "sudo apt-get install abiword"))
-  
-  (unless (executable-find "gimp")
-    (shell-command "sudo apt-get install gimp"))
-  
-  (unless (executable-find "foliate")
-    (shell-command "sudo apt-get install foliate"))
-)
 #+END_SRC
 
 #+RESULTS:
-: t
 
 #+BEGIN_SRC emacs-lisp
 (use-package async
@@ -1360,9 +1259,8 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 
 * Environnement de programmation
 ** Profondeur de retrait et camelcase
-
 #+BEGIN_SRC emacs-lisp
-(setq-default tab-width 2)
+  (setq-default tab-width 2)
 #+END_SRC
 
 #+RESULTS:
@@ -1378,14 +1276,15 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 
 ** Activation des langages de programmation 
 #+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (shell . t)
-     (python . t)
-     (ruby . t)
-     (C . t)
-     (latex . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (shell . t)
+   (python . t)
+   (ruby . t)
+   (C . t)
+   (latex . t)
+   (R . t)))  ;; <- ajout de R
 #+END_SRC
 
 #+RESULTS:
@@ -1414,7 +1313,6 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 : t
 
 ** Python
-
 #+BEGIN_SRC emacs-lisp
 ;; Utiliser Python 3 comme interpréteur pour Org-Babel
 (setq org-babel-python-command "python3")
@@ -1422,7 +1320,6 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 
 #+RESULTS:
 : python3
-
 *** Configuration Python + Virtualenv pour Org-Babel
 **** Activation de pyvenv et du virtualenv pythonvenv
 #+BEGIN_SRC emacs-lisp
@@ -1878,20 +1775,6 @@ essai
 
 #+RESULTS:
 | b | Brouillon | entry | (file (lambda nil (concat org-directory /brouillon.org))) | * TODO %? |
-
-** MobileOrg
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory (concat home-directory "/Dropbox/Apps/MobileOrg"))
-;; (setq org-mobile-directory (concat home-directory "/Dropbox/Applications/MobileOrg"))
-(setq org-mobile-use-encryption nil)
-;; (setq org-mobile-encryption-password "")
-;; (setq org-mobile-files (list ()))
-(setq org-mobile-force-id-on-agenda-items nil)
-(setq org-mobile-inbox-for-pull (concat org-directory "/mobile-flagged.org"))
-#+END_SRC
-
-#+RESULTS:
-: ~/Notes/orgfiles/mobile-flagged.org
 
 ** Org super agenda
 #+BEGIN_SRC emacs-lisp
@@ -4236,3 +4119,4 @@ C-c C-t  permet de basculer entre DONE et TODO.
 |----------+---------------+-----------------------------------------------------------|
 | C-h k    | describe-key  | Affiche la commande associée à une touche spécifique      |
 | C-h m    | describe-mode | Affiche les raccourcis et fonctionnalités du mode courant |
+

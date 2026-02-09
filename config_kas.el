@@ -211,49 +211,6 @@
                  TeX-run-TeX nil t))
   (setq TeX-command-default "Latexmk with shell-escape"))
 
-(use-package ox-beamer
-  :ensure nil                  ;; ox-beamer est inclus avec org-mode, donc inutile de l'installer
-  :after ox-latex              ;; Charger après ox-latex (export LaTeX)
-  :config
-  ;; Tu peux ici personnaliser la classe Beamer si nécessaire
-  ;; (par exemple, ajouter une classe personnalisée)
-  ;; (add-to-list 'org-latex-classes
-  ;;              '("beamer"
-  ;;                "\\documentclass[presentation]{beamer}"
-  ;;                ("\\section{%s}" . "\\section*{%s}")))
-  )
-
-;; Configuration pour utiliser Zathura comme viewer PDF avec AUCTeX
-(add-hook 'after-init-hook
-          (lambda ()
-            (with-eval-after-load 'tex
-              ;; Sélection du viewer Zathura
-              (setq TeX-view-program-selection '((output-pdf "Zathura")))
-              (setq TeX-view-program-list '(("Zathura" "zathura %o"))))))
-
-;; Liste des extensions de fichiers générés par LaTeX à supprimer automatiquement après export Org->PDF
-(setq org-latex-logfiles-extensions
-      '("lof"          ;; List of Figures
-        "lot"          ;; List of Tables
-        "tex~"         ;; Fichier tex sauvegardé temporairement
-        "aux"          ;; Fichier auxiliaire
-        "idx"          ;; Index
-        "log"          ;; Journal de compilation
-        "out"          ;; Fichier de sortie auxiliaire
-        "toc"          ;; Table des matières
-        "nav"          ;; Navigation pour beamer
-        "snm"          ;; Slideshow notes for beamer
-        "vrb"          ;; Verbose log
-        "dvi"          ;; Fichier DVI
-        "fdb_latexmk"  ;; Fichier de suivi latexmk
-        "blg"          ;; Bibliographie bibtex log
-        "brf"          ;; Bibliographie
-        "fls"          ;; Fichier de dépendances latex
-        "entoc"        ;; ?
-        "ps"           ;; Postscript
-        "spl"          ;; ?
-        "bbl"))        ;; Bibliographie bbl
-
 (use-package pdf-tools
   :if (not (eq system-type 'windows-nt))
   :config
@@ -446,13 +403,22 @@
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
   :custom
-  (org-superstar-headline-bullets-list '("✸" "✿" "◆" "◉" "✯"))  ; Puces pour les titres
-  (org-superstar-item-bullet-alist '((?* . "•")      ; Puce pour * list
-                                     (?+ . "➤")      ; Puce pour + list
-                                     (?1 . "➀")      ; Puce pour 1 list
-                                     (?2 . "❖")      ; Puce pour 2 list
-                                     (?3 . "☀")      ; Puce pour 3 list
-                                     (?4 . "◆"))))    ; Puce pour 4 list
+  ;; Puces pour les titres de niveaux 1 à 5
+  (org-superstar-headline-bullets-list '("✸" "✿" "◆" "◉" "✯"))
+
+  ;; Activer la décoration des puces dans les listes
+  (org-superstar-prettify-item-bullets t)
+
+  ;; Puces pour les listes non numérotées
+  ;; Remarque : les listes numérotées ne peuvent pas être personnalisées avec org-superstar
+  (org-superstar-item-bullet-alist
+   '((?* . ?•)   ; Puce pour les listes commençant par *
+     (?+ . ?➤)   ; Puce pour les listes commençant par +
+     (?- . ?–)   ; Puce pour les listes commençant par -
+     (?1 . ?①)   ; Puce pour niveau 1 (titre de section ou liste custom)
+     (?2 . ?②)   ; Puce pour niveau 2
+     (?3 . ?③)   ; Puce pour niveau 3
+     (?4 . ?④)))) ; Puce pour niveau 4
 
 (custom-set-faces
   '(org-level-1 ((t (:inherit outline-1 :height 1.7))))  ; Niveau 1 : Taille 1.7
@@ -606,63 +572,19 @@
   ;; Le raccourci `.` dans le mode normal d'Evil permet de basculer entre cacher ou afficher les fichiers cachés.
   (evil-define-key 'normal dired-mode-map "." 'dired-hide-dotfiles-mode))
 
-;; Chargement du paquet `dired-open` pour ouvrir des fichiers avec des applications externes depuis Dired.
-(use-package dired-open
-  :demand t  ;; Force le chargement immédiat du paquet.
-  
-  :config
-  ;; Définition des extensions de fichiers et des programmes à utiliser pour ouvrir ces fichiers.
-  (setq dired-open-extensions
-        `(("avi" . "mpv")  ;; Les fichiers `.avi` sont ouverts avec `mpv`.
-          ("cbr" . "zathura")  ;; Les fichiers `.cbr` (bandes dessinées) sont ouverts avec `zathura`.
-          ("cbz" . "zathura")  ;; Les fichiers `.cbz` (bandes dessinées) sont ouverts avec `zathura`.
-          ("doc" . "abiword")  ;; Les fichiers `.doc` sont ouverts avec `abiword`.
-          ("docx" . "abiword")  ;; Les fichiers `.docx` sont ouverts avec `abiword`.
-          ("epub" . "foliate")  ;; Les fichiers `.epub` (ebooks) sont ouverts avec `foliate`.
-          ("flac" . "mpv")  ;; Les fichiers `.flac` sont ouverts avec `mpv` (lecture audio).
-          ("gif" . "ffplay")  ;; Les fichiers `.gif` sont ouverts avec `ffplay`.
-          ("gnumeric" . "gnumeric")  ;; Les fichiers `.gnumeric` sont ouverts avec `gnumeric` (tableur).
-          ("jpeg" . ,(executable-find "feh"))  ;; Les fichiers `.jpeg` sont ouverts avec `feh`.
-          ("jpg" . ,(executable-find "feh"))  ;; Les fichiers `.jpg` sont ouverts avec `feh`.
-          ("m3u8" . "mpv")  ;; Les fichiers de playlist `.m3u8` sont ouverts avec `mpv`.
-          ("m4a" . "mpv")  ;; Les fichiers `.m4a` (audio) sont ouverts avec `mpv`.
-          ("mkv" . "mpv")  ;; Les fichiers `.mkv` sont ouverts avec `mpv` (vidéo).
-          ("mobi" . "foliate")  ;; Les fichiers `.mobi` (ebooks) sont ouverts avec `foliate`.
-          ("mov" . "mpv")  ;; Les fichiers `.mov` (vidéo) sont ouverts avec `mpv`.
-          ("mp3" . "mpv")  ;; Les fichiers `.mp3` (audio) sont ouverts avec `mpv`.
-          ("mp4" . "mpv")  ;; Les fichiers `.mp4` (vidéo) sont ouverts avec `mpv`.
-          ("mpg" . "mpv")  ;; Les fichiers `.mpg` (vidéo) sont ouverts avec `mpv`.
-          ("pdf" . "zathura")  ;; Les fichiers `.pdf` sont ouverts avec `zathura`.
-          ("png" . ,(executable-find "feh"))  ;; Les fichiers `.png` sont ouverts avec `feh`.
-          ("webm" . "mpv")  ;; Les fichiers `.webm` sont ouverts avec `mpv`.
-          ("webp" . ,(executable-find "feh"))  ;; Les fichiers `.webp` sont ouverts avec `feh`.
-          ("wmv" . "mpv")  ;; Les fichiers `.wmv` (vidéo) sont ouverts avec `mpv`.
-          ("xcf" . "gimp")  ;; Les fichiers `.xcf` (format de GIMP) sont ouverts avec `gimp`.
-          ("xls" . "gnumeric")  ;; Les fichiers `.xls` (tableurs Excel) sont ouverts avec `gnumeric`.
-          ("xlsx" . "gnumeric")))  ;; Les fichiers `.xlsx` (tableurs Excel) sont ouverts avec `gnumeric`.
-
-  ;; Installation des paquets système nécessaires si non installés via une commande shell.
-  (unless (executable-find "mpv")
-    (shell-command "sudo apt-get install mpv"))
-  
-  (unless (executable-find "gnumeric")
-    (shell-command "sudo apt-get install gnumeric"))
-  
-  (unless (executable-find "feh")
-    (shell-command "sudo apt-get install feh"))
-  
-  (unless (executable-find "zathura")
-    (shell-command "sudo apt-get install zathura"))
-  
-  (unless (executable-find "abiword")
-    (shell-command "sudo apt-get install abiword"))
-  
-  (unless (executable-find "gimp")
-    (shell-command "sudo apt-get install gimp"))
-  
-  (unless (executable-find "foliate")
-    (shell-command "sudo apt-get install foliate"))
-)
+;; Vérification des paquets système nécessaires
+(dolist (pkg '(("mpv" . "mpv")
+               ("gnumeric" . "gnumeric")
+               ("feh" . "feh")
+               ("zathura" . "zathura")
+               ("abiword" . "abiword")
+               ("gimp" . "gimp")
+               ("foliate" . "foliate")))
+  (let ((exe (car pkg))
+        (name (cdr pkg)))
+    (unless (executable-find exe)
+      (message "Le paquet système '%s' n'est pas installé. Veuillez l'installer dans un terminal : sudo apt install %s"
+               name name))))
 
 (use-package async
   :demand t  ;; Assure que le paquet est chargé immédiatement.
@@ -817,7 +739,8 @@
    (python . t)
    (ruby . t)
    (C . t)
-   (latex . t)))
+   (latex . t)
+   (R . t)))  ;; <- ajout de R
 
 ;; Utiliser org-tempo pour ajouter des raccourcis pour les blocs de code
 (use-package org-tempo
@@ -1117,15 +1040,7 @@
     ("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
      "* TODO %?\n %U\n" :empty-lines 1)
      ("j" "Journal" entry (file+datetree (lambda () (concat org-directory "/journal.org")))
-  "* %?\nEntered on %U\n")))
-
-(setq org-mobile-directory (concat home-directory "/Dropbox/Apps/MobileOrg"))
-;; (setq org-mobile-directory (concat home-directory "/Dropbox/Applications/MobileOrg"))
-(setq org-mobile-use-encryption nil)
-;; (setq org-mobile-encryption-password "")
-;; (setq org-mobile-files (list ()))
-(setq org-mobile-force-id-on-agenda-items nil)
-(setq org-mobile-inbox-for-pull (concat org-directory "/mobile-flagged.org"))
+   "* %?\nEntered on %U\n" :empty-lines 1)))
 
 ;; --------------------------------------------------------
 ;; Org Super Agenda : installation et configuration
