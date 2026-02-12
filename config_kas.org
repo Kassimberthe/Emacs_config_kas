@@ -287,92 +287,6 @@ suivi par git.
 #+RESULTS:
 : magenta
 
-** Latex
-#+begin_src emacs-lisp
-(use-package auctex
-  :defer t
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-engine 'luatex)
-  (setq-default TeX-master nil)) 
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-(use-package company-auctex
-  :after (auctex company)         ;; Charger après AUCTeX et company
-  :ensure t                       ;; S’assurer que le paquet est installé
-  :config
-  (company-auctex-init))         ;; Initialiser company-auctex pour compléter les macros, environnements, etc.
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-(use-package cdlatex
-  :ensure t                                  ;; S'assurer que cdlatex est installé
-  :diminish org-cdlatex-mode                 ;; Ne pas afficher le mode mineur dans la barre de mode
-  :hook ((LaTeX-mode . turn-on-cdlatex)      ;; Activer cdlatex en LaTeX-mode
-         (org-mode . turn-on-org-cdlatex))   ;; Activer cdlatex en org-mode
-  :config
-  (setq cdlatex-use-dollar-to-ensure-math nil)) ;; Option : éviter les conflits avec les dollars dans org
-#+end_src
-
-#+RESULTS:
-| turn-on-org-cdlatex | abbrev-mode | org-tempo-setup | toc-org-enable | org-superstar-mode | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | rainbow-mode | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-
-#+begin_src emacs-lisp
-(use-package ox-latex
-  :ensure nil                                        ;; ox-latex fait déjà partie de Org-mode
-  :after org
-  :commands (org-export-dispatch)
-  :ensure-system-package latexmk                    ;; Vérifie que latexmk est installé
-
-  :custom
-  ;; Utiliser minted pour les blocs de code (avec syntax highlighting)
-  (org-latex-src-block-backend 'minted)
-
-  ;; Commande de compilation avec latexmk, en xelatex, avec shell-escape (requis pour minted)
-  (org-latex-pdf-process
-   '("latexmk -xelatex -shell-escape -quiet -f %f"))
-
-  ;; Ajouter une commande LaTeX dans le préambule pour définir une couleur (ex : fond transparent gris clair)
-  (org-latex-header "\\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
-
-  ;; Ajouter des packages utiles au document exporté depuis Org vers LaTeX
-  (org-latex-packages-alist
-   '(("" "minted")                                     ;; Code coloré avec minted
-     ("" "booktabs")                                   ;; Tableaux professionnels
-     ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; Multilingue, alternatif à babel
-     ("" "grffile")                                    ;; Noms de fichiers complexes dans \includegraphics
-     ;; ("" "unicode-math")                            ;; Décommente si tu veux de meilleures fontes mathématiques
-     ("" "xcolor")))                                   ;; Gestion des couleurs
-
-  :config
-  ;; Ajouter .tex à la liste des fichiers à supprimer après export
-  (add-to-list 'org-latex-logfiles-extensions "tex"))
-#+end_src
-
-#+RESULTS:
-: t
-
-#+begin_src emacs-lisp
-(use-package auctex
-  :ensure t
-  :defer t
-  :after tex
-  :config
-  (add-to-list 'TeX-command-list
-               '("Latexmk with shell-escape"
-                 "latexmk -xelatex -shell-escape -interaction=nonstopmode -f %s"
-                 TeX-run-TeX nil t))
-  (setq TeX-command-default "Latexmk with shell-escape"))
-#+end_src
-
-#+RESULTS:
-
 ** PDFs-tools
 | Touche | Action                               | Détails / Couleur              |
 |--------+--------------------------------------+--------------------------------|
@@ -563,6 +477,178 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 
 #+RESULTS:
 : t
+
+** Latex
+| Raccourci | Fonction                   | Description courte                                |
+|-----------+----------------------------+---------------------------------------------------|
+| C-c C-c   | Compiler                   | Compile (LaTeX, BibTeX, View, etc.)               |
+| C-c C-v   | Voir PDF                   | Ouvre le document compilé                         |
+| C-c C-e   | Environnement              | Insère \begin{...} \end{...}                      |
+| C-c C-m   | Commande (macro)           | Insère une commande LaTeX                         |
+| C-c C-s   | Section                    | Insère section / subsection / chapter             |
+| M-RET     | Nouvel item                | Ajoute \item dans liste                           |
+| C-c C-n   | Section suivante           | Navigation vers section suivante                  |
+| C-c C-p   | Section précédente         | Navigation vers section précédente                |
+| C-c C-l   | Erreur suivante            | Va à l’erreur après compilation                   |
+| TAB       | Complétion                 | Complète commandes, labels, citations             |
+| C-c ;     | Commenter / Décommenter    | Commente ou décommente la région                  |
+| C-c b     | my/vertico-bibtex          | Ouvre la complétion BibTeX pour insérer une clé   |
+| C-c p     | bibtex-completion-open-pdf | Ouvre le PDF associé à la clé BibTeX (si présent) |
+
+*** Exemples
+**** Dans refs.bib
+#+BEGIN_EXAMPLE
+@article{Knuth1984,
+  author  = {Donald E. Knuth},
+  title   = {Literate Programming},
+  journal = {The Computer Journal},
+  year    = {1984},
+  volume  = {27},
+  number  = {2},
+  pages   = {97--111}
+}
+
+@book{Lamport1994,
+  author    = {Leslie Lamport},
+  title     = {LaTeX: A Document Preparation System},
+  publisher = {Addison-Wesley},
+  year      = {1994}
+}
+#+END_EXAMPLE
+**** Dans pdf
+Le nom doit correspondre à la clé BibTeX.
++ Knuth1984.pdf
+**** Ouvrir le PDF avec la clé
++ Place le curseur sur la clé et fait M-x bibtex-completion-open-pdf
+**** Exemple de fichier main
+#+BEGIN_EXAMPLE
+\documentclass{article}
+
+\begin{document}
+
+L'apprentissage profond est très utilisé en intelligence artificielle
+\cite{Smith2020}.
+
+Pour apprendre LaTeX, on peut lire un livre spécialisé
+\cite{Dupont2018}.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}
+#+END_EXAMPLE
+*** configuration
+#+BEGIN_SRC emacs-lisp
+    ;;; --- AUCTeX --------------------------------------------------------------
+
+  (use-package auctex
+    :ensure t
+    :defer t
+    :hook (LaTeX-mode . my/latex-mode-setup)
+    :config
+    (setq TeX-save-query nil
+          TeX-view-program-selection
+          '((output-pdf "PDF Tools")))
+
+    (defun my/TeX-save-buffer-before-compile (&rest _)
+      "Save buffer before running TeX."
+      (save-buffer))
+
+    (advice-add #'TeX-command-master :before
+                #'my/TeX-save-buffer-before-compile))
+
+  (defun my/latex-mode-setup ()
+    "Custom LaTeX mode setup."
+    (setq TeX-save-query nil))
+
+
+  ;;; --- BibTeX autokey ------------------------------------------------------
+
+  (defun my/bibtex-generate-autokey (_orig-fn &rest _args)
+    "Generate simpler autokey: AuthorYear."
+    (let* ((names (bibtex-autokey-get-names))
+           (year  (bibtex-autokey-get-year)))
+      (capitalize (concat names year))))
+
+  (advice-add #'bibtex-generate-autokey :around
+              #'my/bibtex-generate-autokey)
+
+
+  ;; ;;; --- bibtex-completion ---------------------------------------------------
+
+  (use-package bibtex-completion
+    :ensure t
+    :config
+    (setq bibtex-completion-bibliography
+          (list (expand-file-name "Library/refs.bib"
+                                  user-emacs-directory))
+
+          bibtex-completion-library-path
+          (list (expand-file-name "Library/pdf/"
+                                  user-emacs-directory))))
+
+
+  ;; ;;; --- Vertico citation interface ------------------------------------------
+
+  (defun my/bib-get-field (field entry)
+    "Return FIELD from bibtex ENTRY."
+    (alist-get field (cdr entry) nil nil #'string=))
+
+  (defun my/truncate (str len)
+    "Safely truncate STR to LEN characters."
+    (when str
+      (truncate-string-to-width str len nil nil t)))
+
+  (defun my/format-author (author)
+    "Format AUTHOR field for display."
+    (when author
+      (string-replace " and " ", " author)))
+
+  (defun my/build-candidate-alist (candidates)
+    "Build display alist from bibtex CANDIDATES."
+    (mapcar
+     (lambda (entry)
+       (let* ((key     (cdr (assoc "=key=" (cdr entry))))
+              (title   (my/truncate
+                        (my/bib-get-field "title" entry) 35))
+              (author  (my/truncate
+                        (my/format-author
+                         (my/bib-get-field "author" entry))
+                        40))
+              (journal (or (my/bib-get-field "journal" entry)
+                           (my/bib-get-field "booktitle" entry))))
+         (cons key
+               (list :title title
+                     :author author
+                     :journal journal))))
+     candidates))
+
+  (defun my/vertico-bibtex (&optional refresh)
+    "Insert a citation key using completing-read.
+  With prefix REFRESH, clear bibtex cache."
+    (interactive "P")
+    (when refresh
+      (bibtex-completion-clear-cache))
+    (bibtex-completion-init)
+    (let* ((candidates (bibtex-completion-candidates))
+           (entries (my/build-candidate-alist candidates))
+           (keys (mapcar #'car entries))
+           (completion-extra-properties
+            `(:annotation-function
+              ,(lambda (key)
+                 (when-let ((data (assoc key entries)))
+                   (let ((plist (cdr data)))
+                     (format "  %-35s %-40s %-30s"
+                             (or (plist-get plist :title) "")
+                             (or (plist-get plist :author) "")
+                             (or (plist-get plist :journal) "")))))))))
+      (when-let ((selection
+                  (completing-read "Insert citation: " keys)))
+        (insert selection)))
+#+END_SRC
+
+#+RESULTS:
+: my/vertico-bibtex
 
 * Personnalisation du mode line
 ** Mode line
@@ -823,7 +909,7 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 #+RESULTS:
 : t
 
-* Mini-beffeur
+* Mini-buffeur
 ** All-the-icons
 M-x all-the-icons-install-fonts RET
 #+begin_src emacs-lisp
@@ -3444,11 +3530,11 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
  | x       | supprimer le caractère sous le curseur       |
  | S-d     | supprimer à partir du curseur jusqu'à la fin |
  |---------+----------------------------------------------|
-** Commenter
-| commande    | mode vim    | mode emac   |
-|-------------+-------------+-------------|
-| spc tab tab | spc tab tab | spc tab tab |
-|-------------+-------------+-------------|
+** Commenter/decommenter
+| commande | mode vim | mode emac |
+|----------+----------+-----------|
+| alt ;    | alt ;    | alt ;     |
+|----------+----------+-----------|
 ** Evaluer un bloc
 | mode vim | mode emacs |
 |----------+------------|
@@ -3903,6 +3989,7 @@ plt.savefig("kimg.png")
 **** Dossier suivi par git (tracked)
 + unmodified : les fichiers non modifiés par rapport au dernier commit.
 + modified : les fichiers modifiés par rapport au dernier commit.
++ stash : lieu où l'on peut stocker les fichiers modifiés.
 **** Dossier non suivi
 + untracked : les fichiers n'ayant jamais subi git add.
 *** Stage
@@ -3923,6 +4010,17 @@ Lieu où les captures sont enregistrées.
 **** Annuler un commit
 + git reset --soft HEAD~1   # uniquement le commit
 + git reset --mixed HEAD~1  # uniquement le commit et le staged
+*** Stash
+Lorsqu'un fichier modifié est envoyé au stash,
+notre tracked file pointe sur le dernier commit.
+**** Envoyer un fichier dans le stash
++ git stash save "description"
+**** Recuper le stash
++ git stash apply stash@{0}
+**** Liste des stash
++ git stash list
+**** Supprimer le stash
++ git stash drop 
 ** Structure du depot distant
 *** Repository distant
 Lieu où les fichiers sont enregistrés sur le net.

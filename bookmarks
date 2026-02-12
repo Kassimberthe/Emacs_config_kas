@@ -4,10 +4,10 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/.emacs.d/Notes/orgfiles/journal.org")
- (front-context-string . "**** Fatim\nDébut")
- (rear-context-string . "-07 sam. 21:58]\n")
- (position . 123)
- (last-modified 27015 46400 615738 389000))
+ (front-context-string . "**** Fin des règ")
+ (rear-context-string . "02-11 mercredi\n\n")
+ (position . 140)
+ (last-modified 27020 39103 122489 812000))
 ("bookmarkers"
  (filename . "~/.emacs.d/config_kas.org")
  (front-context-string . "    (dt/leader-k")

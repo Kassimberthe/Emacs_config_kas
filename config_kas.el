@@ -148,69 +148,6 @@
 (setq diff-hl-delete-color "red")     ;; Couleur pour les suppressions
 (setq diff-hl-insert-color "magenta")    ;; Couleur pour les ajouts (maintenant magenta)
 
-(use-package auctex
-  :defer t
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-engine 'luatex)
-  (setq-default TeX-master nil))
-
-(use-package company-auctex
-  :after (auctex company)         ;; Charger après AUCTeX et company
-  :ensure t                       ;; S’assurer que le paquet est installé
-  :config
-  (company-auctex-init))         ;; Initialiser company-auctex pour compléter les macros, environnements, etc.
-
-(use-package cdlatex
-  :ensure t                                  ;; S'assurer que cdlatex est installé
-  :diminish org-cdlatex-mode                 ;; Ne pas afficher le mode mineur dans la barre de mode
-  :hook ((LaTeX-mode . turn-on-cdlatex)      ;; Activer cdlatex en LaTeX-mode
-         (org-mode . turn-on-org-cdlatex))   ;; Activer cdlatex en org-mode
-  :config
-  (setq cdlatex-use-dollar-to-ensure-math nil)) ;; Option : éviter les conflits avec les dollars dans org
-
-(use-package ox-latex
-  :ensure nil                                        ;; ox-latex fait déjà partie de Org-mode
-  :after org
-  :commands (org-export-dispatch)
-  :ensure-system-package latexmk                    ;; Vérifie que latexmk est installé
-
-  :custom
-  ;; Utiliser minted pour les blocs de code (avec syntax highlighting)
-  (org-latex-src-block-backend 'minted)
-
-  ;; Commande de compilation avec latexmk, en xelatex, avec shell-escape (requis pour minted)
-  (org-latex-pdf-process
-   '("latexmk -xelatex -shell-escape -quiet -f %f"))
-
-  ;; Ajouter une commande LaTeX dans le préambule pour définir une couleur (ex : fond transparent gris clair)
-  (org-latex-header "\\definecolor{lightgraytransparent}{rgb}{0.9, 0.9, 0.9}\n")
-
-  ;; Ajouter des packages utiles au document exporté depuis Org vers LaTeX
-  (org-latex-packages-alist
-   '(("" "minted")                                     ;; Code coloré avec minted
-     ("" "booktabs")                                   ;; Tableaux professionnels
-     ("AUTO" "polyglossia" t ("xelatex" "lualatex"))   ;; Multilingue, alternatif à babel
-     ("" "grffile")                                    ;; Noms de fichiers complexes dans \includegraphics
-     ;; ("" "unicode-math")                            ;; Décommente si tu veux de meilleures fontes mathématiques
-     ("" "xcolor")))                                   ;; Gestion des couleurs
-
-  :config
-  ;; Ajouter .tex à la liste des fichiers à supprimer après export
-  (add-to-list 'org-latex-logfiles-extensions "tex"))
-
-(use-package auctex
-  :ensure t
-  :defer t
-  :after tex
-  :config
-  (add-to-list 'TeX-command-list
-               '("Latexmk with shell-escape"
-                 "latexmk -xelatex -shell-escape -interaction=nonstopmode -f %s"
-                 TeX-run-TeX nil t))
-  (setq TeX-command-default "Latexmk with shell-escape"))
-
 (use-package pdf-tools
   :if (not (eq system-type 'windows-nt))
   :config
@@ -321,6 +258,113 @@
       (kbd "M-j") 'drag-stuff-down
       (kbd "M-k") 'drag-stuff-up))
   )
+
+;;; --- AUCTeX --------------------------------------------------------------
+
+(use-package auctex
+  :ensure t
+  :defer t
+  :hook (LaTeX-mode . my/latex-mode-setup)
+  :config
+  (setq TeX-save-query nil
+        TeX-view-program-selection
+        '((output-pdf "PDF Tools")))
+
+  (defun my/TeX-save-buffer-before-compile (&rest _)
+    "Save buffer before running TeX."
+    (save-buffer))
+
+  (advice-add #'TeX-command-master :before
+              #'my/TeX-save-buffer-before-compile))
+
+(defun my/latex-mode-setup ()
+  "Custom LaTeX mode setup."
+  (setq TeX-save-query nil))
+
+
+;;; --- BibTeX autokey ------------------------------------------------------
+
+(defun my/bibtex-generate-autokey (_orig-fn &rest _args)
+  "Generate simpler autokey: AuthorYear."
+  (let* ((names (bibtex-autokey-get-names))
+         (year  (bibtex-autokey-get-year)))
+    (capitalize (concat names year))))
+
+(advice-add #'bibtex-generate-autokey :around
+            #'my/bibtex-generate-autokey)
+
+
+;; ;;; --- bibtex-completion ---------------------------------------------------
+
+(use-package bibtex-completion
+  :ensure t
+  :config
+  (setq bibtex-completion-bibliography
+        (list (expand-file-name "Library/refs.bib"
+                                user-emacs-directory))
+
+        bibtex-completion-library-path
+        (list (expand-file-name "Library/pdf/"
+                                user-emacs-directory))))
+
+
+;; ;;; --- Vertico citation interface ------------------------------------------
+
+(defun my/bib-get-field (field entry)
+  "Return FIELD from bibtex ENTRY."
+  (alist-get field (cdr entry) nil nil #'string=))
+
+(defun my/truncate (str len)
+  "Safely truncate STR to LEN characters."
+  (when str
+    (truncate-string-to-width str len nil nil t)))
+
+(defun my/format-author (author)
+  "Format AUTHOR field for display."
+  (when author
+    (string-replace " and " ", " author)))
+
+(defun my/build-candidate-alist (candidates)
+  "Build display alist from bibtex CANDIDATES."
+  (mapcar
+   (lambda (entry)
+     (let* ((key     (cdr (assoc "=key=" (cdr entry))))
+            (title   (my/truncate
+                      (my/bib-get-field "title" entry) 35))
+            (author  (my/truncate
+                      (my/format-author
+                       (my/bib-get-field "author" entry))
+                      40))
+            (journal (or (my/bib-get-field "journal" entry)
+                         (my/bib-get-field "booktitle" entry))))
+       (cons key
+             (list :title title
+                   :author author
+                   :journal journal))))
+   candidates))
+
+(defun my/vertico-bibtex (&optional refresh)
+  "Insert a citation key using completing-read.
+With prefix REFRESH, clear bibtex cache."
+  (interactive "P")
+  (when refresh
+    (bibtex-completion-clear-cache))
+  (bibtex-completion-init)
+  (let* ((candidates (bibtex-completion-candidates))
+         (entries (my/build-candidate-alist candidates))
+         (keys (mapcar #'car entries))
+         (completion-extra-properties
+          `(:annotation-function
+            ,(lambda (key)
+               (when-let ((data (assoc key entries)))
+                 (let ((plist (cdr data)))
+                   (format "  %-35s %-40s %-30s"
+                           (or (plist-get plist :title) "")
+                           (or (plist-get plist :author) "")
+                           (or (plist-get plist :journal) "")))))))))
+    (when-let ((selection
+                (completing-read "Insert citation: " keys)))
+      (insert selection)))
 
 ;; Police globale avec Nerd Font
 (set-face-attribute 'default nil

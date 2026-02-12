@@ -33,7 +33,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(dtrt-indent vterm-toggle vterm eshell-syntax-highlighting eshell-toggle git-gutter mu4e-alert org-roam-ui consult-org-roam org-roam org-super-agenda winum visual-fill-column markdown-mode ox-pandoc ess company-irony irony company-c-headers ggtags cmake-mode pyvenv web-mode git-timemachine magit crontab-mode sudo-edit command-log-mode async dired-open dired-hide-dotfiles marginalia consult orderless vertico which-key all-the-icons-dired all-the-icons beacon pulsar toc-org org-superstar catppuccin-theme diminish doom-modeline drag-stuff company-box openwith pdf-tools cdlatex company-auctex auctex diff-hl flycheck rainbow-mode rainbow-delimiters general mu4e undo-tree evil-collection auto-compile)))
+   '(tex-site auctex-latexmk auctex-lua bibtex-completion biblio biblio-core dtrt-indent vterm-toggle vterm eshell-syntax-highlighting eshell-toggle git-gutter mu4e-alert org-roam-ui consult-org-roam org-roam org-super-agenda winum visual-fill-column markdown-mode ox-pandoc ess company-irony irony company-c-headers ggtags cmake-mode pyvenv web-mode git-timemachine magit crontab-mode sudo-edit command-log-mode async dired-open dired-hide-dotfiles marginalia consult orderless vertico which-key all-the-icons-dired all-the-icons beacon pulsar toc-org org-superstar catppuccin-theme diminish doom-modeline drag-stuff company-box openwith pdf-tools cdlatex company-auctex auctex diff-hl flycheck rainbow-mode rainbow-delimiters general mu4e undo-tree evil-collection auto-compile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
