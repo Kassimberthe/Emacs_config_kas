@@ -366,6 +366,8 @@ With prefix REFRESH, clear bibtex cache."
                 (completing-read "Insert citation: " keys)))
       (insert selection)))
 
+(setq TeX-command-extra-options "-shell-escape")
+
 ;; Police globale avec Nerd Font
 (set-face-attribute 'default nil
                     :family "JetBrainsMono Nerd Font Propo"
@@ -1870,13 +1872,17 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
     (kbd "d") 'neotree-delete-node
     (kbd "c") 'neotree-create-node))
 
-(setq initial-frame-alist
-      `((width . 100)
-        (height . 40)
-        (top . 50)
-        (left . 50)))
+;; Démarrer Emacs maximisé
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(setq default-frame-alist initial-frame-alist)
+;; (setq initial-frame-alist
+;;       `((width . 100)
+;;         (height . 40)
+;;         (top . 50)
+;;         (left . 50)))
+
+;; (setq default-frame-alist initial-frame-alist)
 
 (defun my/org-table-copy-down (&optional arg)
   "Appeler `org-table-copy-down' si on est dans un tableau Org.

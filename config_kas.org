@@ -479,21 +479,22 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 : t
 
 ** Latex
-| Raccourci | Fonction                   | Description courte                                |
-|-----------+----------------------------+---------------------------------------------------|
-| C-c C-c   | Compiler                   | Compile (LaTeX, BibTeX, View, etc.)               |
-| C-c C-v   | Voir PDF                   | Ouvre le document compilé                         |
-| C-c C-e   | Environnement              | Insère \begin{...} \end{...}                      |
-| C-c C-m   | Commande (macro)           | Insère une commande LaTeX                         |
-| C-c C-s   | Section                    | Insère section / subsection / chapter             |
-| M-RET     | Nouvel item                | Ajoute \item dans liste                           |
-| C-c C-n   | Section suivante           | Navigation vers section suivante                  |
-| C-c C-p   | Section précédente         | Navigation vers section précédente                |
-| C-c C-l   | Erreur suivante            | Va à l’erreur après compilation                   |
-| TAB       | Complétion                 | Complète commandes, labels, citations             |
-| C-c ;     | Commenter / Décommenter    | Commente ou décommente la région                  |
-| C-c b     | my/vertico-bibtex          | Ouvre la complétion BibTeX pour insérer une clé   |
-| C-c p     | bibtex-completion-open-pdf | Ouvre le PDF associé à la clé BibTeX (si présent) |
+| Raccourci | Fonction                         | Description courte                                |
+|-----------+----------------------------------+---------------------------------------------------|
+| C-c C-c   | Compiler                         | Compile (LaTeX, BibTeX, View, etc.)               |
+| C-c C-v   | Voir PDF                         | Ouvre le document compilé                         |
+| C-c C-e   | Environnement                    | Insère \begin{...} \end{...}                      |
+| C-c C-m   | Commande (macro)                 | Insère une commande LaTeX                         |
+| C-c C-s   | Section                          | Insère section / subsection / chapter             |
+| M-RET     | Nouvel item                      | Ajoute \item dans liste                           |
+| C-c C-n   | Section suivante                 | Navigation vers section suivante                  |
+| C-c C-p   | Section précédente               | Navigation vers section précédente                |
+| C-c C-l   | Erreur suivante                  | Va à l’erreur après compilation                   |
+| TAB       | Complétion                       | Complète commandes, labels, citations             |
+| C-c ;     | Commenter / Décommenter          | Commente ou décommente la région                  |
+| C-c b     | my/vertico-bibtex                | Ouvre la complétion BibTeX pour insérer une clé   |
+| C-c p     | bibtex-completion-open-pdf       | Ouvre le PDF associé à la clé BibTeX (si présent) |
+| C-c `     | Aller à la première erreur LaTeX |                                                   |
 
 *** Exemples
 **** Dans refs.bib
@@ -649,6 +650,16 @@ Pour apprendre LaTeX, on peut lire un livre spécialisé
 
 #+RESULTS:
 : my/vertico-bibtex
+*** Pour minted
++ sudo apt install python3-pygments
++ pygmentize -V
++ pdflatex -shell-escape fichier.tex
+**** Dans emacs
++ C-c C-c + Latex pour compiler
++ C-c C-c + view pour visualiser le pdf 
+#+BEGIN_SRC emacs-lisp
+(setq TeX-command-extra-options "-shell-escape")
+#+END_SRC
 
 * Personnalisation du mode line
 ** Mode line
@@ -3212,18 +3223,26 @@ git clone https://github.com/jaypei/emacs-neotree.git neotree
 #+RESULTS:
 
 * Taille du frame
-#+begin_src emacs-lisp
-(setq initial-frame-alist
-      `((width . 100)
-        (height . 40)
-        (top . 50)
-        (left . 50)))
+#+BEGIN_SRC emacs-lisp
+;; Démarrer Emacs maximisé
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+END_SRC
 
-(setq default-frame-alist initial-frame-alist)
+#+RESULTS:
+: ((fullscreen . maximized) (vertical-scroll-bars))
+
+#+begin_src emacs-lisp
+  ;; (setq initial-frame-alist
+  ;;       `((width . 100)
+  ;;         (height . 40)
+  ;;         (top . 50)
+  ;;         (left . 50)))
+
+  ;; (setq default-frame-alist initial-frame-alist)
 #+end_src
 
 #+RESULTS:
-: ((width . 100) (height . 40) (top . 50) (left . 50))
 
 * IDE pour programmation
 #+PROPERTY: header-args:python :session my_session :exports both
