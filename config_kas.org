@@ -2054,7 +2054,7 @@ Exemple de fonctionnement d'Org-roam
 #+END_SRC
 
 * mu4e
-** Chaet sheet
+** Cheat sheet mu4e
 | Action                        | Touche / Commande | Exemple concret                | Résultat                     |
 |-------------------------------+-------------------+--------------------------------+------------------------------|
 | Lancer mu4e                   | M-x mu4e          | M-x mu4e                       | Ouvre l’interface mail       |
@@ -3445,9 +3445,10 @@ for d in dirs:
 #+RESULTS:
 : 0 1 4 9 16 25 36 49 64 81
 
-* Cheat sheet: vim/emacs
-** Mouvement
-*** du curseur
+* Cheat sheet
+** Cheat sheet: vim/emacs
+*** Mouvement
+**** du curseur
 | mode normal | Description                        |
 |-------------+------------------------------------|
 | k           | déplacer le curseur vers le haut   |
@@ -3455,13 +3456,13 @@ for d in dirs:
 | h           | déplacer le curseur vers la gauche |
 | l           | déplacer le curseur vers la droite |
 |-------------+------------------------------------|
-*** sur les mots
+**** sur les mots
 | normal | Description                            |
 |--------+----------------------------------------|
 | w (b)  | aller au debut de chaque mot (reculer) |
 | e (ge) | aller à la fin de chaque mot (reculer) |
 |--------+----------------------------------------|
-*** sur les lignes
+**** sur les lignes
 | normal | emacs     | Description                              |
 |--------+-----------+------------------------------------------|
 | 0  (_) | C-a (M-m) | aller au debut de la ligne (sans espace) |
@@ -3477,31 +3478,34 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | M-j                   | déplacer la ligne ou le bloc vers le haut |
 | M-k                   | déplacer la ligne ou le bloc vers le bas  |
 |-----------------------+-------------------------------------------|
-*** sur le fichier
+**** sur le fichier
 | normal | Description                          |
 |--------+--------------------------------------|
 | gg (G) | aller au debut du fichier (à la fin) |
 |--------+--------------------------------------|
-*** sur l'ecran
+**** sur l'ecran
 | normal     | Description                                                    |
 |------------+----------------------------------------------------------------|
 | C-e ou C-y | descendre ou monter l'ecran d'une ligne sans bouger le curseur |
 | C-b ou C-f | descendre ou monter l'ecran d'une hauteur(page)                |
+| zz         | mettre la ligne courante au mileu de l'écran                   |
+| zt         | mettre la ligne courante au top  de l'écran                    |
+| zb         | mettre la ligne courante en bas  de l'écran                    |
 |------------+----------------------------------------------------------------|
-*** sur les headings
+**** sur les headings
 | commande        | action                                             |
 |-----------------+----------------------------------------------------|
 | M-fleche droit  | deplacer les headings vers la droite               |
 | M-fleche gauche | deplace les headings vers la gauche                |
 | M-entrer        | ajouter un heading de même niveau que le precedent |
 |-----------------+----------------------------------------------------|
-** Insertion
+*** Insertion
 | Insertion | Description                       |
 |-----------+-----------------------------------|
 | i ou a    | inserer avant ou après le curseur |
 | I ou A    | aller en debut ou fin de ligne    |
 |-----------+-----------------------------------|
-** Selection
+*** Selection
 | Visual | Description                                   |
 |--------+-----------------------------------------------|
 | S-v    | selectionner ligne par ligne                  |
@@ -3509,8 +3513,8 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | C-v    | selectionner par bloc                         |
 | < ou > | décaler la selection vers la gauche ou droite |
 |--------+-----------------------------------------------|
-*** opération sur les selection par bloc
-**** pour copier ou supprimer
+**** opération sur les selection par bloc
+***** pour copier ou supprimer
 | Visual | Description                               |
 |--------+-------------------------------------------|
 | tx     | aller jusqu'avant le caractère x          |
@@ -3520,14 +3524,14 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | 0      | aller jusqu'à debut de ligne             |
 | _      | aller jusqu'en debut de ligne sans espace |
 |--------+-------------------------------------------|
-**** faire une action après le bloc
+***** faire une action après le bloc
 | Visual | Description      |
 |--------+------------------|
 | A      | après le bloc    |
 | I      | avant le bloc    |
 | esc    | applique au bloc |
 |--------+------------------|
-** Copier
+*** Copier
 | Action                          | Normal | Emacs |
 |---------------------------------+--------+-------|
 | copier                          | y      | M-w   |
@@ -3535,12 +3539,12 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | copier le contenu de ",(,{ et w | yi(    |       |
 | copier l'objet et le contenu    | ya"    |       |
 |---------------------------------+--------+-------|
-** Coller
+*** Coller
 | Action                           | Normal | Emacs |
 |----------------------------------+--------+-------|
 | coller avant ou après le curseur | P ou p | C-y   |
 |----------------------------------+--------+-------|
-** Supprimer = couper
+*** Supprimer = couper
  | Normal  | Action                                       |
  |---------+----------------------------------------------|
  | d       | supprimer                                    |
@@ -3549,17 +3553,17 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
  | x       | supprimer le caractère sous le curseur       |
  | S-d     | supprimer à partir du curseur jusqu'à la fin |
  |---------+----------------------------------------------|
-** Commenter/decommenter
+*** Commenter/decommenter
 | commande | mode vim | mode emac |
 |----------+----------+-----------|
 | alt ;    | alt ;    | alt ;     |
 |----------+----------+-----------|
-** Evaluer un bloc
+*** Evaluer un bloc
 | mode vim | mode emacs |
 |----------+------------|
 | spc e r  | C-c C-c    |
 |----------+------------|
-** Recherche et remplacement
+*** Recherche et remplacement
 | Action       | Normal      | Emacs           |
 |--------------+-------------+-----------------|
 | recherche    | /           |                 |
@@ -3571,8 +3575,8 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 |              |             | !=remplace tout |
 |              |             | entré=quitter   |
 |--------------+-------------+-----------------|
-* Cheat sheet: Tableau org
-*** Copier la valeur courante en dessous
+** Cheat sheet: Tableau org
+**** Copier la valeur courante en dessous
 #+BEGIN_SRC emacs-lisp
 (defun my/org-table-copy-down (&optional arg)
   "Appeler `org-table-copy-down' si on est dans un tableau Org.
@@ -3589,8 +3593,8 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 #+RESULTS:
 : my/org-table-copy-down
-*** Créer un tableau
-**** Outils
+**** Créer un tableau
+***** Outils
 | commande   | descriptin                                |
 |------------+-------------------------------------------|
 | pipe       | separateur des colonnes                   |
@@ -3606,23 +3610,23 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 |            |                                           |
 | entrer     | pour se deplacer entre ligne              |
 |------------+-------------------------------------------|
-**** supprimer une colonne ou une ligne
+***** supprimer une colonne ou une ligne
 | commande          | action                        |
 |-------------------+-------------------------------|
 | M-S-flèche gauche | supprimer la colonne courante |
 | M-S-flèche haute  | supprimer la ligne courante   |
 |-------------------+-------------------------------|
-**** ajouter une colonne ou une ligne
+***** ajouter une colonne ou une ligne
 | commande          | action                       |
 |-------------------+------------------------------|
 | M-S-flèche droite | ajouter une colonne courante |
 | M-S-flèche bas    | ajouter une  ligne courante  |
 |-------------------+------------------------------|
-**** tableau vide
+***** tableau vide
 C-c | + nbre__colonne x nbre__ligne  
-**** données brutes en tableau
+***** données brutes en tableau
 selection + C-c |   (quand le separateur est tab ou ,)
-**** position dans le tableau
+***** position dans le tableau
 #+name: tab
 |  a |  b |  c |  d |  e |
 |----+----+----+----+----|
@@ -3645,14 +3649,14 @@ selection + C-c |   (quand le separateur est tab ou ,)
 |----------+----------------------|
 Les lignes et colonnes commencent par 1 et tab par 0.
 
-*** Permuter les lignes ou colonnes / les éléments du tableau
+**** Permuter les lignes ou colonnes / les éléments du tableau
 | commande         | action                          |
 |------------------+---------------------------------|
 | M- + les flèches | permuter les lignes ou colonnes |
 | S- + les flèches | permuter les elts du tableau    |
 |------------------+---------------------------------|
-*** Opération sur les tables
-**** Introduction des formules
+**** Opération sur les tables
+***** Introduction des formules
 | sous le tableau  | dans la cellule |
 |------------------+-----------------|
 | #+TBLFM: syntaxe | egal syntaxe    |
@@ -3672,7 +3676,7 @@ Quelques syntaxes
 | Copier une ligne   | @2 = @1              | Copie toute la ligne 1 dans la ligne 2                               |
 | Copier une colonne | $3 = $1              | Copie la colonne 1 dans la colonne 3                                 |
 |--------------------+----------------------+----------------------------------------------------------------------|
-**** commandes
+***** commandes
 | commande  | effet                                    |
 |-----------+------------------------------------------|
 | C-c*      | Recalculer les formules du tableau       |
@@ -3680,7 +3684,7 @@ Quelques syntaxes
 | C-c?      | Affiche la position de la cellule        |
 | C-u C-c * | Recalculer tous les tableaux du buffer   |
 |-----------+------------------------------------------|
-**** formules intégrés
+***** formules intégrés
 | Fonction            | Syntaxe          | Description                        | Exemple                   |
 |---------------------+------------------+------------------------------------+---------------------------|
 | Somme verticale     | vsum(range)      | Somme des valeurs d’une colonne    | @>$2 = vsum(@2..@-1)      |
@@ -3699,13 +3703,13 @@ Quelques syntaxes
 | Valeur max ligne    | hmax(range)      | Maximum des valeurs d’une ligne    | @2$4 = hmax($1..$3)       |
 | Compte ligne        | hcount(range)    | Nombre de valeurs numériques ligne | @2$4 = hcount($1..$3)     |
 |---------------------+------------------+------------------------------------+---------------------------|
-*** Sur les blocs
-**** syntaxe
+**** Sur les blocs
+***** syntaxe
 #+begin_src python option1 option2 .. option n
 
 #+end_src
 
-**** les options
+***** les options
 Note: X peut être le nom d'une table ou un extrait de la table
 
 | option                 | description                                                                             |
@@ -3737,10 +3741,10 @@ plt.savefig("kimg.png")
 #+RESULTS:
 [[file:kimg.png]]
 
-*** Nommer un tableau
+**** Nommer un tableau
 #+name: sert à nommer un tableau ou la sortie du bloc
-*** fusionner deux tableaux org
-**** Horizontal sans entete 
+**** fusionner deux tableaux org
+***** Horizontal sans entete 
 #+NAME: T1
 | col1 | col2 |
 |    1 | 2    |
@@ -3757,7 +3761,7 @@ plt.savefig("kimg.png")
 | col1 | col2 | col3 |
 |    1 |    2 |    3 |
 
-**** Horizontal avec entete
+***** Horizontal avec entete
 #+NAME: Ta
 | a    | b |
 |------+---|
@@ -3779,7 +3783,7 @@ plt.savefig("kimg.png")
 | col1 | col2 | col3 |
 | 1    | 2    | 3    |
 
-**** Extraction des colonnes
+***** Extraction des colonnes
 #+NAME: T10
 | c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8 | c9 | c10 |
 |----+----+----+----+----+----+----+----+----+-----|
@@ -3814,7 +3818,7 @@ plt.savefig("kimg.png")
 | 11 | 13 | 17 |
 | 21 | 23 | 27 |
 
-*** Raccourci sur le tableau org
+**** Raccourci sur le tableau org
 | code | correspondance                      |
 |------+-------------------------------------|
 | œt   | #+TBLFM:                            |
@@ -3823,7 +3827,7 @@ plt.savefig("kimg.png")
 | œfh  | fusion horizontale de deux tableaux |
 |      |                                     |
 
-** Générales
+*** Générales
 | Commande    | Description                          | Rôle                                                            |
 |-------------+--------------------------------------+-----------------------------------------------------------------|
 | SPC SPC     | Counsel M-x                          | Exécute une commande Emacs via interface de recherche           |
@@ -4002,87 +4006,87 @@ plt.savefig("kimg.png")
 | SPC w d     | Downcase word                        | Minuscule mot                                                   |
 | SPC w u     | Upcase word                          | Majuscule mot                                                   |
 | SPC w =     | Count words                          | Compter mots/lignes                                             |
-* Cheat sheet Git
-** Structure du dossier local
-*** Working directory
-**** Dossier suivi par git (tracked)
+** Cheat sheet Git
+*** Structure du dossier local
+**** Working directory
+***** Dossier suivi par git (tracked)
 + unmodified : les fichiers non modifiés par rapport au dernier commit.
 + modified : les fichiers modifiés par rapport au dernier commit.
 + stash : lieu où l'on peut stocker les fichiers modifiés.
-**** Dossier non suivi
+***** Dossier non suivi
 + untracked : les fichiers n'ayant jamais subi git add.
-*** Stage
+**** Stage
 Lieu où les fichiers sont capturés/copiés.
-**** Envoyer les fichiers ou dossier dans le stage
-***** Envoyer un dossier ou fichier spécifique
+***** Envoyer les fichiers ou dossier dans le stage
+****** Envoyer un dossier ou fichier spécifique
 + git add nom__fichier ou git add nom__dossier/
 + git add -f nom__dossier/                     # Forcer git à envoyer le dossier sans rien enlever
 + git add -f nom__dossier/nom__fichier          # Forcer git à ajouter nom__fichier dans nom__dossier
-***** Envoyer tous les suivis
+****** Envoyer tous les suivis
 + git add .
-**** Retirer un fichier ou un dossier du stage
+***** Retirer un fichier ou un dossier du stage
 + git restore --staged nom__fichier ou git restore --staged nom__dossier 
-*** Repository
+**** Repository
 Lieu où les captures sont enregistrées.
-**** Enregistrer un commit
+***** Enregistrer un commit
 + git commit -m"commentaire à faire"
-**** Annuler un commit
+***** Annuler un commit
 + git reset --soft HEAD~1   # uniquement le commit
 + git reset --mixed HEAD~1  # uniquement le commit et le staged
-*** Stash
+**** Stash
 Lorsqu'un fichier modifié est envoyé au stash,
 notre tracked file pointe sur le dernier commit.
-**** Envoyer un fichier dans le stash
+***** Envoyer un fichier dans le stash
 + git stash save "description"
-**** Recuper le stash
+***** Recuper le stash
 + git stash apply stash@{0}
-**** Liste des stash
+***** Liste des stash
 + git stash list
-**** Supprimer le stash
+***** Supprimer le stash
 + git stash drop 
-** Structure du depot distant
-*** Repository distant
+*** Structure du depot distant
+**** Repository distant
 Lieu où les fichiers sont enregistrés sur le net.
-**** Envoyer un commit vers le repository distant
+***** Envoyer un commit vers le repository distant
 + git push : lorsque les commits du le depot local est en'avance sur le depot distant 
-** Mise à jour du depot local
+*** Mise à jour du depot local
 + git pull : lorsque les commits du le depot distant est en'avance sur le depot local. 
   Le pull peut se decomposer en deux:
   + git fetch # pour charger les mises à jour
   + git merge # pour installer : Le merge affecte le staging, le tracked et le repository.
-** Les branches
-*** Créer une branche
+*** Les branches
+**** Créer une branche
 + git branch nom__branche
-*** Aller sur une branche
+**** Aller sur une branche
 + git checkout nom__branche
-*** Créer et aller sur une branche
+**** Créer et aller sur une branche
 + git checkout -b nom__branche
-*** Lister les branches
+**** Lister les branches
 + git branch     # affecte le ripo local
-*** Supprimer une branche
+**** Supprimer une branche
 + git branch -d nom__branche # affecte le ripo local
-*** Mettre à jour une branche
-**** Avec le merge : cree un commit commun au deux branches
+**** Mettre à jour une branche
+***** Avec le merge : cree un commit commun au deux branches
 + aller sur la branche à mettre à jour car HEAD suit le sens du 1er parent.
 + git merge
-**** Avec rebase : transfère tous les commits de la branche courant vers l'autre
+***** Avec rebase : transfère tous les commits de la branche courant vers l'autre
 + aller sur la branche qui enverrais les commits
 + git rebase
-*** Envoyer les fichiers vers le depot distant à travers une branche tierce
+**** Envoyer les fichiers vers le depot distant à travers une branche tierce
 + git push origin nom__branche__tierce
 
-**  Etat des fichiers
-*** git status
+***  Etat des fichiers
+**** git status
 + montre l'état des fichiers tracked et untracked
 + montre les conflis s'il existe
-*** git diff
+**** git diff
 compare le fichier modifié au dernier staged
-*** git --staged
+**** git --staged
 compare le dernier staged et le dernier commit
-*** git diff HEAD
+**** git diff HEAD
 compare le fichier modifié au dernier commit
-** Les conflits
-*** Les zones dans git
+*** Les conflits
+**** Les zones dans git
 Supposons que nous avons un fichier ancetre dont les lignes sont
 contituées de A,B,C et D et lig une ligne insérée.
 + si lig est avant A, alors la zone est "zone avant A"
@@ -4090,35 +4094,35 @@ contituées de A,B,C et D et lig une ligne insérée.
 + si lig est après D, alors la zone est "zone après D"
 + si B est modifiées, git considere que la ligne B a été supprimée donc la "zone B" et
   la nouvelle ligne est dans la zone "zone entre A et C"
-*** Règle de conflits
+**** Règle de conflits
 Il y'a conflit lorsqu'une même zone est modifiée.
-*** Conflits dans le depot local
+**** Conflits dans le depot local
 Ce conflit se produit lors un merge ou un rebase ou un pull.
-**** Resolution
-***** Annuler le merge ou le rebase
+***** Resolution
+****** Annuler le merge ou le rebase
 + git merge --abort  # pour le merge
 + git rebase --abort # pour le rebase
-***** Corriger le fichier
+****** Corriger le fichier
 + Ouvre le fichier et corrige
 + git commit               # pour un merge
 + git rebase --continue    # pour un rebase  
-*** Conflits dans le depot distant
+**** Conflits dans le depot distant
 Les branches divergent
-**** Resolution
-***** Avec un rebase
+***** Resolution
+****** Avec un rebase
 + git pull --rebase
 + git push
-***** Avec un merge
+****** Avec un merge
 + git pull --no-rebase
 + git push
-***** Jeter le code de la branche
+****** Jeter le code de la branche
 + git checkout -b newbranche
 + git checkout newbranche
 + git reset --hard origin/main
-***** Initialiser le depot distant
+****** Initialiser le depot distant
 + git push --force
-** Customiser git
-*** De manière globale (le bash)
+*** Customiser git
+**** De manière globale (le bash)
 Les couleurs sont à mettre en hexadecimales
 # Untracked files → noir sur jaune
 + git config --global color.status.untracked "black #ffff00"
@@ -4132,12 +4136,12 @@ Les couleurs sont à mettre en hexadecimales
 + git config --global color.status.deleted "red bold underline"
 # Branch name (in status output)
 + git config --global color.branch.current "yellow bold"
-*** De manière locale (.git.config)
+**** De manière locale (.git.config)
 + st = status -s
 + graph = log --oneline --graph --all
 + acp = "!f() { git add . && git commit -m \"$*\" && git push; }; f"
-* Cheat sheet sur la capture
-*** Pour capture
+** Cheat sheet sur la capture
+**** Pour capture
 | Code     | Nom       | Fichier cible | Description                          | Exemple de note générée                                   |
 |----------+-----------+---------------+--------------------------------------+-----------------------------------------------------------|
 | SPC c  b | Brouillon | brouillon.org | Note rapide ou brouillon             | * TODO Relire le chapitre 3\n 2025-12-08 Tue 14:30        |
@@ -4146,7 +4150,7 @@ Les couleurs sont à mettre en hexadecimales
 | SPC c  s | School    | school.org    | Notes scolaires ou devoirs           | * TODO Préparer le devoir de maths\n 2025-12-08 Tue 14:33 |
 | SPC c  j | Journal   | journal.org   | Entrée de journal organisée par date | * Réflexion du jour\nEntered on 2025-12-08 Tue 14:34      |
 |----------+-----------+---------------+--------------------------------------+-----------------------------------------------------------|
-*** Pour timestamp
+**** Pour timestamp
 | Commande / Template                      | Élément                  | Description / Usage                                                                           |
 |------------------------------------------+--------------------------+-----------------------------------------------------------------------------------------------|
 | C-c .                                    | Timestamp actif          | Insère un timestamp actif <YYYY-MM-DD> ou <YYYY-MM-DD HH:MM>. Apparaît dans l’agenda.         |
@@ -4176,8 +4180,8 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | Basé sur complétion |    ++1d | <2025-12-08 Mon 08:00 ++1d> | La répétition se calcule depuis la date où la tâche est marquée DONE. Les jours manqués sont ignorés.      |
 | Rattrapage          |    .+1d | <2025-12-08 Mon 08:00 .+1d> | Toutes les occurrences manquées apparaissent dans l’agenda. La prochaine occurrence part de la complétion. |
 |---------------------+---------+-----------------------------+------------------------------------------------------------------------------------------------------------|
-* Cheat sheet: buffer fenêtre bookmarks
-** Fenêtres
+** Cheat sheet: buffer fenêtre bookmarks
+*** Fenêtres
 | Commande | Action                             | Description                                          |
 |----------+------------------------------------+------------------------------------------------------|
 | C-x 1    | Supprimer les autres fenêtres      | Garde la fenêtre courante et ferme toutes les autres |
@@ -4185,7 +4189,7 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | C-x 2    | Diviser la fenêtre horizontalement | Coupe la fenêtre en deux (haut / bas)                |
 | C-x 3    | Diviser la fenêtre verticalement   | Coupe la fenêtre en deux (gauche / droite)           |
 | C-c n    | Aller à la fenêtre numéro n        | Active la fenêtre numérotée n (ex: C-c 2)            |
-** Buffers ou tampons
+*** Buffers ou tampons
 | Commande | Action                        | Description                                                 |
 |----------+-------------------------------+-------------------------------------------------------------|
 | C-x b    | Changer de tampon             | Bascule vers un autre tampon existant ou en crée un nouveau |
@@ -4193,7 +4197,7 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | C-x k    | Supprimer un tampon           | Ferme le tampon courant ou un tampon spécifié               |
 | C-x C-s  | Sauvegarder                   | Enregistre le tampon courant dans son fichier               |
 | C-x C-w  | Sauvegarder sous un autre nom | Écrit le tampon courant dans un nouveau fichier             |
-** Bookmarks
+*** Bookmarks
 | Commande            | Action                | Description                                        |
 |---------------------+-----------------------+----------------------------------------------------|
 | C-c m               | Créer un bookmark     | Ajoute un signet à la position courante            |
@@ -4202,7 +4206,7 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | C-c d               | Supprimer un bookmark | Supprime un signet                                 |
 | C-c s               | mode normal           | Sauvegarder les bookmarks dans le fichier bookmark |
 + Les bookmarks sont sauvegardés entre les sessions
-*** Personnalisation
+**** Personnalisation
 #+BEGIN_SRC emacs-lisp
   ;; Créer un bookmark
   (global-set-key (kbd "C-c m") 'bookmark-set)
@@ -4223,7 +4227,7 @@ C-c C-t  permet de basculer entre DONE et TODO.
 #+RESULTS:
 : bookmark-save
 
-** Marks pour vim
+*** Marks pour vim
 | Commande | Action               | Description                          |
 |----------+----------------------+--------------------------------------|
 | m{a-z}   | Créer un bookmark    | Marque la position courante (ex: ma) |
@@ -4231,6 +4235,35 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | `{a-z}   | Aller exact          | Va à la ligne et colonne du marqueur |
 | :marks   | Lister les bookmarks | Affiche tous les marqueurs           |
 + Les marques sont perdues à la fermeture (par défaut)                                          
+** Cheat sheet mu4e
+| Touche / Commande | Action                               | Exemple concret                | Résultat                     |
+|-------------------+--------------------------------------+--------------------------------+------------------------------|
+| M-x mu4e          | Lancer mu4e                          | M-x mu4e                       | Ouvre l’interface mail       |
+| shift c           | Ecrire un mail                       |                                |                              |
+| C-c C-a           | joindre un fichier                   |                                |                              |
+| C-c C-k           | Sortir/annuler de la redaction(mail) |                                |                              |
+| C-c C-c           | Envoyer un mail                      | Écrire → C-c C-c               | Envoi via SMTP               |
+| RET               | Lire un mail ou afficher le pj       | RET sur un message             | Ouvre le mail                |
+| Ji                | Aller dans l’INBOX                   | Ji → /Gmail/INBOX              | Affiche les mails reçus      |
+| s                 | Rechercher un mail                   | s from:google subject:security | Liste des mails Google       |
+| bu                | Voir mails non lus                   | bu                             | Affiche tous les non lus     |
+| n                 | Aller au mail suivant                | n                              | Message suivant              |
+| p                 | Aller au mail précédent              | p                              | Message précédent            |
+| r                 | Répondre                             | r                              | Répond à l’expéditeur        |
+| R                 | Répondre à tous                      | R                              | Répond à tous                |
+| C                 | Nouveau mail                         | C                              | Ouvre le buffer de rédaction |
+| !                 | Marquer comme lu                     | !                              | Marque le mail comme lu      |
+| ?                 | Marquer non lu                       | ?                              | Marque non lu                |
+| d                 | Supprimer (Gmail Trash)              | d                              | Déplace vers Corbeille       |
+| a                 | Archiver                             | a                              | Archive le mail              |
+| f                 | Ajouter un drapeau                   | f                              | Ajoute un flag               |
+| A s               | Télécharger pièce jointe             | A s                            | Sauve la pièce jointe        |
+| A                 | Voir pièces jointes                  | A                              | Liste des PJ                 |
+| J                 | Changer de dossier                   | J → sélectionner un dossier    | Navigation rapide            |
+| u                 | Mettre à jour les mails              | u                              | Sync + index                 |
+| q                 | Quitter mu4e                         | q                              | Quitte mu4e                  |
+| C-c C-d           | Enregistrer dans le brouillon        |                                |                              |
+
 * Verification des commandes
 | Commande | Action        | Description                                               |
 |----------+---------------+-----------------------------------------------------------|

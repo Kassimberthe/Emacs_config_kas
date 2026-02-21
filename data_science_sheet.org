@@ -237,3 +237,155 @@ ie sur chaque objet, selectionne col et applique np.mean ou lam.
 + supprime toutes les lignes ayant une valeur manquante
 *** df.dropna(thresh=n, axis=..)
 + conserver la ligne ou colonne si le nbre de valeur different de nan >= n.
+** Charger les données
+*** sur la machine
+**** via un csv
+Si les données sont sur la machine ou sur le web (url):
++ df = pd.read__csv("chemin-fichier.csv", sep=", ou ; ou \t", header=0 ou None)
+   - header = 0 valeur par default ie que la 1ere ligne est le nom des colonnes 
+**** via excel
+Si les données sont sur la machine ou sur le web (url):
++ df = pd.read__excel("chemin-fichier.csv", sheet__name="nom-feuille", header=0 ou None)
+   - header = 0 valeur par default ie que la 1ere ligne est le nom des colonnes
+**** via json
++ df = pd.read__json("chemin-fichier.json")
+*** sur le web
+**** importer le module requests
++ import requests
+**** charger les données
++ r = requests.get("url")
++ with open("nom-fichier", "wb") as f:      ie ouvre le tampon f en mode wb en le nommant nom-fichier
+  f.write(r.content)                      ie écrire le contenu de r dans le tampon
+** Conversion du df en csv, excel ou json
++ df.to__excel("nom-fichier.excel")
++ df.to__csv("nom-fichier.csv")
++ df.to__json("nom-fichier.json")
+** Doublon
++ df.duplicated()
+  retourne un mask booléen. les lignes sont False et la copie est True.
+* Data analyste
+** Chargement des données
+*** Aperçu du dataframe
+#+begin_src python
+  print("Aperçu des 5  premieres lignes du dataframe")
+  df.head()
+#+end_src
+  
+#+begin_src python
+  print("Aperçu aléatoire des 10  premieres lignes du dataframe")
+  df.sample(10)
+#+end_src
++ Données manquantes ou erronées:
+  - la colonne x contient une valeur de -1,0, ce qui suggère une donnée
+    incorrecte et doit être traitée.
+  - la colonne x contient une valeur manquante et doit être traitée.
++ Variables catégorielles: Les colonnes telles que x,y et z sont les
+  variables catégorielles et devront être analysées en conséquence.
++ Variables continues: Des colonnes telles que x,y et z sont des variables
+  continues et seront utiles pour les résumés statistiques.
+*** Dimension du dataframe
+#+begin_src python
+  df.shape
+#+end_src
++ Le data set contient n lignes et p colonnes.
+*** Info sur les colonnes
+#+begin_src python
+  print("Informations générales sur les colonnes")
+  df.info()
+#+end_src
++ Les types de données sont principalement des (entiers ou flottants
+  ou objets) avec n colonnes, suivi des (entiers ou flottants
+  ou objets) avec n colonnes et n colonnes de type (entier ou flottant
+  ou objet).
++ Certaines colonnes présentent des valeurs manquantes.
+** Qualité des données
+*** Les valeurs manquantes
+#+begin_src python
+  np.sum(df.isnull())
+#+end_src
++ Le data set contient n valeurs manquantes.
+*** Les doublons
+#+begin_src python
+  print("Le nombre de doublon est")
+  np.sum(df.duplicated())
+#+end_src
+
+*** Detection des valeurs aberrantes(var quantitative)
+#+begin_src python
+  import numpy as np
+  import matplotlib.pyplot as plt
+
+  # Sélection des colonnes numériques uniquement
+  numeric_cols = df.select_dtypes(include=np.number).columns
+
+  n_cols = 3
+  n_rows = int(np.ceil(len(numeric_cols) / n_cols))
+
+  fig, axes = plt.subplots(nrows=n_rows, ncols=n_cols, figsize=(15, n_rows * 4))
+  axes = axes.flatten()  # transforme en tableau 1D pour itération facile
+
+  for i, col in enumerate(numeric_cols):
+      axes[i].boxplot(df[col].dropna())
+      axes[i].set_title(f"Boxplot of {col}")
+
+  # Supprimer les subplots vides
+  for j in range(len(numeric_cols), len(axes)):
+      fig.delaxes(axes[j])
+
+  plt.tight_layout()
+  plt.show()
+#+end_src
+** Analyse univariée
++ 1. _variable
+  - la distribution des nom__variable montre quelques valeurs
+    aberrantes particulièrement au niveau des  âges les plus élevés
+    (autour de hmax à hplus)
+    ou
+    La distribution des nom__contenant-var présente des valeurs
+    aberrantes. certains ayant jusqu'à hplus ...
+ - le nom__variable médian est d’environ n, et la plupart ont
+   entre q1 et q2
+ - Médiane centrée → distribution symétrique
+   Médiane proche du bas → asymétrie positive
+   Médiane proche du haut → asymétrie négative
+*** variables numériques
++ df[numeric__cols].describe()
++ histogramme
+*** variables catégorielles
++ df["colonne"].value_counts()
++ bar
+** Analyse bivariée
+*** variable numérique vs variable numérique
++ correlation
++ Scatter plot
+*** numerique vs catégorielle
++ boxplot
+*** catégorielle vs catégorielle
++ crosstab
++ graphique empilé
+* Data science
+** preprocessing sur df ou train general
++ Nettoyage des données
++ Création des nouvelles variables
++ Standarisation
++ Selection des variables
+** Construction du modele (estimateur)
+*** importer le modele
++ modele
++ le type de split à utiliser
++ la metrique utilisée
+*** Construction des variables X et y
+*** Split
+*** Initialisation du modele
+*** Training
+*** Evaluer le modele sur le split
++ sur le train data
++ sur le test data 
+*** Prediction sur le split
++ sur le train data
++ sur le test data
+** Prediction
++ preprocessing sur df et test general
++ train sur tout df
++ prediction sur test general
+** Soumission de fichier
