@@ -3447,6 +3447,21 @@ for d in dirs:
 
 * Cheat sheet
 ** Cheat sheet: vim/emacs
+*** Syntaxe
+| verbe    | description                           |
+|----------+---------------------------------------|
+| d        | supprimer                             |
+| c        | supprimer et passer en mode insertion |
+| y        | copier                                |
+| v        | selectionner                          |
+| >        | indenter                              |
+| <        | desindenter                           |
+| >> ou << | mode normal                           |
+|----------+---------------------------------------|
+**** mode normal
++ verbe + mouvement
+**** mode visuel
++ v + mouvement + verbe
 *** Mouvement
 **** du curseur
 | mode normal | Description                        |
@@ -3483,6 +3498,20 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 |--------+--------------------------------------|
 | gg (G) | aller au debut du fichier (à la fin) |
 |--------+--------------------------------------|
+**** aller jusqu'au
+***** caractère x exlus
++ tx
+***** caractère x inclus
++ fx
+***** mot xxx exclus
++ /xxx
+**** sur l'objet texte
+| action     | description                    |
+|------------+--------------------------------|
+| iw         | intérieur du mot               |
+| i<symbole> | intérieur du symbole           |
+| a<symbole> | symbole + intérieur du symbole |
+|------------+--------------------------------|
 **** sur l'ecran
 | normal     | Description                                                    |
 |------------+----------------------------------------------------------------|
@@ -3499,6 +3528,8 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | M-fleche gauche | deplace les headings vers la gauche                |
 | M-entrer        | ajouter un heading de même niveau que le precedent |
 |-----------------+----------------------------------------------------|
+**** repeter une commande
++ .
 *** Insertion
 | Insertion | Description                       |
 |-----------+-----------------------------------|
@@ -3511,9 +3542,8 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 | S-v    | selectionner ligne par ligne                  |
 | v      | selectionner caractère par caractère          |
 | C-v    | selectionner par bloc                         |
-| < ou > | décaler la selection vers la gauche ou droite |
 |--------+-----------------------------------------------|
-**** opération sur les selection par bloc
+**** opération sur les selection par bloc ou caractère 
 ***** pour copier ou supprimer
 | Visual | Description                               |
 |--------+-------------------------------------------|
@@ -3575,6 +3605,27 @@ se termine soit par .,! ou ? suivi d'un espace ou retour à la ligne.
 |              |             | !=remplace tout |
 |              |             | entré=quitter   |
 |--------------+-------------+-----------------|
+*** Mode commande
+| Commande | Usage                          | Fonction                                                       | Exemple           |
+|----------+--------------------------------+----------------------------------------------------------------+-------------------|
+| :r       | :r <fichier>                   | Insère le contenu d’un fichier après la ligne courante         | :r monfichier.txt |
+| :r !     | :r !<commande>                 | Insère le résultat d’une commande shell                        | :r !date          |
+| :put     | :put [registre]                | Colle le contenu d’un registre après la ligne courante         | :put a            |
+| :new     | :new                           | Ouvre une nouvelle fenêtre (split) vide                        | :new              |
+| :q       | :q                             | Quitte le buffer actuel                                        | :q                |
+| :q!      | :q!                            | Quitte sans sauvegarder                                        | :q!               |
+| :w       | :w [fichier]                   | Sauvegarde le buffer dans un fichier                           | :w                |
+| :!       | :!<commande>                   | Exécute une commande shell externe                             | :!ls              |
+| :%s      | :%s/<ancien>/<nouveau>/[flags] | Remplace du texte dans le buffer entier ou une plage de lignes | :%s/chien/chat/g  |
+**** flags
+| Flag | Fonction                                                  | Exemple                                                                 |
+|------+-----------------------------------------------------------+-------------------------------------------------------------------------|
+| g    | global : remplace toutes les occurrences sur chaque ligne | :%s/chat/chien/g remplace tous les “chat” par “chien” dans chaque ligne |
+| c    | confirm : demande confirmation pour chaque remplacement   | :%s/chat/chien/gc te demande “oui/non” pour chaque “chat” trouvé        |
+| i    | ignore case : ignore la casse                             | :%s/Chat/chien/gi remplace “Chat”, “chat”, “CHAT”, etc.                 |
+| I    | respect case : sensible à la casse (par défaut)           | :%s/Chat/chien/I remplace uniquement “Chat” exactement                  |
+| n    | ne rien remplacer, juste compter                          | :%s/chat/chien/n affiche le nombre de remplacements possibles           |
+| &    | réutiliser les flags de la dernière substitution          | :%s/chat/chien/& applique les mêmes flags que la dernière commande :s   |
 ** Cheat sheet: Tableau org
 **** Copier la valeur courante en dessous
 #+BEGIN_SRC emacs-lisp
