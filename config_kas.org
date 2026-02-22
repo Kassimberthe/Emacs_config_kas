@@ -145,37 +145,6 @@ f12 = altgr + f12
 #+RESULTS:
 
 * Traitement de texte
-** Indentation
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook #'org-indent-mode)
-#+END_SRC
-
-#+RESULTS:
-| org-indent-mode | rainbow-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-
-#+begin_src emacs-lisp
-;; --------------------------------------------------------
-;; Définir la largeur des tabulations et l'indentation
-;; pour les modes de programmation
-;; --------------------------------------------------------
-
-;; Largeur globale des tabulations
-(setq tab-width 4)
-
-;; Fonction pour configurer les modes de programmation
-(defun my/prog-mode-tab-settings ()
-  "Configure indentation and tab width for programming modes."
-  (setq tab-width 4)              ;; largeur d'une tabulation
-  (setq evil-shift-width 4)       ;; décalage pour evil-mode
-  (setq python-indent-offset 4))  ;; indentation Python
-
-;; Ajouter le hook pour tous les modes de programmation
-(add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
-#+end_src
-
-#+RESULTS:
-| my/prog-mode-tab-settings | display-line-numbers-mode | hl-line-mode | rainbow-mode |
-
 ** Appel automatique du delimitateur fermant
 #+BEGIN_SRC emacs-lisp
 ;(electric-pair-mode 1)
@@ -495,7 +464,6 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 | C-c b     | my/vertico-bibtex                | Ouvre la complétion BibTeX pour insérer une clé   |
 | C-c p     | bibtex-completion-open-pdf       | Ouvre le PDF associé à la clé BibTeX (si présent) |
 | C-c `     | Aller à la première erreur LaTeX |                                                   |
-
 *** Exemples
 **** Dans refs.bib
 #+BEGIN_EXAMPLE
@@ -798,14 +766,6 @@ Pour apprendre LaTeX, on peut lire un livre spécialisé
 #+RESULTS:
 
 * Org mode
-** Indentation
-
-#+BEGIN_SRC emacs-lisp
-(eval-after-load 'org-indent '(diminish 'org-indent-mode))
-#+END_SRC
-
-#+RESULTS:
-
 ** Bullets
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
@@ -1355,22 +1315,6 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 : eww-browse-wikipedia-en
 
 * Environnement de programmation
-** Profondeur de retrait et camelcase
-#+BEGIN_SRC emacs-lisp
-  (setq-default tab-width 2)
-#+END_SRC
-
-#+RESULTS:
-: 2
-
-#+BEGIN_SRC emacs-lisp
-(use-package subword
-  :config (global-subword-mode 1))
-#+END_SRC
-
-#+RESULTS:
-: t
-
 ** Activation des langages de programmation 
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages
@@ -1612,6 +1556,46 @@ n ie commit suivant, p ie précédent, b ie copier le hash du commit et q pour q
 
 #+RESULTS:
 : t
+
+#+BEGIN_SRC emacs-lisp
+;; -----------------------------
+;; Org-mode Babel et blocs source
+;; -----------------------------
+
+;; Ne pas demander de confirmation lors de l'exécution de code dans Org Babel
+(setq org-confirm-babel-evaluate nil)
+
+;; Préserver l'indentation originale du code source
+(setq org-src-preserve-indentation t)
+
+;; Quand on édite un bloc source, ne pas ajouter d'indentation supplémentaire
+(setq org-edit-src-content-indentation 0)
+
+
+;; -----------------------------
+;; Python
+;; -----------------------------
+
+;; Indentation de 4 espaces pour Python
+(setq python-indent-offset 4)
+
+;; Assurer des espaces au lieu de tabulations
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (setq tab-width 4)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (setq indent-tabs-mode nil) (setq tab-width 4)) | doom-modeline-env-setup-python |
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-tab-acts-natively t)
+(setq python-indent-offset 4)
+#+END_SRC
+
+#+RESULTS:
+: 4
 
 ** R
 *** Dans le terminal
@@ -3309,7 +3293,8 @@ git clone https://github.com/jaypei/emacs-neotree.git neotree
 | :results list              | Force une liste                                     | [1,2,3]                                           | - 1\n- 2\n- 3                       |
 | :results scalar            | Valeur simple                                       | 42                                                | 42                                  |
 
-
+** Tampon python
++ C-c'   ouverture et fermeture
 ** 1. Chargement des librairies
 
 #+BEGIN_SRC python :results output

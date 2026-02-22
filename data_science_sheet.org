@@ -389,4 +389,3 @@ Si les données sont sur la machine ou sur le web (url):
 + train sur tout df
 + prediction sur test general
 ** Soumission de fichier
-

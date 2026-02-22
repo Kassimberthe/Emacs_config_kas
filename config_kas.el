@@ -85,26 +85,6 @@
    :keymaps 'override
    "<f12>" #'my/emacs-to-normal))
 
-(add-hook 'org-mode-hook #'org-indent-mode)
-
-;; --------------------------------------------------------
-;; Définir la largeur des tabulations et l'indentation
-;; pour les modes de programmation
-;; --------------------------------------------------------
-
-;; Largeur globale des tabulations
-(setq tab-width 4)
-
-;; Fonction pour configurer les modes de programmation
-(defun my/prog-mode-tab-settings ()
-  "Configure indentation and tab width for programming modes."
-  (setq tab-width 4)              ;; largeur d'une tabulation
-  (setq evil-shift-width 4)       ;; décalage pour evil-mode
-  (setq python-indent-offset 4))  ;; indentation Python
-
-;; Ajouter le hook pour tous les modes de programmation
-(add-hook 'prog-mode-hook #'my/prog-mode-tab-settings)
-
 ;(electric-pair-mode 1)
 
 (use-package rainbow-delimiters
@@ -444,8 +424,6 @@ With prefix REFRESH, clear bibtex cache."
 ;; Attention : cela change la couleur par défaut de tout le minibuffer
 ;(set-face-foreground 'default "#8839ef")  ;; texte que tu tapes
 
-(eval-after-load 'org-indent '(diminish 'org-indent-mode))
-
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
   :custom
@@ -773,11 +751,6 @@ With prefix REFRESH, clear bibtex cache."
          ("C-c w d" . 'eww-browser-english-dict)
          ("C-c w w" . 'eww-browse-wikipedia-en)))
 
-(setq-default tab-width 2)
-
-(use-package subword
-  :config (global-subword-mode 1))
-
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -945,6 +918,36 @@ With prefix REFRESH, clear bibtex cache."
                   ("cpp"   . "src C++")                     ;; C++
                   ("tex"   . "src latex")))                 ;; LaTeX
     (add-to-list 'org-structure-template-alist item)))
+
+;; -----------------------------
+;; Org-mode Babel et blocs source
+;; -----------------------------
+
+;; Ne pas demander de confirmation lors de l'exécution de code dans Org Babel
+(setq org-confirm-babel-evaluate nil)
+
+;; Préserver l'indentation originale du code source
+(setq org-src-preserve-indentation t)
+
+;; Quand on édite un bloc source, ne pas ajouter d'indentation supplémentaire
+(setq org-edit-src-content-indentation 0)
+
+
+;; -----------------------------
+;; Python
+;; -----------------------------
+
+;; Indentation de 4 espaces pour Python
+(setq python-indent-offset 4)
+
+;; Assurer des espaces au lieu de tabulations
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (setq tab-width 4)))
+
+(setq org-src-tab-acts-natively t)
+(setq python-indent-offset 4)
 
 (use-package ess
   :ensure t
