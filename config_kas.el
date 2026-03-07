@@ -1539,7 +1539,7 @@ With prefix REFRESH, clear bibtex cache."
   ;; ------------------------------------------------------------------
   (dt/leader-keys
     "w" '(:ignore t :wk "Windows/Words")
-    "w -" '(evil-window-split :wk "Split horizontal")
+    "w o" '(evil-window-split :wk "Split horizontal")
     "w v" '(evil-window-vsplit :wk "Split vertical")
     "w f" '(evil-window-delete :wk "Close window")
     "w n" '(evil-window-new :wk "New window")
