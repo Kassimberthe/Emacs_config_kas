@@ -1631,6 +1631,7 @@ install.packages("ggplot2")
 #+RESULTS:
 : t
 * Exportation
++ C-c C-e 
 ** Markdown
 
 #+BEGIN_SRC emacs-lisp
