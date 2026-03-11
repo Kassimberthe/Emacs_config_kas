@@ -184,6 +184,13 @@ f12 = altgr + f12
 #+RESULTS:
 | hl-line-mode |
 
+#+begin_src emacs-lisp
+(setq-default cursor-type 'box)
+#+end_src
+
+#+RESULTS:
+: box
+
 ** Activer la numérotation des lignes
 
 #+BEGIN_SRC emacs-lisp

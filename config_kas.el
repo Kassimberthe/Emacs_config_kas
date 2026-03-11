@@ -99,6 +99,8 @@
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
+(setq-default cursor-type 'box)
+
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
