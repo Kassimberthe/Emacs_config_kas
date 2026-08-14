@@ -1943,3 +1943,42 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 ;; Enregistrer les bookmarks sur disque
 (global-set-key (kbd "C-c s") 'bookmark-save)
+
+(defun my/org-calc-cycle ()
+  "Calcule la durée entre Début et Fin du dernier cycle."
+  (with-current-buffer (find-file-noselect "~/.emacs.d/Notes/orgfiles/cycles.org")
+    (save-excursion
+      (goto-char (point-max))
+      (when (re-search-backward "^\\* Cycle" nil t)
+        (let (start end)
+          (when (re-search-forward "^Début: \\(.*\\)$" nil t)
+            (setq start (match-string 1)))
+          (when (re-search-forward "^Fin: \\(.*\\)$" nil t)
+            (setq end (match-string 1)))
+          (when (and start end
+                     (not (string-empty-p start))
+                     (not (string-empty-p end)))
+            (let* ((d1 (date-to-time (concat start " 00:00")))
+                   (d2 (date-to-time (concat end " 00:00")))
+                   (days (/ (float-time (time-subtract d2 d1)) 86400)))
+              (when (re-search-forward "^Durée:.*$" nil t)
+                (replace-match (format "Durée: %.0f jours" days))))))))
+    (save-buffer)))
+;; -----------------------------
+;; Templates Org Capture
+;; -----------------------------
+(setq org-capture-templates
+      '(("d" "Début cycle"
+         entry
+         (file "~/.emacs.d/Notes/orgfiles/cycles.org")
+         "* Cycle\nDébut: %<%Y-%m-%d>\nFin:\nDurée:\nDurée de cycle:\n"
+         :immediate-finish t)
+
+        ("f" "Fin cycle"
+         entry
+         (file "~/.emacs.d/Notes/orgfiles/cycles.org")
+         "* "
+         :immediate-finish t
+         :after-finalize (my/complete-cycle-end-with-input))
+
+        ))
