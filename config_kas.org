@@ -3895,6 +3895,8 @@ plt.savefig("kimg.png")
 |      |                                     |
 | &    | réutiliser les flags de la dernière substitution          | :%s/chat/chien/& applique les mêmes flags que la dernière commande :s   |
 ** Cheat sheet Git
+*** Diagramme
+[[~/.emacs.d/git-resume.jpeg]]
 *** Structure du dossier local
 **** Working directory
 ***** Dossier suivi par git (tracked)
@@ -4333,8 +4335,35 @@ C-c C-t  permet de basculer entre DONE et TODO.
 | q                 | Quitter mu4e                         | q                              | Quitte mu4e                  |
 | C-c C-d           | Enregistrer dans le brouillon        |                                |                              |
 
+** Cheat sheet sur org mode
+*** Les titres
++ Les titres et sous titres sont précédés de un ou plusieurs étoiles.
++ Pour transformer les titres en sous titres ou vis versa, il suffit de taper:
+  - M-> ou M-<
+*** Les types de caractères
+| type             | exemple        | syntaxe      |
+|------------------+----------------+--------------|
+| gras             | **gras**         | *gras*         |
+| italique         | //italique//     | /italique/     |
+| souligner        | ~_souligner_~    | _souligner_    |
+| code             | ~~code~~         | ~code~         |
+| verbatim         | ==verbatim==     | =verbatim=     |
+| barrer une ligne | ~+ligne barrée+~ | +ligne barrée+ |
+|------------------+----------------+--------------|
++ le symbole ~ devant symbole bloque son interprétation automatique.
+*** Inserer des liens
+**** manuellement
+| type | exemple               | rendu       |
+|------+-----------------------+-------------|
+| lien | ~[[lien][description]]~ | [[lien][description]] |
+|------+-----------------------+-------------|
+**** automatique
+C-c C-l  [[lien][description]]
 
-* Verification des commandes
+*** Inserer les images
++ Pour inserer une image ~[[chemin vers l'image]]~
++ Pour afficher l'image C-c C-x C-v
+** Verification des commandes
 | Commande | Action        | Description                                               |
 |----------+---------------+-----------------------------------------------------------|
 | C-h k    | describe-key  | Affiche la commande associée à une touche spécifique      |
