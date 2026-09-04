@@ -3,11 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
- (filename . "~/.emacs.d/Notes/orgfiles/cycles.org")
- (front-context-string)
- (rear-context-string . "ée de cycle:\n* \n")
- (position . 124)
- (last-modified 27061 39838 680369 816000))
+ (filename . "~/.emacs.d/Notes/orgfiles/rendez-vous.org")
+ (front-context-string . "** Rendez-vous a")
+ (rear-context-string . "rivate meetings\n")
+ (position . 168)
+ (last-modified 27291 6488 833003 962000))
 ("bookmarkers"
  (filename . "~/.emacs.d/config_kas.org")
  (front-context-string . "    (dt/leader-k")

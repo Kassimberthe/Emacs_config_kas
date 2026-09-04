@@ -1068,7 +1068,8 @@ With prefix REFRESH, clear bibtex cache."
 (setq org-agenda-files (list (concat org-directory "/personal.org")
                (concat org-directory "/work.org")
                (concat org-directory "/school.org")
-               (concat org-directory "/journal.org")))
+               (concat org-directory "/journal.org")
+               (concat org-directory "/rendez-vous.org")))
 
 (setq diary-file (concat org-directory "/anniversaires.org"))
 (setq org-deadline-warning-days 7)
@@ -1080,18 +1081,58 @@ With prefix REFRESH, clear bibtex cache."
 ;; TODO: org-agenda-custom-commands
 (setq org-agenda-window-setup 'only-window)
 
-(setq org-default-notes-file (concat org-directory "/brouillon.org"))
+(setq org-default-notes-file
+      (concat org-directory "/brouillon.org"))
+
 (setq org-capture-templates
-    '(("b" "Brouillon" entry (file (lambda () (concat org-directory "/brouillon.org")))
-     "* TODO %?\n %U\n" :empty-lines 1)
-    ("p" "Personal" entry (file (lambda () (concat org-directory "/personal.org")))
-     "* TODO %?\n %U\n" :empty-lines 1)
-    ("w" "Work" entry (file (lambda () (concat org-directory "/work.org")))
-     "* TODO %?\n %U\n" :empty-lines 1)
-    ("s" "School" entry (file (lambda () (concat org-directory "/school.org")))
-     "* TODO %?\n %U\n" :empty-lines 1)
-     ("j" "Journal" entry (file+datetree (lambda () (concat org-directory "/journal.org")))
-   "* %?\nEntered on %U\n" :empty-lines 1)))
+      '(("b" "Brouillon" entry
+         (file (lambda () (concat org-directory "/brouillon.org")))
+         "* TODO %?\n%U\n"
+         :empty-lines 1)
+
+        ("p" "Personal" entry
+         (file (lambda () (concat org-directory "/personal.org")))
+         "* TODO %?\n%U\n"
+         :empty-lines 1)
+
+        ("w" "Work" entry
+         (file (lambda () (concat org-directory "/work.org")))
+         "* TODO %?\n%U\n"
+         :empty-lines 1)
+
+        ("s" "School" entry
+         (file (lambda () (concat org-directory "/school.org")))
+         "* TODO %?\n%U\n"
+         :empty-lines 1)
+
+        ("j" "Journal" entry
+         (file+datetree
+          (lambda () (concat org-directory "/journal.org")))
+         "* %?\nEntered on %U\n"
+         :empty-lines 1)
+
+         ("r" "Rendez-vous")         
+         ("rc" "Rendez-vous" entry
+ (file+headline
+  (lambda () (concat org-directory "/rendez-vous.org"))
+  "Les rendez-vous")
+ "** %^{Titre}
+SCHEDULED: %^t
+:PROPERTIES:
+:ATTENDEES: %^{Avec qui}
+:LOCATION: %^{Lieu}
+:END:
+
+Notes:
+%?"
+ :empty-lines 1)
+
+("rs" "Rendez-vous" entry
+           (file+headline
+(lambda () (concat org-directory "/rendez-vous.org"))
+                          "Private meetings")
+           "* Rendez-vous avec: %^{With whom}\nSCHEDULED: %^t")
+))
 
 ;; --------------------------------------------------------
 ;; Org Super Agenda : installation et configuration
@@ -1370,14 +1411,22 @@ With prefix REFRESH, clear bibtex cache."
   ;; c — Capture
   ;; ------------------------------------------------------------------
   (dt/leader-keys
-    "c" '(:ignore t :wk "Capture")
-  ;  "c c" '(org-capture :wk "Org capture")
-    "c b" (lambda () (interactive) (org-capture nil "b"))
-    "c p" (lambda () (interactive) (org-capture nil "p"))
-    "c w" (lambda () (interactive) (org-capture nil "w"))
-    "c s" (lambda () (interactive) (org-capture nil "s"))
-    "c j" (lambda () (interactive) (org-capture nil "j")))
-
+  "c"   '(:ignore t :wk "Capture")
+  "c c" '(org-capture :wk "Org capture")
+  "c a" '(org-agenda :wk "Agenda")
+  "c b" '((lambda () (interactive) (org-capture nil "b"))
+          :wk "Brouillon")
+  "c p" '((lambda () (interactive) (org-capture nil "p"))
+          :wk "Personal")
+  "c w" '((lambda () (interactive) (org-capture nil "w"))
+          :wk "Work")
+  "c s" '((lambda () (interactive) (org-capture nil "s"))
+          :wk "School")
+  "c j" '((lambda () (interactive) (org-capture nil "j"))
+          :wk "Journal")
+  "c r" '((lambda () (interactive) (org-capture nil "r"))
+          :wk "Rendez-vous"))
+ 
   ;; ------------------------------------------------------------------
   ;; d — Dired
   ;; ------------------------------------------------------------------
@@ -1475,16 +1524,16 @@ With prefix REFRESH, clear bibtex cache."
   ;; ------------------------------------------------------------------
   ;; m — Org
   ;; ------------------------------------------------------------------
-  (dt/leader-keys
-    "m" '(:ignore t :wk "Org")
-    "m a" '(org-agenda :wk "Agenda")
-    "m B" '(org-babel-tangle :wk "Tangle")
-    "m C" '(org-capture :wk "Capture")
-    "m e" '(org-export-dispatch :wk "Export")
-    "m i" '(org-toggle-item :wk "Toggle item")
-    "m l" '(org-store-link :wk "Store link")
-    "m t" '(org-todo :wk "Todo")
-    "m T" '(org-todo-list :wk "Todo list"))
+(dt/leader-keys
+  "m"   '(:ignore t :wk "Org")
+  ;"m a" '(org-agenda :wk "Agenda")
+  "m B" '(org-babel-tangle :wk "Tangle")
+  ;"m C" '(org-capture :wk "Capture")
+  "m e" '(org-export-dispatch :wk "Export")
+  "m i" '(org-toggle-item :wk "Toggle item")
+  "m l" '(org-store-link :wk "Store link")
+  "m t" '(org-todo :wk "Todo")
+  "m T" '(org-todo-list :wk "Todo list"))
 
   ;; ------------------------------------------------------------------
   ;; o — Open
@@ -1943,42 +1992,3 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 ;; Enregistrer les bookmarks sur disque
 (global-set-key (kbd "C-c s") 'bookmark-save)
-
-(defun my/org-calc-cycle ()
-  "Calcule la durée entre Début et Fin du dernier cycle."
-  (with-current-buffer (find-file-noselect "~/.emacs.d/Notes/orgfiles/cycles.org")
-    (save-excursion
-      (goto-char (point-max))
-      (when (re-search-backward "^\\* Cycle" nil t)
-        (let (start end)
-          (when (re-search-forward "^Début: \\(.*\\)$" nil t)
-            (setq start (match-string 1)))
-          (when (re-search-forward "^Fin: \\(.*\\)$" nil t)
-            (setq end (match-string 1)))
-          (when (and start end
-                     (not (string-empty-p start))
-                     (not (string-empty-p end)))
-            (let* ((d1 (date-to-time (concat start " 00:00")))
-                   (d2 (date-to-time (concat end " 00:00")))
-                   (days (/ (float-time (time-subtract d2 d1)) 86400)))
-              (when (re-search-forward "^Durée:.*$" nil t)
-                (replace-match (format "Durée: %.0f jours" days))))))))
-    (save-buffer)))
-;; -----------------------------
-;; Templates Org Capture
-;; -----------------------------
-(setq org-capture-templates
-      '(("d" "Début cycle"
-         entry
-         (file "~/.emacs.d/Notes/orgfiles/cycles.org")
-         "* Cycle\nDébut: %<%Y-%m-%d>\nFin:\nDurée:\nDurée de cycle:\n"
-         :immediate-finish t)
-
-        ("f" "Fin cycle"
-         entry
-         (file "~/.emacs.d/Notes/orgfiles/cycles.org")
-         "* "
-         :immediate-finish t
-         :after-finalize (my/complete-cycle-end-with-input))
-
-        ))
