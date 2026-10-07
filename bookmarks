@@ -5,9 +5,9 @@
 (("org-capture-last-stored"
  (filename . "~/.emacs.d/Notes/orgfiles/rendez-vous.org")
  (front-context-string . "** Rendez-vous a")
- (rear-context-string . "rivate meetings\n")
- (position . 168)
- (last-modified 27291 6488 833003 962000))
+ (rear-context-string . "m.>\n* Rencontre\n")
+ (position . 235)
+ (last-modified 27294 54889 415760 126000))
 ("bookmarkers"
  (filename . "~/.emacs.d/config_kas.org")
  (front-context-string . "    (dt/leader-k")

@@ -112,6 +112,14 @@
 
 (show-paren-mode 1)
 
+;; Limite les paragraphes Org à 125 caractères par ligne
+(defun my-org-mode-setup ()
+  (setq-local fill-column 145)
+  (setq-local word-wrap nil)
+  (auto-fill-mode 1))
+
+(add-hook 'org-mode-hook #'my-org-mode-setup)
+
 (use-package flycheck
   :diminish 'flycheck-mode
   :config (setq-default flycheck-emacs-lisp-load-path 'inherit)
@@ -135,29 +143,49 @@
   :config
   (pdf-loader-install)
 
-  ;; Ouvrir les PDF ajustés pour tenir sur la page
+  ;; Affichage
   (setq-default pdf-view-display-size 'fit-page)
-
-  ;; Zoom plus précis avec un facteur de 1.1
   (setq pdf-view-resize-factor 1.1)
+
+  ;; Actualiser automatiquement le PDF lorsqu'il change sur disque
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (auto-revert-mode 1)))
+
+  ;; Pas de numéros de ligne dans les PDF
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (display-line-numbers-mode -1)))
 
   ;; Navigation style Vim
   (define-key pdf-view-mode-map (kbd "g") #'pdf-view-first-page)
-  (define-key pdf-view-mode-map (kbd "G")   #'pdf-view-last-page)
-  (define-key pdf-view-mode-map (kbd "e")   #'pdf-view-goto-page)
-  (define-key pdf-view-mode-map (kbd "r")   #'pdf-view-revert-buffer)
+  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
+  (define-key pdf-view-mode-map (kbd "e") #'pdf-view-goto-page)
+  (define-key pdf-view-mode-map (kbd "r") #'pdf-view-revert-buffer)
 
-  ;; Utiliser la recherche standard d'Emacs
+  ;; Recherche
   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
   (define-key pdf-view-mode-map (kbd "C-r") #'isearch-backward)
 
-  ;; Raccourcis clavier pour les annotations
-  (define-key pdf-view-mode-map (kbd "h") #'pdf-annot-add-highlight-markup-annotation)
-  (define-key pdf-view-mode-map (kbd "t") #'pdf-annot-add-text-annotation)
-  (define-key pdf-view-mode-map (kbd "u") #'pdf-annot-add-underline-markup-annotation)
-  (define-key pdf-view-mode-map (kbd "s") #'pdf-annot-add-strikeout-markup-annotation)
-  (define-key pdf-view-mode-map (kbd "~") #'pdf-annot-add-squiggly-markup-annotation)
-  (define-key pdf-view-mode-map (kbd "d") #'pdf-annot-delete))
+  ;; Annotations
+  (define-key pdf-view-mode-map
+              (kbd "h")
+              #'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map
+              (kbd "t")
+              #'pdf-annot-add-text-annotation)
+  (define-key pdf-view-mode-map
+              (kbd "u")
+              #'pdf-annot-add-underline-markup-annotation)
+  (define-key pdf-view-mode-map
+              (kbd "s")
+              #'pdf-annot-add-strikeout-markup-annotation)
+  (define-key pdf-view-mode-map
+              (kbd "~")
+              #'pdf-annot-add-squiggly-markup-annotation)
+  (define-key pdf-view-mode-map
+              (kbd "d")
+              #'pdf-annot-delete))
 
 ;; Utiliser Zathura pour les PDF depuis Org-mode
 (setq org-file-apps
@@ -241,114 +269,244 @@
       (kbd "M-k") 'drag-stuff-up))
   )
 
-;;; --- AUCTeX --------------------------------------------------------------
+;;; ============================================================================
+;;; AUCTeX / LaTeX
+;;; ============================================================================
+
+(defun my/latex-mode-setup ()
+  "Personal configuration for LaTeX buffers."
+
+  ;; Do not ask before saving when compiling.
+  (setq-local TeX-save-query nil)
+
+  ;; Make _ and ^ behave naturally in math mode.
+  (setq-local TeX-electric-sub-and-superscript t)
+
+  ;; Remove trailing whitespace before saving.
+  (add-hook 'before-save-hook
+            #'delete-trailing-whitespace
+            nil
+            t)
+
+  ;; Enable SyncTeX.
+  (TeX-source-correlate-mode 1))
+
+
+;;; ============================================================================
+;;; AUCTeX
+;;; ============================================================================
 
 (use-package auctex
   :ensure t
   :defer t
-  :hook (LaTeX-mode . my/latex-mode-setup)
+
+  :hook
+  (LaTeX-mode . my/latex-mode-setup)
+
   :config
-  (setq TeX-save-query nil
+
+  ;; Parse LaTeX files automatically.
+  (setq TeX-parse-self t
+        TeX-auto-save t
+
+        ;; Do not ask before saving.
+        TeX-save-query nil
+
+        ;; PDF output.
+        TeX-PDF-mode t
+
+        ;; Let AUCTeX determine the master file.
+        TeX-master nil
+
+        ;; Use AUCTeX's LaTeXMk command.
+        TeX-command-default "LaTeXMk"
+
+        ;; PDF Tools.
         TeX-view-program-selection
-        '((output-pdf "PDF Tools")))
+        '((output-pdf "PDF Tools"))
 
-  (defun my/TeX-save-buffer-before-compile (&rest _)
-    "Save buffer before running TeX."
-    (save-buffer))
-
-  (advice-add #'TeX-command-master :before
-              #'my/TeX-save-buffer-before-compile))
-
-(defun my/latex-mode-setup ()
-  "Custom LaTeX mode setup."
-  (setq TeX-save-query nil))
+        ;; SyncTeX.
+        TeX-source-correlate-start-server t))
 
 
-;;; --- BibTeX autokey ------------------------------------------------------
+;;; ============================================================================
+;;; AUCTeX keybindings
+;;; ============================================================================
 
-(defun my/bibtex-generate-autokey (_orig-fn &rest _args)
-  "Generate simpler autokey: AuthorYear."
-  (let* ((names (bibtex-autokey-get-names))
-         (year  (bibtex-autokey-get-year)))
-    (capitalize (concat names year))))
+(with-eval-after-load 'latex
 
-(advice-add #'bibtex-generate-autokey :around
-            #'my/bibtex-generate-autokey)
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-c")
+              #'TeX-command-master)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-v")
+              #'TeX-view)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-r")
+              #'TeX-command-region)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-b")
+              #'TeX-command-buffer)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-l")
+              #'TeX-recenter-output-buffer)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c C-k")
+              #'TeX-kill-job)
+
+  (define-key LaTeX-mode-map
+              (kbd "C-c '")
+              #'TeX-next-error))
 
 
-;; ;;; --- bibtex-completion ---------------------------------------------------
+;;; ============================================================================
+;;; PDF Tools
+;;; ============================================================================
 
-(use-package bibtex-completion
+(use-package pdf-tools
   :ensure t
+  :defer t
+
   :config
-  (setq bibtex-completion-bibliography
-        (list (expand-file-name "Library/refs.bib"
-                                user-emacs-directory))
+  (pdf-tools-install :no-query)
 
-        bibtex-completion-library-path
-        (list (expand-file-name "Library/pdf/"
-                                user-emacs-directory))))
-
-
-;; ;;; --- Vertico citation interface ------------------------------------------
-
-(defun my/bib-get-field (field entry)
-  "Return FIELD from bibtex ENTRY."
-  (alist-get field (cdr entry) nil nil #'string=))
-
-(defun my/truncate (str len)
-  "Safely truncate STR to LEN characters."
-  (when str
-    (truncate-string-to-width str len nil nil t)))
-
-(defun my/format-author (author)
-  "Format AUTHOR field for display."
-  (when author
-    (string-replace " and " ", " author)))
-
-(defun my/build-candidate-alist (candidates)
-  "Build display alist from bibtex CANDIDATES."
-  (mapcar
-   (lambda (entry)
-     (let* ((key     (cdr (assoc "=key=" (cdr entry))))
-            (title   (my/truncate
-                      (my/bib-get-field "title" entry) 35))
-            (author  (my/truncate
-                      (my/format-author
-                       (my/bib-get-field "author" entry))
-                      40))
-            (journal (or (my/bib-get-field "journal" entry)
-                         (my/bib-get-field "booktitle" entry))))
-       (cons key
-             (list :title title
-                   :author author
-                   :journal journal))))
-   candidates))
-
-(defun my/vertico-bibtex (&optional refresh)
-  "Insert a citation key using completing-read.
-With prefix REFRESH, clear bibtex cache."
-  (interactive "P")
-  (when refresh
-    (bibtex-completion-clear-cache))
-  (bibtex-completion-init)
-  (let* ((candidates (bibtex-completion-candidates))
-         (entries (my/build-candidate-alist candidates))
-         (keys (mapcar #'car entries))
-         (completion-extra-properties
-          `(:annotation-function
-            ,(lambda (key)
-               (when-let ((data (assoc key entries)))
-                 (let ((plist (cdr data)))
-                   (format "  %-35s %-40s %-30s"
-                           (or (plist-get plist :title) "")
-                           (or (plist-get plist :author) "")
-                           (or (plist-get plist :journal) "")))))))))
-    (when-let ((selection
-                (completing-read "Insert citation: " keys)))
-      (insert selection)))
+  (setq-default
+   pdf-view-display-size 'fit-page))
 
 (setq TeX-command-extra-options "-shell-escape")
+
+;;; ============================================================
+;;; BibTeX : clé automatique AuteurYear
+;;; ============================================================
+
+(require 'bibtex)
+
+(defun my/bibtex-generate-autokey (_orig-fn &rest _args)
+"Generate a simple BibTeX key: AuthorYear."
+(let ((names (bibtex-autokey-get-names))
+(year  (bibtex-autokey-get-year)))
+(capitalize (concat names year))))
+
+(advice-add #'bibtex-generate-autokey :around
+#'my/bibtex-generate-autokey)
+
+;;; ============================================================
+;;; bibtex-completion
+;;; ============================================================
+
+(use-package bibtex-completion
+:ensure t
+:config
+(setq bibtex-completion-bibliography
+'("/home/kassim/Vidéos/Memoire_kassim-Berthe/refs.bib"))
+
+(setq bibtex-completion-library-path
+'("/home/kassim/Vidéos/Memoire_kassim-Berthe/pdf/")))
+
+
+;;; ============================================================
+;;; Fonctions d'affichage
+;;; ============================================================
+
+(defun my/bib-get-field (field entry)
+"Return FIELD from BibTeX ENTRY."
+(alist-get field
+(cdr entry)
+nil
+nil
+#'string=))
+
+(defun my/truncate (str len)
+"Safely truncate STR to LEN characters."
+(when (stringp str)
+(truncate-string-to-width str len nil nil t)))
+
+(defun my/format-author (author)
+"Format AUTHOR for display."
+(when author
+(replace-regexp-in-string
+"[[:space:]]+and[[:space:]]+"
+", "
+author)))
+
+(defun my/build-candidate-alist (candidates)
+"Build display data from BibTeX CANDIDATES."
+(mapcar
+(lambda (entry)
+(let* ((key
+(cdr (assoc "=key=" (cdr entry))))
+
+	(title
+	 (my/truncate
+	  (my/bib-get-field "title" entry)
+	  35))
+
+	(author
+	 (my/truncate
+	  (my/format-author
+	   (my/bib-get-field "author" entry))
+	  40))
+
+	(journal
+	 (or
+	  (my/bib-get-field "journal" entry)
+	  (my/bib-get-field "booktitle" entry))))
+
+   (cons
+    key
+    (list
+     :title title
+     :author author
+     :journal journal))))
+
+candidates))
+
+;;; ============================================================
+;;; Vertico : insertion de citations LaTeX
+;;; ============================================================
+(defun my/vertico-bibtex (&optional refresh)
+"Choose bibliography entries and insert a LaTeX citation."
+(interactive "P")
+
+(when refresh
+(bibtex-completion-clear-cache))
+
+(bibtex-completion-init)
+
+(let* ((candidates
+(bibtex-completion-candidates))
+
+
+     (entries
+      (my/build-candidate-alist candidates))
+
+     (keys
+      (mapcar #'car entries))
+
+     (selection
+      (completing-read-multiple
+       "Insert citation: "
+       keys)))
+
+(when selection
+  (insert
+   "\\cite{"
+   (string-join selection ",")
+   "}"))))
+;;; ============================================================
+;;; Raccourci
+;;; ============================================================
+
+(global-set-key
+ (kbd "C-c i")
+ #'my/vertico-bibtex)
+
+(global-set-key (kbd "C-c p") #'my/vertico-bibtex-open-pdf)
 
 ;; Police globale avec Nerd Font
 (set-face-attribute 'default nil
@@ -535,7 +693,7 @@ With prefix REFRESH, clear bibtex cache."
   (("M-i" . consult-imenu) ;; Accède à la liste des fonctions dans le buffer
    ("C-x b" . consult-buffer) ;; Liste des buffers ouverts
    ("C-x r b" . consult-bookmark) ;; Recherche parmi les signets
-   ("C-s" . consult-line)) ;; Recherche dans la ligne actuelle
+   ("C-c f" . consult-line)) ;; Recherche dans la ligne actuelle
   :config
   (setq completion-in-region-function #'consult-completion-in-region))
 
@@ -1008,9 +1166,6 @@ With prefix REFRESH, clear bibtex cache."
                        (balance-windows) ;; Équilibre les fenêtres
                        (other-window 1))) ;; Se déplace vers la nouvelle fenêtre
 
-;; Load up doom-palenight for the System Crafters look
-;(load-theme 'doom-palenight t)
-
 (use-package winum
  :ensure t
  :config
@@ -1115,7 +1270,7 @@ With prefix REFRESH, clear bibtex cache."
          ("rc" "Rendez-vous" entry
  (file+headline
   (lambda () (concat org-directory "/rendez-vous.org"))
-  "Les rendez-vous")
+  "Exposé")
  "** %^{Titre}
 SCHEDULED: %^t
 :PROPERTIES:
@@ -1130,7 +1285,7 @@ Notes:
 ("rs" "Rendez-vous" entry
            (file+headline
 (lambda () (concat org-directory "/rendez-vous.org"))
-                          "Private meetings")
+                          "Rencontre")
            "* Rendez-vous avec: %^{With whom}\nSCHEDULED: %^t")
 ))
 
@@ -1791,6 +1946,29 @@ Notes:
     (lambda () (interactive)
       (evil-ex-execute "put"))))
 
+(defun kmail ()
+  "Copie les emails de la colonne Org courante dans le kill-ring."
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Le curseur doit être dans un tableau Org"))
+  (let* ((table (org-table-to-lisp))
+         (col (1- (org-table-current-column)))
+         (emails '()))
+    (dolist (row table)
+      (when (and (listp row)
+                 (> (length row) col))
+        (let ((cell (nth col row)))
+          (when (string-match
+                 "[[:alnum:]._%+-]+@[[:alnum:].-]+\\.[[:alpha:]]\\{2,\\}"
+                 cell)
+            (push (match-string 0 cell) emails)))))
+    (setq emails (delete-dups (nreverse emails)))
+    (if emails
+        (progn
+          (kill-new (string-join emails ", "))
+          (message "%d email(s) copié(s)" (length emails)))
+      (user-error "Aucun email trouvé dans cette colonne"))))
+
 ;; Clipboard pour Emacs en mode terminal sous Wayland (Ubuntu 24.04)
 (unless (display-graphic-p)
   ;; Copier vers le presse-papier système
@@ -1930,14 +2108,6 @@ and save it automatically into ~/EXCEL_TABLE_ORG/."
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; (setq initial-frame-alist
-;;       `((width . 100)
-;;         (height . 40)
-;;         (top . 50)
-;;         (left . 50)))
-
-;; (setq default-frame-alist initial-frame-alist)
-
 (defun my/org-table-copy-down (&optional arg)
   "Appeler `org-table-copy-down' si on est dans un tableau Org.
 ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
@@ -1992,3 +2162,10 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 
 ;; Enregistrer les bookmarks sur disque
 (global-set-key (kbd "C-c s") 'bookmark-save)
+
+(use-package isearch
+  :ensure nil
+  :config
+  (setq search-whitespace-regexp ".*?")
+  (setq isearch-lax-whitespace t)
+  (setq isearch-regexp-lax-whitespace nil))
