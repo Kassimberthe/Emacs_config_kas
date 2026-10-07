@@ -501,7 +501,7 @@ de texte vers le haut ou le bas avec des raccourcis clavier.
 | C-c C-l   | Erreur suivante                  | Va à l’erreur après compilation                   |
 | TAB       | Complétion                       | Complète commandes, labels, citations             |
 | C-c ;     | Commenter / Décommenter          | Commente ou décommente la région                  |
-| C-c b     | my/vertico-bibtex                | Ouvre la complétion BibTeX pour insérer une clé   |
+| C-c i     | my/vertico-bibtex                | Ouvre la complétion BibTeX pour insérer une clé   |
 | C-c p     | bibtex-completion-open-pdf       | Ouvre le PDF associé à la clé BibTeX (si présent) |
 | C-c `     | Aller à la première erreur LaTeX |                                                   |
 *** Exemples
@@ -1132,7 +1132,7 @@ Il prose des racourcis de clavier
   (("M-i" . consult-imenu) ;; Accède à la liste des fonctions dans le buffer
    ("C-x b" . consult-buffer) ;; Liste des buffers ouverts
    ("C-x r b" . consult-bookmark) ;; Recherche parmi les signets
-   ("C-s" . consult-line)) ;; Recherche dans la ligne actuelle
+   ("C-c f" . consult-line)) ;; Recherche dans la ligne actuelle
   :config
   (setq completion-in-region-function #'consult-completion-in-region))
 #+END_SRC
@@ -1896,16 +1896,6 @@ install.packages("ggplot2")
 #+RESULTS:
 
 essai
-
-** Marge entre les fenêtres
-
-#+BEGIN_SRC emacs-lisp
-;; Load up doom-palenight for the System Crafters look
-;(load-theme 'doom-palenight t)
-#+END_SRC
-
-#+RESULTS:
-: t
 
 ** Désactiver la numérotation des lignes pour Org Mode
 ;#+BEGIN_SRC emacs-lisp
@@ -3360,8 +3350,9 @@ Quitter exit
 | :tag | [E] |
 
 * Fonction personnalisée
-*** Kbloc
-+ En faisant M-x select-kbloc, il selectionne le bloc commençant par #+BEGIN_SRC jusqu'à
+*** Selectionner la balise
++ avec M-Kbloc
+  En faisant M-x kbloc, il selectionne le bloc commençant par #+BEGIN_SRC jusqu'à
   la position du curseur.
   
 #+BEGIN_SRC emacs-lisp
@@ -3398,6 +3389,37 @@ Quitter exit
 
 #+RESULTS:
 | lambda | nil | (interactive) | (evil-ex-execute put) |
+
+*** Selectionner les mails dans un tableau org
++ avec kmail dans la colonne.
+#+begin_src emacs-lisp
+(defun kmail ()
+  "Copie les emails de la colonne Org courante dans le kill-ring."
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Le curseur doit être dans un tableau Org"))
+  (let* ((table (org-table-to-lisp))
+         (col (1- (org-table-current-column)))
+         (emails '()))
+    (dolist (row table)
+      (when (and (listp row)
+                 (> (length row) col))
+        (let ((cell (nth col row)))
+          (when (string-match
+                 "[[:alnum:]._%+-]+@[[:alnum:].-]+\\.[[:alpha:]]\\{2,\\}"
+                 cell)
+            (push (match-string 0 cell) emails)))))
+    (setq emails (delete-dups (nreverse emails)))
+    (if emails
+        (progn
+          (kill-new (string-join emails ", "))
+          (message "%d email(s) copié(s)" (length emails)))
+      (user-error "Aucun email trouvé dans cette colonne"))))
+#+end_src
+
+#+RESULTS:
+: kmail
+
 * Clique
 ** Activer la synchronisation entre emacs, evil et le presse-papiers système
 *** Mode terminal
@@ -3623,16 +3645,6 @@ git clone https://github.com/jaypei/emacs-neotree.git neotree
 
 #+RESULTS:
 : ((fullscreen . maximized) (vertical-scroll-bars))
-
-#+begin_src emacs-lisp
-  ;; (setq initial-frame-alist
-  ;;       `((width . 100)
-  ;;         (height . 40)
-  ;;         (top . 50)
-  ;;         (left . 50)))
-
-  ;; (setq default-frame-alist initial-frame-alist)
-#+end_src
 
 #+RESULTS:
 
@@ -4594,6 +4606,15 @@ C-c C-l  [[lien][description]]
 | C-h k    | describe-key  | Affiche la commande associée à une touche spécifique      |
 | C-h m    | describe-mode | Affiche les raccourcis et fonctionnalités du mode courant |
 
+* Isearch
+#+begin_src emacs-lisp
+(use-package isearch
+  :ensure nil
+  :config
+  (setq search-whitespace-regexp ".*?")
+  (setq isearch-lax-whitespace t)
+  (setq isearch-regexp-lax-whitespace nil))
+#+end_src
 
-
-
+#+RESULTS:
+: t
