@@ -851,18 +851,31 @@ candidates))
 * Theme de font
 ** theme catppucin
 #+BEGIN_SRC emacs-lisp
-;; Définir le répertoire pour les thèmes personnalisés
-(setq custom-theme-directory
-      (concat user-emacs-directory "themes"))
+;;; ================================
+;;; THÈMES
+;;; ================================
 
-;; Utiliser le thème Catppuccin avec la saveur 'macchiato'
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "themes/" user-emacs-directory))
+
 (use-package catppuccin-theme
+  :ensure t
   :demand t
   :custom
-  (catppuccin-flavor 'macchiato)  ;; Options disponibles : 'latte, 'frappe, 'macchiato, 'mocha
+  (catppuccin-flavor 'macchiato)
 
   :config
-  (catppuccin-reload))  ;; Recharge la configuration du thème
+  (catppuccin-reload))
+
+(load-theme 'dtmacs t)
+
+
+;;; ================================
+;;; CURSEUR
+;;; ================================
+
+(setq-default cursor-type 'box)
+(set-cursor-color "#47dfea")
 #+END_SRC
 
 #+RESULTS:
@@ -3128,18 +3141,6 @@ Exemple de fonctionnement d'Org-roam
 | SPC w u     | Upcase word                          | Majuscule mot                                                   |
 | SPC w d     | Downcase word                        | Minuscule mot                                                   |
 | SPC w =     | Count words                          | Compter mots/lignes                                             |
-* Themes
-#+BEGIN_SRC emacs-lisp
-;; Ajouter le dossier contenant ton thème personnalisé au chemin des thèmes
-(add-to-list 'custom-theme-load-path "~/.emacs/themes/")
-
-;; Charger ton thème personnalisé 'dtmacs'
-(load-theme 'dtmacs t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
 * Completion company mode
 #+begin_src emacs-lisp
   (use-package company
@@ -4617,12 +4618,5 @@ C-c C-l  [[lien][description]]
 
 #+RESULTS:
 : t
-* Couleur et forme du curseur
-#+begin_src emacs-lisp
-(setq-default cursor-type 'box)
-(set-cursor-color "#47dfea")
-#+end_src
-
-#+RESULTS:
 
 

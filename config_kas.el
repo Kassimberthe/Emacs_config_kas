@@ -538,18 +538,31 @@ candidates))
 
 (menu-bar-mode -1)
 
-;; Définir le répertoire pour les thèmes personnalisés
-(setq custom-theme-directory
-      (concat user-emacs-directory "themes"))
+;;; ================================
+;;; THÈMES
+;;; ================================
 
-;; Utiliser le thème Catppuccin avec la saveur 'macchiato'
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "themes/" user-emacs-directory))
+
 (use-package catppuccin-theme
+  :ensure t
   :demand t
   :custom
-  (catppuccin-flavor 'macchiato)  ;; Options disponibles : 'latte, 'frappe, 'macchiato, 'mocha
+  (catppuccin-flavor 'macchiato)
 
   :config
-  (catppuccin-reload))  ;; Recharge la configuration du thème
+  (catppuccin-reload))
+
+(load-theme 'dtmacs t)
+
+
+;;; ================================
+;;; CURSEUR
+;;; ================================
+
+(setq-default cursor-type 'box)
+(set-cursor-color "#47dfea")
 
 (set-face-attribute 'mode-line-buffer-id nil
                   :foreground "#40a02b"  ;; vert
@@ -1760,12 +1773,6 @@ Notes:
     "w u" '(upcase-word :wk "Upcase")
     "w =" '(count-words :wk "Count words")))
 
-;; Ajouter le dossier contenant ton thème personnalisé au chemin des thèmes
-(add-to-list 'custom-theme-load-path "~/.emacs/themes/")
-
-;; Charger ton thème personnalisé 'dtmacs'
-(load-theme 'dtmacs t)
-
 (use-package company
   :ensure t
   :custom
@@ -2174,6 +2181,3 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil))
-
-(setq-default cursor-type 'box)
-(set-cursor-color "#47dfea")
