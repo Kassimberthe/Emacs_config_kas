@@ -99,8 +99,6 @@
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
-(setq-default cursor-type 'box)
-
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
@@ -633,7 +631,7 @@ candidates))
   :ensure t
   :custom
   ;; Couleur du flash
-  (beacon-color "#666600")
+  (beacon-color "#47dfea")
 
   ;; Taille du halo
   (beacon-size 30)
@@ -2010,7 +2008,7 @@ Notes:
 
 ;; Abbrev pour Org Mode
 ;; Insère une ligne TBLFM
-(define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
+(define-abbrev org-mode-abbrev-table "œf" "#+TBLFM:")
 
 ;; Insère un nom pour un tableau ou un bloc
 (define-abbrev org-mode-abbrev-table "œn" "#+name:")
@@ -2018,10 +2016,17 @@ Notes:
 ;; Correction automatique du caractère œ → <
 (define-abbrev org-mode-abbrev-table "œ" "<")
 
-;; Abbrev pour insérer ton bloc Emacs Lisp
+;; Fusion horizontal avec  entete
 (define-abbrev org-mode-abbrev-table
-  "œfh"
+  "œhy"
   "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 :colnames no
+(cl-mapcar #'append ta tb)
+#+END_SRC")
+
+;; Fusion horizontal sans entete
+(define-abbrev org-mode-abbrev-table
+  "œhn"
+  "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 
 (cl-mapcar #'append ta tb)
 #+END_SRC")
 
@@ -2169,3 +2174,6 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil))
+
+(setq-default cursor-type 'box)
+(set-cursor-color "#47dfea")

@@ -183,13 +183,6 @@ f12 = altgr + f12
 #+RESULTS:
 | hl-line-mode |
 
-#+begin_src emacs-lisp
-(setq-default cursor-type 'box)
-#+end_src
-
-#+RESULTS:
-: box
-
 ** Activer la numérotation des lignes
 
 #+BEGIN_SRC emacs-lisp
@@ -435,7 +428,7 @@ suivi par git.
 #+end_src
 
 #+RESULTS:
-| org-persist-load-all | global-company-mode | (lambda nil (eval-after-load 'tex #'(lambda nil (setq TeX-view-program-selection '((output-pdf Zathura))) (setq TeX-view-program-list '((Zathura zathura %o)))))) | debian-ispell-set-default-dictionary | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
+| org-persist-load-all | global-company-mode | debian-ispell-set-default-dictionary | (lambda nil (eval-after-load 'tex #'(lambda nil (setq TeX-view-program-selection '((output-pdf Zathura))) (setq TeX-view-program-list '((Zathura zathura %o)))))) | debian-ispell-set-startup-menu | tramp-register-archive-autoload-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
 
 
 #+BEGIN_SRC emacs-lisp
@@ -1031,7 +1024,7 @@ candidates))
   :ensure t
   :custom
   ;; Couleur du flash
-  (beacon-color "#666600")
+  (beacon-color "#47dfea")
 
   ;; Taille du halo
   (beacon-size 30)
@@ -3483,10 +3476,11 @@ Quitter exit
 * Abbreviation dans org mode
 | code | correspondance                      |
 |------+-------------------------------------|
-| œt   | #+TBLFM:                            |
+| œf   | #+TBLFM:                            |
 | œn   | #+name:                             |
 | œ    | <                                   |
-| œfh  | fusion horizontale de deux tableaux |
+| œhy  | fusion horizontale de deux tableaux |
+|      |                                     |
 |      |                                     |
 #+BEGIN_SRC emacs-lisp
 ;; Activer abbrev dans tous les buffers Org
@@ -3494,7 +3488,7 @@ Quitter exit
 
 ;; Abbrev pour Org Mode
 ;; Insère une ligne TBLFM
-(define-abbrev org-mode-abbrev-table "œt" "#+TBLFM:")
+(define-abbrev org-mode-abbrev-table "œf" "#+TBLFM:")
 
 ;; Insère un nom pour un tableau ou un bloc
 (define-abbrev org-mode-abbrev-table "œn" "#+name:")
@@ -3502,16 +3496,24 @@ Quitter exit
 ;; Correction automatique du caractère œ → <
 (define-abbrev org-mode-abbrev-table "œ" "<")
 
-;; Abbrev pour insérer ton bloc Emacs Lisp
+;; Fusion horizontal avec  entete
 (define-abbrev org-mode-abbrev-table
-  "œfh"
+  "œhy"
   "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 :colnames no
 (cl-mapcar #'append ta tb)
-#+END_SRC")
+,#+END_SRC")
+
+;; Fusion horizontal sans entete
+(define-abbrev org-mode-abbrev-table
+  "œhn"
+  "#+BEGIN_SRC emacs-lisp :var ta=nom_tab1 :var tb=nom_tab2 
+(cl-mapcar #'append ta tb)
+,#+END_SRC")
+
 #+END_SRC
 
 #+RESULTS:
-: œfh
+: œhn
 
 * Exporter en excel
 ** Configuration
@@ -4079,9 +4081,6 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
 |------------+-------------------------------------------|
 | pipe       | separateur des colonnes                   |
 |            |                                           |
-| C-c entrer | tracer la ligne horizontale en dessous du |
-|            | curseur + une ligne du tableau            |
-|            |                                           |
 | C-c -      | tracer le hline en dessous du curseur     |
 |            |                                           |
 | C-u C-c -  | tracer le hline en haut du curseur        |
@@ -4618,3 +4617,12 @@ C-c C-l  [[lien][description]]
 
 #+RESULTS:
 : t
+* Couleur et forme du curseur
+#+begin_src emacs-lisp
+(setq-default cursor-type 'box)
+(set-cursor-color "#47dfea")
+#+end_src
+
+#+RESULTS:
+
+
