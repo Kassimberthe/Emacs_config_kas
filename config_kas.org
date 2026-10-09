@@ -4299,14 +4299,14 @@ plt.savefig("kimg.png")
 | 21 | 23 | 27 |
 
 **** Raccourci sur le tableau org
-| code | correspondance                      |
-|------+-------------------------------------|
-| œt   | #+TBLFM:                            |
-| œn   | #+name:                             |
-| œ    | <                                   |
-| œfh  | fusion horizontale de deux tableaux |
-|      |                                     |
-| &    | réutiliser les flags de la dernière substitution          | :%s/chat/chien/& applique les mêmes flags que la dernière commande :s   |
+| code | correspondance                                   |                                                                       |
+|------+--------------------------------------------------+-----------------------------------------------------------------------|
+| œt   | #+TBLFM:                                         |                                                                       |
+| œn   | #+name:                                          |                                                                       |
+| œ    | <                                                |                                                                       |
+| œfh  | fusion horizontale de deux tableaux              |                                                                       |
+|      |                                                  |                                                                       |
+| &    | réutiliser les flags de la dernière substitution | :%s/chat/chien/& applique les mêmes flags que la dernière commande :s |
 ** Cheat sheet Git
 *** Diagramme
 [[~/.emacs.d/git-resume.jpeg]]
@@ -4619,4 +4619,34 @@ C-c C-l  [[lien][description]]
 #+RESULTS:
 : t
 
+* Raccourci org table
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
 
+;; Insérer une ligne au-dessus du curseur
+(define-key org-mode-map (kbd "C-œ l u")
+#'org-table-insert-row)
+
+;; Supprimer la colonne courante
+(define-key org-mode-map (kbd "C-œ c d")
+#'org-table-delete-column)
+
+;; Insérer une colonne 
+(defun org-table-insert-column-right ()
+"Insérer une colonne à droite de la colonne courante."
+(interactive)
+(org-table-insert-column)
+(org-table-move-column-right))
+
+(define-key org-mode-map (kbd "C-œ c r")
+#'org-table-insert-column-right)
+
+;; Insérer une colonne à gauche
+(define-key org-mode-map (kbd "C-œ c l")
+#'org-table-insert-column)
+
+)
+#+end_src
+
+#+RESULTS:
+: org-table-insert-column

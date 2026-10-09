@@ -2181,3 +2181,32 @@ ARG (prefix) est transmis proprement à la commande d'Org si nécessaire."
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil))
+
+(with-eval-after-load 'org
+
+;; Insérer une ligne au-dessus du curseur
+(define-key org-mode-map (kbd "C-œ l u")
+#'org-table-insert-row)
+
+;; Supprimer la colonne courante
+(define-key org-mode-map (kbd "C-œ c d")
+#'org-table-delete-column)
+)
+
+(with-eval-after-load 'org
+
+;; Insérer une colonne à droite
+(defun org-table-insert-column-right ()
+"Insérer une colonne à droite de la colonne courante."
+(interactive)
+(org-table-insert-column)
+(org-table-move-column-right))
+
+(define-key org-mode-map (kbd "C-œ c r")
+#'org-table-insert-column-right)
+
+;; Insérer une colonne à gauche
+(define-key org-mode-map (kbd "C-œ c l")
+#'org-table-insert-column)
+
+)
