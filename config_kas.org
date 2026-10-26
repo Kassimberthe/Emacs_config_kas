@@ -64,26 +64,31 @@ n ie aller au noeud suivant et p pour le précédent, q pour quitter
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :demand t
-  :after undo-tree  ;; S'assure que `undo-tree` est chargé avant
+  :after undo-tree
   :init
-  (setq evil-respect-visual-line-mode t   ;; Respecte le mode `visual-line-mode`
-        evil-undo-system 'undo-tree      ;; Utilise `undo-tree` pour l'historique
+  (setq evil-respect-visual-line-mode t
+        evil-undo-system 'undo-tree
         evil-want-abbrev-expand-on-insert-exit nil
-        evil-want-keybinding nil)        ;; Prépare pour des extensions comme `evil-collection`
-  
+        evil-want-keybinding nil
+        evil-emacs-state-cursor 'bar)
+
   :config
-  (evil-mode 1)  ;; Active `evil-mode`
+  (evil-mode 1)
 
-  ;; Exemple de mappage global
-  (evil-define-key '(normal insert) 'global (kbd "C-p") 'project-find-file)
+  ;; Mappage global
+  (evil-define-key '(normal insert) 'global
+    (kbd "C-p") 'project-find-file)
 
-  ;; Assurez-vous que les mappages pour `org-mode` fonctionnent seulement si `org` est chargé
+  ;; Mappages Org
   (with-eval-after-load 'org
-    (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-    (evil-define-key 'insert org-mode-map (kbd "S-<right>") 'org-shiftright)
-    (evil-define-key 'insert org-mode-map (kbd "S-<left>") 'org-shiftleft))
+    (evil-define-key 'normal org-mode-map
+      (kbd "TAB") 'org-cycle)
+    (evil-define-key 'insert org-mode-map
+      (kbd "S-<right>") 'org-shiftright)
+    (evil-define-key 'insert org-mode-map
+      (kbd "S-<left>") 'org-shiftleft))
 
-  ;; Empêche `evil` de modifier la sélection visuelle
+  ;; Empêche Evil de modifier la sélection visuelle
   (fset 'evil-visual-update-x-selection 'ignore))
 #+END_SRC
 
@@ -856,7 +861,7 @@ candidates))
 ;;; ================================
 
 (add-to-list 'custom-theme-load-path
-             (expand-file-name "themes/" user-emacs-directory))
+             (expand-file-name "theme_emacs/" user-emacs-directory))
 
 (use-package catppuccin-theme
   :ensure t
@@ -874,7 +879,7 @@ candidates))
 ;;; CURSEUR
 ;;; ================================
 
-(setq-default cursor-type 'box)
+(setq-default cursor-type 'bar)
 (set-cursor-color "#47dfea")
 #+END_SRC
 
@@ -1209,16 +1214,17 @@ Il prose des racourcis de clavier
 | (lambda nil (undo-tree-mode 1)) | pdf-occur-dired-minor-mode |
 
 #+BEGIN_SRC emacs-lisp
-;; Chargement du paquet `dired-hide-dotfiles` pour cacher les fichiers et répertoires commençant par un point (.) dans Dired.
+;; Cacher les fichiers et répertoires cachés dans Dired.
 (use-package dired-hide-dotfiles
-  :demand t  ;; Force le chargement immédiat du paquet.
+  :demand t
+  :after (evil dired)
   :config
-  ;; Active `dired-hide-dotfiles-mode` pour cacher les fichiers et répertoires dont le nom commence par un point.
   (dired-hide-dotfiles-mode 1)
-  
-  ;; Définition d'un raccourci clavier dans Dired pour activer/désactiver le mode `dired-hide-dotfiles-mode`.
-  ;; Le raccourci `.` dans le mode normal d'Evil permet de basculer entre cacher ou afficher les fichiers cachés.
-  (evil-define-key 'normal dired-mode-map "." 'dired-hide-dotfiles-mode))
+  (with-eval-after-load 'dired
+    (with-eval-after-load 'evil
+      (evil-define-key 'normal dired-mode-map
+        (kbd ".") #'dired-hide-dotfiles-mode))))
+
 #+END_SRC
 
 #+RESULTS:
@@ -3246,7 +3252,7 @@ Quitter exit
 #+BEGIN_SRC emacs-lisp
 (use-package vterm-toggle
   :ensure t
-  :after vterm
+  :after (evil vterm)
   :config
   ;; En mode normal (evil), la touche ESC doit s'envoyer elle-même dans vterm,
   ;; ce qui permet de tuer les programmes comme dans un terminal classique.
