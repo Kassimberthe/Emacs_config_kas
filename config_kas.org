@@ -797,6 +797,44 @@ candidates))
  (kbd "C-c i")
  #'my/vertico-bibtex)
 
+(defun my/vertico-bibtex-open-pdf ()
+  "Select a BibTeX entry and open its associated PDF."
+  (interactive)
+
+  (bibtex-completion-init)
+
+  (let* ((candidates
+          (bibtex-completion-candidates))
+
+         (entries
+          (my/build-candidate-alist candidates))
+
+         (keys
+          (mapcar #'car entries))
+
+         (selection
+          (completing-read
+           "Open PDF: "
+           keys
+           nil
+           t))
+
+         (pdf
+          (bibtex-completion-find-pdf selection)))
+
+    (cond
+     ((null pdf)
+      (message "Aucun PDF trouvé pour cette référence."))
+
+     ((listp pdf)
+      (find-file (car pdf)))
+
+     ((stringp pdf)
+      (find-file pdf))
+
+     (t
+      (message "Format de chemin PDF non reconnu : %S" pdf)))))
+
 (global-set-key (kbd "C-c p") #'my/vertico-bibtex-open-pdf)
 #+end_src
 
@@ -4625,6 +4663,13 @@ C-c C-l  [[lien][description]]
 #+RESULTS:
 : t
 
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-o") 'cycle-spacing)
+#+end_src
+
+#+RESULTS:
+: cycle-spacing
+
 * Raccourci org table
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
@@ -4656,3 +4701,96 @@ C-c C-l  [[lien][description]]
 
 #+RESULTS:
 : org-table-insert-column
+* Gestion des fenêtres
+#+BEGIN_SRC emacs-lisp
+(use-package window
+  :ensure nil
+
+  :custom
+  ;; Configure the rules for displaying buffers.
+  (display-buffer-alist
+   '(
+     ;; Display Shell buffers at the bottom.
+     ("\\*e?shell\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . -1))
+
+      ("\\*vterm\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . -1))
+
+     ;; Display Backtrace, Warnings, Compile-Log,
+     ;; Help and Messages buffers at the bottom.
+     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . 0))
+
+     ;; Display Faces buffer at the bottom.
+     ("\\*Faces\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . 1))))
+
+  ;; Window and buffer navigation keybindings.
+  :bind
+  (("s-n" . next-buffer)
+   ("s-p" . previous-buffer)
+   ("s-o" . other-window)
+
+   ;; Split windows.
+   ("s-2" . split-window-below)
+   ("s-3" . split-window-right)
+
+   ;; Delete windows and frames.
+   ("s-0" . delete-window)
+   ("s-1" . delete-other-windows)
+   ("s-5" . delete-frame)
+
+   ;; Toggle side windows.
+   ("<f8>" . window-toggle-side-windows)))
+
+
+;; Create a new floating frame with the current buffer.
+(defun prot/make-frame-floating-with-current-buffer ()
+  "Display the current buffer in a new floating frame.
+
+This passes certain parameters to the newly created frame:
+- Use a different name than the default.
+- Use a graphical frame.
+- Do not display the minibuffer.
+
+The name can be used by BSPWM to present the frame
+in a floating state."
+  (interactive)
+  (make-frame
+   '((name . "my-float-window")
+     (window-system . x)
+     (minibuffer . nil))))
+
+
+;; Move the current buffer to the bottom of the frame.
+(defun prot/display-buffer-at-bottom ()
+  "Move the current buffer to the bottom of the frame.
+
+This is useful to take a buffer out of a side window.
+
+The window parameters are provided mostly for didactic purposes."
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (when (not (one-window-p))
+      (delete-window))
+    (display-buffer-at-bottom
+     buffer
+     '((window-parameters
+        . ((mode-line-format . (" " "%b"))))))))
+#+END_SRC
+
+#+RESULTS:
+: prot/display-buffer-at-bottom
